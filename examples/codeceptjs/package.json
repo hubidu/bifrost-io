@@ -1,0 +1,14 @@
+{
+  "name": "realworld-codeceptjs",
+  "version": "1.0.0",
+  "description": "Realworld e2e tests for codeceptjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "codeceptjs run --steps"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "codeceptjs": "^1.1.7"
+  }
+}

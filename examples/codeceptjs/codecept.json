@@ -1,0 +1,22 @@
+{
+  "tests": "./*_test.js",
+  "timeout": 10000,
+  "output": "./__out",
+  "helpers": {
+    "WebDriverIO": {
+      "url": "http://localhost",
+      "browser": "chrome",
+      "smartWait": 2000,
+      "waitForTimeout": 10000
+    },
+    "MyHelper": {
+      "require": "../../codeceptjs/dashboard_helper.js"
+    }    
+  },
+  "include": {
+    "I": "./custom-steps.js"
+  },
+  "bootstrap": false,
+  "mocha": {},
+  "name": "codeceptjs"
+}

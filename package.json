@@ -1,0 +1,16 @@
+{
+  "name": "e2e-dashboard-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "code-excerpt": "^2.1.1",
+    "mkdirp": "^0.5.1",
+    "uuid": "^3.2.1"
+  }
+}
