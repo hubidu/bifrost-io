@@ -9,8 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "archiver": "^2.1.1",
     "code-excerpt": "^2.1.1",
     "mkdirp": "^0.5.1",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2",
     "uuid": "^3.2.1"
   }
 }

@@ -1,35 +1,33 @@
 const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
+
 const DashboardClient = require('../index')
-const {getErrorScreenshotFileName, mapStepToSource} = require('./utils')
+
+const {writeStringToFileSync, stringify, getErrorScreenshotFileName, mapStepToSource} = require('./utils')
 
 let Helper = codecept_helper;
 
-let testCtx
+let testCtx, commandCtx
 
 const CODECEPTJS_OUTPUT = './__out'
 const dashboardClient = new DashboardClient()
 
-const stringify = (o) => { 
-  // Note: cache should not be re-used by repeated calls to JSON.stringify.
-  var cache = [];
-  const res = JSON.stringify(o, function(key, value) {
-      if (typeof value === 'object' && value !== null) {
-          if (cache.indexOf(value) !== -1) {
-              // Circular reference found, discard key
-              return;
-          }
-          // Store value in our collection
-          cache.push(value);
-      }
-      return value;
-  });
-  cache = null; // Enable ga
-
-  return res
+const rmCodeceptjsErrorScreenshotSync = (test, useUniqueScreenshotNames) => {
+  const errorScreenshot = getErrorScreenshotFileName(test, useUniqueScreenshotNames)
+  fs.unlinkSync(path.join(CODECEPTJS_OUTPUT, errorScreenshot))
 }
 
+const toError = err => {
+  let message = err.message;
+  if (err.inspect) { // AssertionFailedError
+    message = err.message = err.inspect();
+  }
+  return {
+    message,
+    stack: err.stack
+  }
+}
 
 class MyHelper extends Helper {
   constructor(config) {
@@ -62,7 +60,7 @@ class MyHelper extends Helper {
     }
 }
 
-  _after(test) {
+  async _after(test) {
     testCtx.commit()
     testCtx = undefined
 }
@@ -72,60 +70,68 @@ class MyHelper extends Helper {
     assert(testCtx, 'Expected a test context in order to make a screenshot')
     const browser = this._getBrowser()
 
-    if (testCtx.isScreenshotStep(step.name)) {
-      const screenshotFileName = testCtx.getFileName(step.name, step.args)
+    commandCtx = testCtx.createCommandContext(step.name, step.args)
+
+    if (commandCtx.shouldTakeScreenshot()) {
+      const screenshotFileName = commandCtx.getFileName()
       await browser.saveScreenshot(screenshotFileName)
 
-      testCtx.addStepScreenshot(step.name, screenshotFileName) 
+      commandCtx.addScreenshot(screenshotFileName) 
     }
+
+    commandCtx.addPageInfo({
+      url: await browser.getUrl(),
+      title: await browser.getTitle()
+    })
   }
 
   _afterStep(step) {
-    // console.log(`AFTER STEP`, step.name)
+    // TODO Make a new error screenshot
+    const browser = this._getBrowser()
+    // const screenshotFileName = testCtx.getFileName('failedHere', [], '.error.png')
+    // await browser.saveScreenshot(screenshotFileName)
+    // testCtx.addStepScreenshot('error', screenshotFileName) 
 
+    commandCtx = undefined
   }
 
-  _beforeSuite(suite) {
-    console.log('BEFORE SUITE', suite.title)
-  }
+  _beforeSuite(suite) {}
 
-  _afterSuite(suite) {
-    // console.log('AFTER SUITE', suite.title)
-  }
+  _afterSuite(suite) {}
 
   _passed(test) {
-    fs.writeFileSync(test.title, stringify(test, null, 2))
-    console.log(test.file)
-    const stepsToSource = test.steps.map(mapStepToSource)
-    // console.log(stepsToSource)
-    // TODO Add device information
-    // TODO Add step stacktraces
+    const stepsToSource = test.steps.map(mapStepToSource).reverse()
+    testCtx.commands.forEach((cmd,i ) => {
+      cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
+    })
 
-    testCtx.addSourceSnippets(stepsToSource)
     testCtx.markSuccessful()
   }
 
-  async _failed(test) {
-    console.log('FAILED', test.title)
-
-    const stepsToSource = test.steps.map(mapStepToSource)
-    // console.log(stepsToSource)
-
-    const errorScreenshot = getErrorScreenshotFileName(test, this.options.uniqueScreenshotNames)
-    fs.unlinkSync(path.join(CODECEPTJS_OUTPUT, errorScreenshot))
-
-    // Make a new error screenshot
+  async _failed(test) {  
     const browser = this._getBrowser()
-    const screenshotFileName = testCtx.getFileName('failedHere', [], '.error.png')
-    await browser.saveScreenshot(screenshotFileName)
-    testCtx.addStepScreenshot('error', screenshotFileName) 
 
-    testCtx.addSourceSnippets(stepsToSource)
-    testCtx.markFailed()
+    rmCodeceptjsErrorScreenshotSync(test, this.options.uniqueScreenshotNames)
+
+    testCtx.addDeviceSettings({
+      name: 'desktop',
+      browser: browser.desiredCapabilities.browserName,
+      // orientation: await browser.getOrientation(), // only on mobile
+      type: 'desktop',
+      width: await  browser.getViewportSize('width'),
+      height: await  browser.getViewportSize('height')
+    })
+
+    const stepsToSource = test.steps.map(mapStepToSource).reverse()
+    testCtx.commands.forEach((cmd,i ) => {
+      cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
+    })
+
+    testCtx.markFailed(toError(test.err))
   }
   
   _finishTest(suite) {
-    console.log('FINISHED')
+    // All tests are finished
   }
 
 }

@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 /**
  * Determine the filename of codeceptjs error
  */
@@ -53,7 +55,33 @@ const mapStepToSource = step => {
   }
 }
 
+/**
+ * Stringify with circular refs
+ */
+const stringify = (o) => { 
+  // Note: cache should not be re-used by repeated calls to JSON.stringify.
+  var cache = [];
+  const res = JSON.stringify(o, function(key, value) {
+      if (typeof value === 'object' && value !== null) {
+          if (cache.indexOf(value) !== -1) {
+              // Circular reference found, discard key
+              return;
+          }
+          // Store value in our collection
+          cache.push(value);
+      }
+      return value;
+  });
+  cache = null; // Enable ga
+
+  return res
+}
+
+const writeStringToFileSync = (filename, str) => fs.writeFileSync(filename, str)
+
 module.exports = {
     getErrorScreenshotFileName,
-    mapStepToSource
+    mapStepToSource,
+    stringify,
+    writeStringToFileSync
 }
