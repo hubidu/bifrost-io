@@ -4,7 +4,7 @@
   "description": "Realworld e2e tests for codeceptjs",
   "main": "index.js",
   "scripts": {
-    "test": "codeceptjs run --steps"
+    "test": "codeceptjs run"
   },
   "author": "",
   "license": "ISC",

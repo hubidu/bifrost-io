@@ -6,7 +6,7 @@ const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
 const generateReport = require('./generate-report')
-const sendReport = require('./send-report')
+const {sendReport, isDashboardHostConfigured} = require('./send-report')
 const zipDirectory = require('./zip-directory')
 
 const OUTPUT_BASE = './__out'
@@ -16,7 +16,7 @@ const makeFileName = str => str.replace(/[^0-9a-zA-Z\- \.\(\)]/g, '')
 const fileToString = fileName => fs.readFileSync(fileName).toString()
 const toSeconds = num => num / 1000;
 const writeReport = testContext => fs.writeFileSync(testContext.getReportFileName(), JSON.stringify(generateReport(testContext), null, 2))
-
+const rmFileSync = filename => fs.unlinkSync(filename) 
 /**
  * Collect data for a single test command
  */
@@ -125,6 +125,9 @@ class DashboardTestContext {
         return this.stepCounter++
     }
 
+    /**
+     * Add device settings. name and type are required.
+     */
     addDeviceSettings(deviceSettings) {
         assert(deviceSettings.name)
         assert(deviceSettings.type)
@@ -132,7 +135,7 @@ class DashboardTestContext {
     }
 
     /**
-     * Mark the test as successful
+     * Call it when the test succeeded
      */
     markSuccessful() {
         this.result = 'success'
@@ -140,7 +143,7 @@ class DashboardTestContext {
     }
 
     /**
-     * Mark the test as failed
+     * Call it with an error instance when the test failed
      */
     markFailed(err) {
         this.result = 'error'
@@ -152,6 +155,9 @@ class DashboardTestContext {
         failedCommand.markFailed(err)        
     }
 
+    /**
+     * Generate a report file name
+     */
     getReportFileName(ext = '.json') {
         return path.join(this.outputPath, REPORT_FILENAME)
     }
@@ -161,9 +167,15 @@ class DashboardTestContext {
      */
     async commit() {       
         writeReport(this);
-        const zipFile = await zipDirectory(this.outputPath);
-        await sendReport(zipFile)
-        // TODO Remove file after successful send
+
+        if (isDashboardHostConfigured()) {
+            const zipFile = await zipDirectory(this.outputPath);
+            try {
+                await sendReport(zipFile)
+            } finally {
+                rmFileSync(zipFile)   
+            }
+        }
     }
 }
 

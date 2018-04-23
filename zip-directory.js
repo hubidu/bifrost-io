@@ -7,8 +7,9 @@ const zipDirectory = dir => new Promise((resolve, reject) => {
         zlib: { level: 9 } // Sets the compression level.
     })
 
-    const zipFile = fs.createWriteStream(path.join(dir + '.zip'))
-    zipFile.on('close', () => resolve());
+    const zipFileName = path.join(dir + '.zip')
+    const zipFile = fs.createWriteStream(zipFileName)
+    zipFile.on('close', () => resolve(zipFileName));
     zipFile.on('error', () => reject());
 
     archive.pipe(zipFile)

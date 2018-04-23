@@ -47,12 +47,9 @@ class MyHelper extends Helper {
   _init() {}
 
   // before/after hooks
-  _before(test) {
-      // console.log('BEFORE TEST')
-  }
+  _before(test) {}
 
   _test(test) {
-    console.log('TEST', test.title)
     try {
       testCtx = dashboardClient.createTestContext(test.parent.title, test.title)
     } catch (err) {
@@ -66,7 +63,6 @@ class MyHelper extends Helper {
 }
 
   async _beforeStep(step) {
-    // console.log('BEFORE STEP', step.toString())
     assert(testCtx, 'Expected a test context in order to make a screenshot')
     const browser = this._getBrowser()
 
