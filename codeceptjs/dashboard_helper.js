@@ -95,10 +95,21 @@ class MyHelper extends Helper {
 
   _afterSuite(suite) {}
 
-  _passed(test) {
-    const stepsToSource = test.steps.map(mapStepToSource).reverse()
+  async _passed(test) {
+    const browser = this._getBrowser()
+
+    const stepsToSource = test.steps.map(mapStepToSource)
     testCtx.commands.forEach((cmd,i ) => {
       cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
+    })
+
+    testCtx.addDeviceSettings({
+      name: 'desktop',
+      browser: browser.desiredCapabilities.browserName,
+      // orientation: await browser.getOrientation(), // only on mobile
+      type: 'desktop',
+      width: await  browser.getViewportSize('width'),
+      height: await  browser.getViewportSize('height')
     })
 
     testCtx.markSuccessful()
@@ -118,7 +129,7 @@ class MyHelper extends Helper {
       height: await  browser.getViewportSize('height')
     })
 
-    const stepsToSource = test.steps.map(mapStepToSource).reverse()
+    const stepsToSource = test.steps.map(mapStepToSource)
     testCtx.commands.forEach((cmd,i ) => {
       cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
     })

@@ -4,7 +4,7 @@ const rp = require('request-promise')
 const debug = require('debug')('dashboard-client')
 
 const HOST = process.env.DASHBOARD_HOST
-const PORT = process.env.DASHBOARD_PORT || 8000
+const PORT = process.env.DASHBOARD_PORT || 8003
 const UPLOAD_URL = `http://${HOST}:${PORT}/upload`;
 
 const sendReport = async zipFileName => {

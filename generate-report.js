@@ -17,7 +17,7 @@ module.exports = ctx => {
                 page: cmd.pageInfo,
                 codeStack: cmd.codeStack
             })
-        }).reverse(),
+        }),
         deviceSettings: ctx.deviceSettings, // TODO map this
 
         logs: [] // Browser logs

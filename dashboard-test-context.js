@@ -95,12 +95,19 @@ class DashboardCommandContext {
 
 class DashboardTestContext {
     constructor(suiteTitle, testTitle) {
-        this.outputPath = path.join(OUTPUT_BASE, `${suiteTitle} -- ${testTitle}`, `${Date.now()}`)
+        this.TEST_TOKEN = process.env.TOKEN
+        assert(this.TEST_TOKEN, 'Expected an access token for the dashboard service (process.env.TOKEN)')
+        this.TEST_PROJECT = process.env.PROJECT
+        assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.PROJECT)')
+
+        this.TEST_BASE = `${makeFileName(suiteTitle)} -- ${makeFileName(testTitle)}`
+        this.TEST_DIR = `${Date.now()}`
+        this.outputPath = path.join(OUTPUT_BASE, this.TEST_BASE, this.TEST_DIR)
         mkdirp.sync(this.outputPath)
       
         this.result = undefined
         this.reportFileName = REPORT_FILENAME // just the filename of the report data file
-        this.reportDir = this.outputPath
+        this.reportDir = [this.TEST_TOKEN, this.TEST_PROJECT, this.TEST_BASE, this.TEST_DIR].join('/')
         this.startedAt = Date.now()
         this.duration = undefined // in seconds
         this.prefix = suiteTitle
@@ -169,11 +176,11 @@ class DashboardTestContext {
         writeReport(this);
 
         if (isDashboardHostConfigured()) {
-            const zipFile = await zipDirectory(this.outputPath);
+            const zipFile = await zipDirectory(this.outputPath, this.reportDir);
             try {
                 await sendReport(zipFile)
             } finally {
-                rmFileSync(zipFile)   
+                // rmFileSync(zipFile)   
             }
         }
     }

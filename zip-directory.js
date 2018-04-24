@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const archiver = require('archiver')
 
-const zipDirectory = dir => new Promise((resolve, reject) => {
+const zipDirectory = (dir, asDirInZip) => new Promise((resolve, reject) => {
     const archive = archiver('zip', {
         zlib: { level: 9 } // Sets the compression level.
     })
@@ -13,7 +13,7 @@ const zipDirectory = dir => new Promise((resolve, reject) => {
     zipFile.on('error', () => reject());
 
     archive.pipe(zipFile)
-    archive.directory(dir, false)
+    archive.directory(dir, asDirInZip)
     archive.finalize()
 })
 
