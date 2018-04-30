@@ -1,5 +1,10 @@
 module.exports = ctx => {
+    if (!process.env.OWNER_KEY) throw new Error('Please provide an owner key in process.env.OWNER_KEY')
+
     return {
+        // TODO add runId
+        ownerKey: process.env.OWNER_KEY,
+        project: process.env.TEST_PROJECT || 'Unknown test project',
         type: 'test', // Dont remember what this is for
         result: ctx.result,
         reportFileName: ctx.reportFileName,
@@ -13,11 +18,11 @@ module.exports = ctx => {
         // outline: ctx.outline // scenario outline
 
         screenshots: ctx.commands.map(cmd => {
-            return Object.assign(cmd.screenshot, {
+            return Object.assign({}, cmd.screenshot, {
                 page: cmd.pageInfo,
                 codeStack: cmd.codeStack
             })
-        }),
+        }).reverse(),
         deviceSettings: ctx.deviceSettings, // TODO map this
 
         logs: [] // Browser logs

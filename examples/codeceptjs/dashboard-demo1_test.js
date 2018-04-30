@@ -1,14 +1,14 @@
 
-Feature('Login');
+Feature('Login Scenarios');
 
-Scenario('Login with invalid credentials', async (I) => {
+Scenario('A Login with invalid username and password should show an error message', async (I, loginPage) => {
     I.amOnPage('http://www.check24.de')
     I.click('#c24-meinkonto')
 
     I.click('Anmelden')
 
-    I.fillField('#email', 'Foo')
-    I.fillField('#password', 'bar')
-    I.click('#c24-kb-register-btn')
+    loginPage.loginWith('Foo', 'Bar')
+    
+    I.see('Bitte geben Sie', '.error-desc')
 });
 

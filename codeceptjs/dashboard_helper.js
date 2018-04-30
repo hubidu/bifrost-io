@@ -10,12 +10,13 @@ let Helper = codecept_helper;
 
 let testCtx, commandCtx
 
+// TODO Obtain configured codeceptjs output dir
 const CODECEPTJS_OUTPUT = './__out'
 const dashboardClient = new DashboardClient()
 
-const rmCodeceptjsErrorScreenshotSync = (test, useUniqueScreenshotNames) => {
+const getCodeceptjsErrorScreenshotPath = (test, useUniqueScreenshotNames, targetFileName) => {
   const errorScreenshot = getErrorScreenshotFileName(test, useUniqueScreenshotNames)
-  fs.unlinkSync(path.join(CODECEPTJS_OUTPUT, errorScreenshot))
+  return path.join(CODECEPTJS_OUTPUT, errorScreenshot)
 }
 
 const toError = err => {
@@ -82,13 +83,9 @@ class MyHelper extends Helper {
   }
 
   _afterStep(step) {
-    // TODO Make a new error screenshot
     const browser = this._getBrowser()
-    // const screenshotFileName = testCtx.getFileName('failedHere', [], '.error.png')
-    // await browser.saveScreenshot(screenshotFileName)
-    // testCtx.addStepScreenshot('error', screenshotFileName) 
 
-    commandCtx = undefined
+    // commandCtx = undefined
   }
 
   _beforeSuite(suite) {}
@@ -118,7 +115,9 @@ class MyHelper extends Helper {
   async _failed(test) {  
     const browser = this._getBrowser()
 
-    rmCodeceptjsErrorScreenshotSync(test, this.options.uniqueScreenshotNames)
+    const codeceptjsErrorScreenshot = getCodeceptjsErrorScreenshotPath(test, this.options.uniqueScreenshotNames)
+
+    commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err)) 
 
     testCtx.addDeviceSettings({
       name: 'desktop',
@@ -129,7 +128,7 @@ class MyHelper extends Helper {
       height: await  browser.getViewportSize('height')
     })
 
-    const stepsToSource = test.steps.map(mapStepToSource)
+    const stepsToSource = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
     testCtx.commands.forEach((cmd,i ) => {
       cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
     })

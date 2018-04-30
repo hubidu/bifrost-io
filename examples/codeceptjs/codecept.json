@@ -1,6 +1,4 @@
 {
-  "tests": "./*_test.js",
-  "timeout": 10000,
   "output": "./__out",
   "helpers": {
     "WebDriverIO": {
@@ -11,12 +9,17 @@
     },
     "MyHelper": {
       "require": "../../codeceptjs/dashboard_helper.js"
-    }    
+    }
   },
   "include": {
-    "I": "./custom-steps.js"
+    "I": "./custom-steps.js",
+    "loginPage": "./pages/login.page.js"
   },
-  "bootstrap": false,
   "mocha": {},
+  "bootstrap": false,
+  "teardown": null,
+  "hooks": [],
+  "tests": "./*_test.js",
+  "timeout": 10000,
   "name": "codeceptjs"
 }

@@ -5,18 +5,14 @@ Client library to send E2E reports to a dashboard service for visualization
 
 ## TODO
 
-DONE codeceptjs: Get step stacktrace
-DONE Get device information
-DONE Add error screenshot
-DONE zip report dir
-DONE Push report files and screenshots to the dashboard service
-- Reverse screenshot order (actually report app should order by time)
-- report-app: Filter by token and project
-- Add project id
+- DONE Reverse screenshot order (actually report app should order by time)
+- DONE report-app: Filter by token and project
+- DONE Add project id
+- DONE Specify token for report data upload
 - Extract tags from test title
-- Specify token for report data upload
 - Implement scenario outline
 - Implement element highlighting
+- Autowait for elements
 
 
 ## Usage with codeceptjs

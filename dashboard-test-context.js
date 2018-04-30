@@ -35,7 +35,17 @@ class DashboardCommandContext {
      * Decide before which commands a screenshot should be taken
      */
     shouldTakeScreenshot() {
-        return ['click', 'fillField', 'amOnPage'].indexOf(this.name) >= 0
+        return ['click', 'fillField', 'amOnPage', 'see'].indexOf(this.name) >= 0
+    }
+
+    _createScreenshot(screenshotFileName, err = undefined) {
+        this.screenshot = {
+            shotAt: Date.now(),
+            success: err !== undefined ? false : true,
+            message: err && err.toString(),
+            orgStack: err && err.stack,
+            screenshot: screenshotFileName,
+        }
     }
 
     /**
@@ -50,13 +60,15 @@ class DashboardCommandContext {
 
         const targetFile = moveToTestDirSync(screenshotFileName)
 
-        this.screenshot = {
-            shotAt: Date.now(),
-            success: err !== undefined ? false : true,
-            message: err && err.toString(),
-            orgStack: err && err.stack,
-            screenshot: screenshotFileName,
-        }
+        this._createScreenshot(screenshotFileName, err)
+        return this
+    }
+
+    addExistingScreenshot(screenshotPath, err = undefined) {
+        const targetFileName = this.getFileName()
+        fs.renameSync(screenshotPath, path.join(this.testContext.outputPath, targetFileName))    
+
+        this._createScreenshot(targetFileName, err)
         return this
     }
 
@@ -79,6 +91,8 @@ class DashboardCommandContext {
     }    
 
     markFailed(err) {
+        if (!err) throw new Error('Expected to get an error instance')
+        if (!this.screenshot) throw new Error('Expected to have a screenshot')
         this.screenshot.success = false
         this.screenshot.message = err.message
         this.screenshot.orgStack = err.stack
@@ -95,10 +109,10 @@ class DashboardCommandContext {
 
 class DashboardTestContext {
     constructor(suiteTitle, testTitle) {
-        this.TEST_TOKEN = process.env.TOKEN
-        assert(this.TEST_TOKEN, 'Expected an access token for the dashboard service (process.env.TOKEN)')
-        this.TEST_PROJECT = process.env.PROJECT
-        assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.PROJECT)')
+        this.OWNER_KEY = process.env.OWNER_KEY
+        assert(this.OWNER_KEY, 'Expected an access OWNER_KEY for the dashboard service (process.env.OWNER_KEY)')
+        this.TEST_PROJECT = process.env.TEST_PROJECT
+        assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.TEST_PROJECT)')
 
         this.TEST_BASE = `${makeFileName(suiteTitle)} -- ${makeFileName(testTitle)}`
         this.TEST_DIR = `${Date.now()}`
@@ -107,12 +121,12 @@ class DashboardTestContext {
       
         this.result = undefined
         this.reportFileName = REPORT_FILENAME // just the filename of the report data file
-        this.reportDir = [this.TEST_TOKEN, this.TEST_PROJECT, this.TEST_BASE, this.TEST_DIR].join('/')
+        this.reportDir = [this.OWNER_KEY, this.TEST_PROJECT, this.TEST_BASE, this.TEST_DIR].join('/')
         this.startedAt = Date.now()
         this.duration = undefined // in seconds
-        this.prefix = suiteTitle
+        this.prefix = `${this.TEST_PROJECT} -- ${suiteTitle}`
         this.title = testTitle
-        this.fullTitle = `${suiteTitle} -- ${testTitle}`
+        this.fullTitle = `${this.prefix} -- ${testTitle}`
 
         this.commands = []
         this.deviceSettings = undefined
