@@ -9,10 +9,14 @@ Client library to send E2E reports to a dashboard service for visualization
 - DONE report-app: Filter by token and project
 - DONE Add project id
 - DONE Specify token for report data upload
+- Show a url to the dashboard after test execution
+- Speed up test import
+- Extract User Agent info
 - Extract tags from test title
-- Implement scenario outline
 - Implement element highlighting
+- Test with real project
 - Autowait for elements
+- Implement scenario outline
 
 
 ## Usage with codeceptjs

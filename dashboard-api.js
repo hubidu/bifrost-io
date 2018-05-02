@@ -5,7 +5,17 @@ const debug = require('debug')('dashboard-client')
 
 const HOST = process.env.DASHBOARD_HOST
 const PORT = process.env.DASHBOARD_PORT || 8003
+
 const UPLOAD_URL = `http://${HOST}:${PORT}/upload`;
+const GETDASHBOARD_URL = `http://${HOST}:${PORT}/dashboard-url`;
+
+const getDashboardUrl = async (ownerkey, project) => {
+    if (!HOST) return undefined
+
+    const res = await rp.get(`${GETDASHBOARD_URL}/${ownerkey}/${project}`)
+
+    return JSON.parse(res)
+}
 
 const sendReport = async zipFileName => {
     assert(zipFileName, 'Expected a path to a zip file')
@@ -24,5 +34,6 @@ const isDashboardHostConfigured = () => HOST !== undefined
 
 module.exports = {
     sendReport,
-    isDashboardHostConfigured
+    isDashboardHostConfigured,
+    getDashboardUrl
 }

@@ -136,8 +136,14 @@ class MyHelper extends Helper {
     testCtx.markFailed(toError(test.err))
   }
   
-  _finishTest(suite) {
-    // All tests are finished
+  async _finishTest(suite) {
+    const url = await dashboardClient.getDashboardUrl()
+    if (url) {
+      console.log('************************************************')
+      console.log('* You can view the report in the dashboard now *')
+      console.log(`*    ${url}`)
+      console.log('************************************************')  
+    }
   }
 
 }

@@ -6,7 +6,7 @@ const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
 const generateReport = require('./generate-report')
-const {sendReport, isDashboardHostConfigured} = require('./send-report')
+const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
 const zipDirectory = require('./zip-directory')
 
 const OUTPUT_BASE = './__out'
