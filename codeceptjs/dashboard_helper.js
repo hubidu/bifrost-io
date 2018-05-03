@@ -104,6 +104,11 @@ class MyHelper extends Helper {
       cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
     })
 
+    const userAgent = await browser.execute(function () {
+      return window.navigator.userAgent;
+    })
+    console.log('USER AGENT', userAgent)
+    
     testCtx.addDeviceSettings({
       name: 'desktop',
       browser: browser.desiredCapabilities.browserName,
