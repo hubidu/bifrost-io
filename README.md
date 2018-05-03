@@ -12,8 +12,8 @@ Client library to send E2E reports to a dashboard service for visualization
 - DONE Show a url to the dashboard after test execution
 - DONE Speed up test import
 - DONE Extract User Agent info
-- Implement element highlighting
-- Should I record/send commands without screenshot?
+- DONE Implement element highlighting
+- DONE Filter commands without screenshot?
 - Extract tags from test title
 - Add a runId
 - Test with real project
