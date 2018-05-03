@@ -31,13 +31,6 @@ class DashboardCommandContext {
         this.codeStack = []
     }    
 
-    /**
-     * Decide before which commands a screenshot should be taken
-     */
-    shouldTakeScreenshot() {
-        return ['click', 'fillField', 'amOnPage', 'see'].indexOf(this.name) >= 0
-    }
-
     _createScreenshot(screenshotFileName, err = undefined) {
         this.screenshot = {
             shotAt: Date.now(),
@@ -46,6 +39,34 @@ class DashboardCommandContext {
             orgStack: err && err.stack,
             screenshot: screenshotFileName,
         }
+    }
+
+    /**
+     * Retrieve the selector from command arguments
+     */
+    getSelector() {
+        if (this.name.indexOf('click') === 0) {
+            if (this.args.length === 1) {
+                return this.args[0]
+            } else if (this.args.length === 2) {
+                return this.args[1]
+            }
+        } else if (this.name.indexOf('fillField') === 0) {
+            return this.args[0]
+        } else if (this.name.indexOf('see') === 0) {
+            if (this.args.length === 1) {
+                return this.args[0]
+            } else if (this.args.length === 2) {
+                return this.args[1]
+            }
+        }
+    }
+
+    /**
+     * Decide before which commands a screenshot should be taken
+     */
+    shouldTakeScreenshot() {
+        return ['click', 'fillField', 'amOnPage', 'see', 'seeElement'].indexOf(this.name) >= 0
     }
 
     /**
@@ -194,7 +215,7 @@ class DashboardTestContext {
             try {
                 await sendReport(zipFile)
             } finally {
-                // rmFileSync(zipFile)   
+                rmFileSync(zipFile)   
             }
         }
     }

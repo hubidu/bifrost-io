@@ -4,6 +4,8 @@ const path = require('path')
 const chalk = require('chalk')
 const info = chalk.bold.green
 
+const {getUserAgent, highlightElement} = require('../scripts')
+const getDeviceSettingsFromUA = require('../get-device-settings-from-ua')
 const DashboardClient = require('../index')
 
 const {writeStringToFileSync, stringify, getErrorScreenshotFileName, mapStepToSource} = require('./utils')
@@ -73,6 +75,10 @@ class MyHelper extends Helper {
 
     commandCtx = testCtx.createCommandContext(step.name, step.args)
 
+    // Highlight element
+    const sel = commandCtx.getSelector()
+    if (sel) await browser.execute(highlightElement, sel)
+
     if (commandCtx.shouldTakeScreenshot()) {
       const screenshotFileName = commandCtx.getFileName()
       await browser.saveScreenshot(screenshotFileName)
@@ -88,8 +94,6 @@ class MyHelper extends Helper {
 
   _afterStep(step) {
     const browser = this._getBrowser()
-
-    // commandCtx = undefined
   }
 
   _beforeSuite(suite) {}
@@ -104,19 +108,10 @@ class MyHelper extends Helper {
       cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
     })
 
-    const userAgent = await browser.execute(function () {
-      return window.navigator.userAgent;
-    })
-    console.log('USER AGENT', userAgent)
-    
-    testCtx.addDeviceSettings({
-      name: 'desktop',
-      browser: browser.desiredCapabilities.browserName,
-      // orientation: await browser.getOrientation(), // only on mobile
-      type: 'desktop',
-      width: await  browser.getViewportSize('width'),
-      height: await  browser.getViewportSize('height')
-    })
+    const {value: userAgent} = await browser.execute(getUserAgent)
+    const viewportSize = await browser.getViewportSize()
+    const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
+    testCtx.addDeviceSettings(deviceSettings)
 
     testCtx.markSuccessful()
   }
@@ -128,14 +123,10 @@ class MyHelper extends Helper {
 
     commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err)) 
 
-    testCtx.addDeviceSettings({
-      name: 'desktop',
-      browser: browser.desiredCapabilities.browserName,
-      // orientation: await browser.getOrientation(), // only on mobile
-      type: 'desktop',
-      width: await  browser.getViewportSize('width'),
-      height: await  browser.getViewportSize('height')
-    })
+    const {value: userAgent} = await browser.execute(getUserAgent)
+    const viewportSize = await browser.getViewportSize()
+    const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
+    testCtx.addDeviceSettings(deviceSettings)
 
     const stepsToSource = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
     testCtx.commands.forEach((cmd,i ) => {

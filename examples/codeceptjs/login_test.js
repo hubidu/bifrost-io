@@ -1,7 +1,7 @@
 
 Feature('Login Scenarios');
 
-Scenario('A Login with invalid username and password should show an error message', async (I, loginPage) => {
+Scenario('When I login with an invalid username and password then I will see an error message', async (I, loginPage) => {
     I.amOnPage('http://www.check24.de')
     I.click('#c24-meinkonto')
 

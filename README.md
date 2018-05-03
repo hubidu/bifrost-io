@@ -11,9 +11,10 @@ Client library to send E2E reports to a dashboard service for visualization
 - DONE Specify token for report data upload
 - DONE Show a url to the dashboard after test execution
 - DONE Speed up test import
-- Extract User Agent info
-- Extract tags from test title
+- DONE Extract User Agent info
 - Implement element highlighting
+- Should I record/send commands without screenshot?
+- Extract tags from test title
 - Add a runId
 - Test with real project
 - Autowait for elements
