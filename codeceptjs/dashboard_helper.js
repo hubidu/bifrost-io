@@ -1,6 +1,8 @@
 const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
+const chalk = require('chalk')
+const info = chalk.bold.green
 
 const DashboardClient = require('../index')
 
@@ -29,6 +31,8 @@ const toError = err => {
     stack: err.stack
   }
 }
+
+const printToConsole = msg => console.log(info(msg))
 
 class MyHelper extends Helper {
   constructor(config) {
@@ -139,10 +143,11 @@ class MyHelper extends Helper {
   async _finishTest(suite) {
     const url = await dashboardClient.getDashboardUrl()
     if (url) {
-      console.log('************************************************')
-      console.log('* You can view the report in the dashboard now *')
-      console.log(`*    ${url}`)
-      console.log('************************************************')  
+      console.log('')
+      console.log('')
+      console.log(`Go here to see reports:`)
+      printToConsole(`  ${url}`)
+      console.log('')
     }
   }
 

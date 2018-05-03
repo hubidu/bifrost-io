@@ -14,6 +14,7 @@ Client library to send E2E reports to a dashboard service for visualization
 - Extract User Agent info
 - Extract tags from test title
 - Implement element highlighting
+- Add a runId
 - Test with real project
 - Autowait for elements
 - Implement scenario outline
@@ -25,5 +26,5 @@ Include it as helper in your codeceptjs project (see examples directory). Then r
 specifying the reporter host as environment variable, like so:
 
 ```
-    cross-env TOKEN=12345 PROJECT=codeceptjs-demo DASHBOARD_HOST=localhost:8000 codeceptjs run
+    cross-env OWNER_KEY=12345 TEST_PROJECT=codeceptjs-demo DASHBOARD_HOST=localhost:8000 codeceptjs run
 ```
