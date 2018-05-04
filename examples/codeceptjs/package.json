@@ -1,10 +1,10 @@
 {
-  "name": "realworld-codeceptjs",
+  "name": "codeceptjs-demo",
   "version": "1.0.0",
-  "description": "Realworld e2e tests for codeceptjs",
+  "description": "Codeceptjs example project with awesome reporting",
   "main": "index.js",
   "scripts": {
-    "test": "codeceptjs run"
+    "test": "cross-env OWNER_KEY=y9b8hFbiv3 TEST_PROJECT=codeceptjs-demo codeceptjs run"
   },
   "author": "",
   "license": "ISC",
