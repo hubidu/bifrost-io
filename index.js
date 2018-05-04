@@ -8,15 +8,18 @@ class DashboardClient {
         assert(this.OWNER_KEY, 'Expected an access OWNER_KEY for the dashboard service (process.env.OWNER_KEY)')
         this.TEST_PROJECT = process.env.TEST_PROJECT
         assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.TEST_PROJECT)')
+
+        this.ctx = undefined
     }
 
     createTestContext(suiteTitle, testTitle) {
         const ctx = new DashboardTestContext(suiteTitle, testTitle)
+        this.ctx =  ctx
         return ctx
     }
 
     async getDashboardUrl() {
-        const { Url } = await getDashboardUrl(this.OWNER_KEY, this.TEST_PROJECT)
+        const { Url } = await getDashboardUrl(this.OWNER_KEY, this.TEST_PROJECT, this.ctx.runId)
         return Url
     }
 }

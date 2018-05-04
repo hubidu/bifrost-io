@@ -5,6 +5,7 @@ module.exports = ctx => {
         // TODO add runId
         ownerKey: process.env.OWNER_KEY,
         project: process.env.TEST_PROJECT || 'Unknown test project',
+        runid: ctx.runId,
         type: 'test', // Dont remember what this is for
         result: ctx.result,
         reportFileName: ctx.reportFileName,

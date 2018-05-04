@@ -4,6 +4,7 @@ const assert = require('assert')
 const uuidv1 = require('uuid/v1')
 const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
+const shortid = require('shortid');
 
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
@@ -12,11 +13,13 @@ const zipDirectory = require('./zip-directory')
 const OUTPUT_BASE = './__out'
 const REPORT_FILENAME = 'report.json'
 
-const makeFileName = str => str.replace(/[^0-9a-zA-Z\- \.\(\)]/g, '')
+const makeFileName = str => str.replace(/[^0-9a-zA-Z\- \.\(\),]/g, '')
 const fileToString = fileName => fs.readFileSync(fileName).toString()
 const toSeconds = num => num / 1000;
 const writeReport = testContext => fs.writeFileSync(testContext.getReportFileName(), JSON.stringify(generateReport(testContext), null, 2))
 const rmFileSync = filename => fs.unlinkSync(filename) 
+const cleanTitle = str => str.replace(/\r?\n|\r/, ' ').replace(/\s+/g,' ').trim()
+
 /**
  * Collect data for a single test command
  */
@@ -37,6 +40,8 @@ class DashboardCommandContext {
             success: err !== undefined ? false : true,
             message: err && err.toString(),
             orgStack: err && err.stack,
+            actual: err && err.actual,
+            expected: err && err.expected,
             screenshot: screenshotFileName,
         }
     }
@@ -114,6 +119,8 @@ class DashboardCommandContext {
     markFailed(err) {
         if (!err) throw new Error('Expected to get an error instance')
         if (!this.screenshot) throw new Error('Expected to have a screenshot')
+
+        // TODO Do I need this?
         this.screenshot.success = false
         this.screenshot.message = err.message
         this.screenshot.orgStack = err.stack
@@ -135,11 +142,15 @@ class DashboardTestContext {
         this.TEST_PROJECT = process.env.TEST_PROJECT
         assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.TEST_PROJECT)')
 
+        suiteTitle = cleanTitle(suiteTitle)
+        testTitle = cleanTitle(testTitle)
+
         this.TEST_BASE = `${makeFileName(suiteTitle)} -- ${makeFileName(testTitle)}`
         this.TEST_DIR = `${Date.now()}`
         this.outputPath = path.join(OUTPUT_BASE, this.TEST_BASE, this.TEST_DIR)
         mkdirp.sync(this.outputPath)
       
+        this.runId = shortid.generate()
         this.result = undefined
         this.reportFileName = REPORT_FILENAME // just the filename of the report data file
         this.reportDir = [this.OWNER_KEY, this.TEST_PROJECT, this.TEST_BASE, this.TEST_DIR].join('/')

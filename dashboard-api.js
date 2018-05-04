@@ -9,10 +9,10 @@ const PORT = process.env.DASHBOARD_PORT || 8003
 const UPLOAD_URL = `http://${HOST}:${PORT}/upload`;
 const GETDASHBOARD_URL = `http://${HOST}:${PORT}/dashboard-url`;
 
-const getDashboardUrl = async (ownerkey, project) => {
+const getDashboardUrl = async (ownerkey, project, runId) => {
     if (!HOST) return undefined
 
-    const res = await rp.get(`${GETDASHBOARD_URL}/${ownerkey}/${project}`)
+    const res = await rp.get(`${GETDASHBOARD_URL}/${ownerkey}/${project}/${runId}`)
 
     return JSON.parse(res)
 }

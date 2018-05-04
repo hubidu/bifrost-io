@@ -2,7 +2,7 @@ const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
-const info = chalk.bold.green
+const info = chalk.bold.green.underline
 
 const {getUserAgent, highlightElement} = require('../scripts')
 const getDeviceSettingsFromUA = require('../get-device-settings-from-ua')
@@ -30,7 +30,9 @@ const toError = err => {
   }
   return {
     message,
-    stack: err.stack
+    stack: err.stack,
+    actual: err.actual,
+    expected: err.expected
   }
 }
 
