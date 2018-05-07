@@ -10,6 +10,8 @@
 - DONE Implement element highlighting
 - DONE Filter commands without screenshot?
 - DONE Add a runId
+- Reset highlight element on each step
+- Fix: invalid element state: Failed to execute 'querySelectorAll' on 'Document': '//li[text()="Wichtigste Leistungen"]' is not a valid selector.
 - Extract tags from test title
 - Add more error details (actual/expected)
 - Improve error messages

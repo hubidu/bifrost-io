@@ -4,7 +4,7 @@ const path = require('path')
 const chalk = require('chalk')
 const info = chalk.bold.green.underline
 
-const {getUserAgent, highlightElement} = require('../scripts')
+const {getUserAgent, dehighlightElement, highlightElement} = require('../scripts')
 const getDeviceSettingsFromUA = require('../get-device-settings-from-ua')
 const DashboardClient = require('../index')
 
@@ -15,7 +15,7 @@ let Helper = codecept_helper;
 let testCtx, commandCtx
 
 // TODO Obtain configured codeceptjs output dir
-const CODECEPTJS_OUTPUT = './__out'
+const CODECEPTJS_OUTPUT = global.output_dir
 const dashboardClient = new DashboardClient()
 
 const getCodeceptjsErrorScreenshotPath = (test, useUniqueScreenshotNames, targetFileName) => {
@@ -87,6 +87,8 @@ class MyHelper extends Helper {
 
       commandCtx.addScreenshot(screenshotFileName) 
     }
+
+    if (sel) await browser.execute(dehighlightElement)
 
     commandCtx.addPageInfo({
       url: await browser.getUrl(),
