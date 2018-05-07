@@ -3,6 +3,8 @@ e2e-dashboard-client
 
 Client library to send E2E reports to a dashboard service for visualization
 
+![Video](./doc/going-from-red-to-green-test.gif)
+
 ## TODO
 
 - DONE Reverse screenshot order (actually report app should order by time)
