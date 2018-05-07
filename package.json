@@ -1,6 +1,6 @@
 {
-  "name": "e2e-dashboard-client",
-  "version": "1.0.0",
+  "name": "bifrost.io",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {

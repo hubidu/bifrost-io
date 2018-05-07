@@ -14,9 +14,10 @@ Client library to send E2E reports to a dashboard service for visualization
 - DONE Extract User Agent info
 - DONE Implement element highlighting
 - DONE Filter commands without screenshot?
+- DONE Add a runId
 - Extract tags from test title
-- Add a runId
 - Add more error details (actual/expected)
+- Improve error messages
 - Make html snapshot
 - Make server report processing more robust
 - Test with real project

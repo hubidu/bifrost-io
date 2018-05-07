@@ -12,6 +12,10 @@ const GETDASHBOARD_URL = `http://${HOST}:${PORT}/dashboard-url`;
 const getDashboardUrl = async (ownerkey, project, runId) => {
     if (!HOST) return undefined
 
+    assert(ownerkey, 'Expected an ownerkey')
+    assert(project, 'Expected the test project name')
+    assert(runId, 'Expected a test run id')
+
     const res = await rp.get(`${GETDASHBOARD_URL}/${ownerkey}/${project}/${runId}`)
 
     return JSON.parse(res)

@@ -1,11 +1,11 @@
-module.exports = ctx => {
+module.exports = (ctx) => {
     if (!process.env.OWNER_KEY) throw new Error('Please provide an owner key in process.env.OWNER_KEY')
 
     return {
         // TODO add runId
         ownerKey: process.env.OWNER_KEY,
         project: process.env.TEST_PROJECT || 'Unknown test project',
-        runid: ctx.runId,
+        runid: ctx.runid,
         type: 'test', // Dont remember what this is for
         result: ctx.result,
         reportFileName: ctx.reportFileName,

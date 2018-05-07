@@ -4,7 +4,6 @@ const assert = require('assert')
 const uuidv1 = require('uuid/v1')
 const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
-const shortid = require('shortid');
 
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
@@ -16,7 +15,7 @@ const REPORT_FILENAME = 'report.json'
 const makeFileName = str => str.replace(/[^0-9a-zA-Z\- \.\(\),]/g, '')
 const fileToString = fileName => fs.readFileSync(fileName).toString()
 const toSeconds = num => num / 1000;
-const writeReport = testContext => fs.writeFileSync(testContext.getReportFileName(), JSON.stringify(generateReport(testContext), null, 2))
+const writeReport = (testContext) => fs.writeFileSync(testContext.getReportFileName(), JSON.stringify(generateReport(testContext), null, 2))
 const rmFileSync = filename => fs.unlinkSync(filename) 
 const cleanTitle = str => str.replace(/\r?\n|\r/, ' ').replace(/\s+/g,' ').trim()
 
@@ -136,7 +135,8 @@ class DashboardCommandContext {
 }
 
 class DashboardTestContext {
-    constructor(suiteTitle, testTitle) {
+    constructor(runid, suiteTitle, testTitle) {
+        assert(runid, 'Expected an runid (id which identifies this test run)')
         this.OWNER_KEY = process.env.OWNER_KEY
         assert(this.OWNER_KEY, 'Expected an access OWNER_KEY for the dashboard service (process.env.OWNER_KEY)')
         this.TEST_PROJECT = process.env.TEST_PROJECT
@@ -150,7 +150,7 @@ class DashboardTestContext {
         this.outputPath = path.join(OUTPUT_BASE, this.TEST_BASE, this.TEST_DIR)
         mkdirp.sync(this.outputPath)
       
-        this.runId = shortid.generate()
+        this.runid = runid
         this.result = undefined
         this.reportFileName = REPORT_FILENAME // just the filename of the report data file
         this.reportDir = [this.OWNER_KEY, this.TEST_PROJECT, this.TEST_BASE, this.TEST_DIR].join('/')
