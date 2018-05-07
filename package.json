@@ -17,7 +17,7 @@
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "shortid": "^2.2.8",
-    "ua-parser-js": "^0.7.17",
+    "ua-parser-js": "^0.7.18",
     "uuid": "^3.2.1"
   }
 }
