@@ -55,8 +55,8 @@ module.exports = function (sel, isError) {
     
         newOutline.style.width = rect.width + 'px'
         newOutline.style.height = rect.height + 'px'
-        newOutline.style.top = rect.top + 'px'
-        newOutline.style.left = rect.left + 'px'
+        newOutline.style.top = rect.top + window.scrollY + 'px'
+        newOutline.style.left = rect.left + window.scrollX + 'px'
     
         document.querySelector('body').appendChild(newOutline)
     }

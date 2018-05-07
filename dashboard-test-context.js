@@ -70,7 +70,7 @@ class DashboardCommandContext {
      * Decide before which commands a screenshot should be taken
      */
     shouldTakeScreenshot() {
-        return ['click', /* 'fillField', */ 'amOnPage', 'see', 'seeElement'].indexOf(this.name) >= 0
+        return this.name.indexOf('click') >= 0 || this.name.indexOf('amOnPage') >= 0 || this.name.indexOf('see') >= 0
     }
 
     /**

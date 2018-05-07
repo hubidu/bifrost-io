@@ -10,8 +10,9 @@
 - DONE Implement element highlighting
 - DONE Filter commands without screenshot?
 - DONE Add a runId
-- Reset highlight element on each step
-- Fix: invalid element state: Failed to execute 'querySelectorAll' on 'Document': '//li[text()="Wichtigste Leistungen"]' is not a valid selector.
+- DONE Reset highlight element on each step
+- DONE Fix: invalid element state: Failed to execute 'querySelectorAll' on 'Document': '//li[text()="Wichtigste Leistungen"]' is not a valid selector.
+- Fix TypeError: Cannot read property 'addExistingScreenshot' of undefined
 - Extract tags from test title
 - Add more error details (actual/expected)
 - Improve error messages

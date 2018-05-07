@@ -14,7 +14,6 @@ let Helper = codecept_helper;
 
 let testCtx, commandCtx
 
-// TODO Obtain configured codeceptjs output dir
 const CODECEPTJS_OUTPUT = global.output_dir
 const dashboardClient = new DashboardClient()
 
@@ -56,7 +55,9 @@ class MyHelper extends Helper {
   _init() {}
 
   // before/after hooks
-  _before(test) {}
+  _before() {
+    console.log('BEFORE()')  
+  }
 
   _test(test) {
     try {
@@ -64,7 +65,7 @@ class MyHelper extends Helper {
     } catch (err) {
       console.log('ERROR in _test hook', err)
     }
-}
+  }
 
   async _after(test) {
     testCtx.commit()
@@ -72,7 +73,14 @@ class MyHelper extends Helper {
 }
 
   async _beforeStep(step) {
-    assert(testCtx, 'Expected a test context in order to make a screenshot')
+    console.log(step.name, step.args.join(','))
+  }
+
+  async _afterStep(step) {
+    if (!testCtx) {
+      console.log('WARN Expected a test context in order to make a screenshot')
+      return
+    }
     const browser = this._getBrowser()
 
     commandCtx = testCtx.createCommandContext(step.name, step.args)
@@ -96,15 +104,16 @@ class MyHelper extends Helper {
     })
   }
 
-  _afterStep(step) {
-    const browser = this._getBrowser()
-  }
-
   _beforeSuite(suite) {}
 
   _afterSuite(suite) {}
 
   async _passed(test) {
+    if (!testCtx) {
+      console.log('WARN Expected a test context in order to make a screenshot')
+      return
+    }
+
     const browser = this._getBrowser()
 
     const stepsToSource = test.steps.map(mapStepToSource)
@@ -121,6 +130,11 @@ class MyHelper extends Helper {
   }
 
   async _failed(test) {  
+    if (!testCtx) {
+      console.log('WARN Expected a test context in order to make a screenshot')
+      return
+    }
+
     const browser = this._getBrowser()
 
     const codeceptjsErrorScreenshot = getCodeceptjsErrorScreenshotPath(test, this.options.uniqueScreenshotNames)

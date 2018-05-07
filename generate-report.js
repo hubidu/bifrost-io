@@ -1,8 +1,10 @@
+const assert = require('assert')
+
 module.exports = (ctx) => {
+    assert(ctx, 'Please provide a text context')
     if (!process.env.OWNER_KEY) throw new Error('Please provide an owner key in process.env.OWNER_KEY')
 
     return {
-        // TODO add runId
         ownerKey: process.env.OWNER_KEY,
         project: process.env.TEST_PROJECT || 'Unknown test project',
         runid: ctx.runid,
@@ -20,6 +22,10 @@ module.exports = (ctx) => {
 
         screenshots: ctx.commands.map(cmd => {
             return Object.assign({}, cmd.screenshot, {
+                cmd: {
+                    name: cmd.name,
+                    args: cmd.args
+                },
                 page: cmd.pageInfo,
                 codeStack: cmd.codeStack
             })
