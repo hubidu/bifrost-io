@@ -1,5 +1,5 @@
 
-module.exports = function (sel, isError) {
+module.exports = function (sel, isError, txt) {
     isError = isError || false
     var highlightColor = isError ? 'Orange' : 'Teal';
 
@@ -46,18 +46,40 @@ module.exports = function (sel, isError) {
         newOutline.style['color'] = 'white';
         newOutline.style['border-radius'] = '5px';
         newOutline.style.border = `2px solid ${highlightColor}`
-        newOutline.style['font-size'] = '10px';
         newOutline.style['padding'] = '1px';
         newOutline.style['z-index'] = '1000';
         newOutline.style['pointer-events'] = 'none'; // be able to click through this element
         newOutline.style.opacity = 0.5;
-        newOutline.style['background-color'] = highlightColor;
+        newOutline.style['background-color'] = highlightColor
     
         newOutline.style.width = rect.width + 'px'
         newOutline.style.height = rect.height + 'px'
         newOutline.style.top = rect.top + window.scrollY + 'px'
         newOutline.style.left = rect.left + window.scrollX + 'px'
-    
+        
+        if (txt) {
+            var txtContainer = document.createElement('div')
+            var textContent = document.createTextNode(txt); 
+            txtContainer.className = 'wdio-outline'
+            txtContainer.style.position = 'absolute'
+            txtContainer.style['border-radius'] = '3px';
+            txtContainer.style['color'] = 'white'
+            txtContainer.style['background-color'] = highlightColor
+            txtContainer.style['font-size'] = '10px';
+            // txtContainer.style['font-weight'] = 'bold';
+            txtContainer.style['z-index'] = '1000';
+            txtContainer.style['pointer-events'] = 'none'; // be able to click through this element
+            txtContainer.style.opacity = 0.8;
+
+            txtContainer.style.width = '150px'
+            txtContainer.style.height = '80px'
+            txtContainer.style.top = (rect.top + window.scrollY - 50) + 'px'
+            txtContainer.style.left = (rect.left + window.scrollX) + 'px'
+                        
+            txtContainer.appendChild(textContent);      
+            document.querySelector('body').appendChild(txtContainer)
+        }
+
         document.querySelector('body').appendChild(newOutline)
     }
     return true

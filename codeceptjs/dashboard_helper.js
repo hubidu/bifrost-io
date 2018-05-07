@@ -56,7 +56,6 @@ class MyHelper extends Helper {
 
   // before/after hooks
   _before() {
-    console.log('BEFORE()')  
   }
 
   _test(test) {
@@ -73,7 +72,7 @@ class MyHelper extends Helper {
 }
 
   async _beforeStep(step) {
-    console.log(step.name, step.args.join(','))
+    // console.log(step.name, step.args.join(','))
   }
 
   async _afterStep(step) {
@@ -87,7 +86,7 @@ class MyHelper extends Helper {
 
     // Highlight element
     const sel = commandCtx.getSelector()
-    if (sel) await browser.execute(highlightElement, sel)
+    if (sel) await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)
 
     if (commandCtx.shouldTakeScreenshot()) {
       const screenshotFileName = commandCtx.getFileName()

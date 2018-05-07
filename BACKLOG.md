@@ -12,7 +12,10 @@
 - DONE Add a runId
 - DONE Reset highlight element on each step
 - DONE Fix: invalid element state: Failed to execute 'querySelectorAll' on 'Document': '//li[text()="Wichtigste Leistungen"]' is not a valid selector.
-- Fix TypeError: Cannot read property 'addExistingScreenshot' of undefined
+- DONE Fix TypeError: Cannot read property 'addExistingScreenshot' of undefined
+- Fix: Why do I see waitFor... as screenshot commands?
+- Add formatted step.name and args to report app (and report model)
+- HOw can I add the result of a rest api call?
 - Extract tags from test title
 - Add more error details (actual/expected)
 - Improve error messages
