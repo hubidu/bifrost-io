@@ -8,7 +8,7 @@
       "waitForTimeout": 10000
     },
     "MyHelper": {
-      "require": "../../codeceptjs/dashboard_helper.js"
+      "require": "bifrost.io/codeceptjs/dashboard_helper.js"
     }
   },
   "include": {
