@@ -1,37 +1,25 @@
-e2e-dashboard-client
+bifrost.io
 ====================
 
-Client library to send E2E reports to a dashboard service for visualization
+JS client library to send E2E reports to a [heimdall.io](https://github.com/hubidu/e2e-reporter-backend) dashboard service.
+Supports the following JS UI test frameworks:
+
+- [CodeceptJS](https://github.com/Codeception/CodeceptJS)
+
+## See in action
+
+### Going from a failing (red) to a green test
 
 ![Video](./doc/going-from-red-to-green-test.gif)
 
-## TODO
-
-- DONE Reverse screenshot order (actually report app should order by time)
-- DONE report-app: Filter by token and project
-- DONE Add project id
-- DONE Specify token for report data upload
-- DONE Show a url to the dashboard after test execution
-- DONE Speed up test import
-- DONE Extract User Agent info
-- DONE Implement element highlighting
-- DONE Filter commands without screenshot?
-- DONE Add a runId
-- Extract tags from test title
-- Add more error details (actual/expected)
-- Improve error messages
-- Make html snapshot
-- Make server report processing more robust
-- Test with real project
-- Enable logging json or markdown to provide additional information (e. g. links to items)
-- Autowait for elements
-- Implement scenario outline
-
-
-## Usage with codeceptjs
+## Usage with [codeceptjs](./examples/codeceptjs)
 
 Include it as helper in your codeceptjs project (see examples directory). Then run your tests
-specifying the reporter host as environment variable, like so:
+specifying
+    
+    - your heimdall.io key
+    - your test project name
+    - the heimdall.io host
 
 ```
     cross-env OWNER_KEY=12345 TEST_PROJECT=codeceptjs-demo DASHBOARD_HOST=localhost:8000 codeceptjs run
