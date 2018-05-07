@@ -17,10 +17,10 @@ Supports the following JS UI test frameworks:
 Include it as helper in your codeceptjs project (see examples directory). Then run your tests
 specifying
     
-    - your heimdall.io key
-    - your test project name
-    - the heimdall.io host
+- your heimdall.io key
+- your test project name
+- the heimdall.io host
 
-```
+```bash
     cross-env OWNER_KEY=12345 TEST_PROJECT=codeceptjs-demo DASHBOARD_HOST=localhost:8000 codeceptjs run
 ```
