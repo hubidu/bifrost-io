@@ -13,9 +13,12 @@
 - DONE Reset highlight element on each step
 - DONE Fix: invalid element state: Failed to execute 'querySelectorAll' on 'Document': '//li[text()="Wichtigste Leistungen"]' is not a valid selector.
 - DONE Fix TypeError: Cannot read property 'addExistingScreenshot' of undefined
-- Fix: Why do I see waitFor... as screenshot commands?
-- Add formatted step.name and args to report app (and report model)
+- DONE Fix: Why do I see waitFor... as screenshot commands?
+- DONE Add formatted step.name and args to report app (and report model)
+- Implement support for xpath selectors
+- Fix: Incorrect source line location in stack trace
 - HOw can I add the result of a rest api call?
+- Supply test source code to dashboard server
 - Extract tags from test title
 - Add more error details (actual/expected)
 - Improve error messages

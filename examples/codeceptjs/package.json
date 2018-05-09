@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bifrost.io": "^0.2.0",
+    "bifrost.io": "^0.2.1",
     "codeceptjs": "^1.1.8",
     "webdriverio": "^4.12.0"
   }

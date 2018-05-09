@@ -67,12 +67,20 @@ class MyHelper extends Helper {
   }
 
   async _after(test) {
+    if (!testCtx) {
+      console.log('WARN Expected a test context in order to commit the report data')
+      return
+    }
     testCtx.commit()
     testCtx = undefined
 }
 
   async _beforeStep(step) {
-    // console.log(step.name, step.args.join(','))
+    if (!testCtx) {
+      console.log('WARN Expected a test context in order to make a screenshot')
+      return
+    }
+    commandCtx = testCtx.createCommandContext(step.name, step.args)
   }
 
   async _afterStep(step) {
@@ -80,9 +88,10 @@ class MyHelper extends Helper {
       console.log('WARN Expected a test context in order to make a screenshot')
       return
     }
+    if (!commandCtx) {
+      throw new Error('WARN Expected a test context in order to make a screenshot')
+    }
     const browser = this._getBrowser()
-
-    commandCtx = testCtx.createCommandContext(step.name, step.args)
 
     // Highlight element
     const sel = commandCtx.getSelector()

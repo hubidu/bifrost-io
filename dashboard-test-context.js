@@ -169,7 +169,7 @@ class DashboardTestContext {
     }
 
     createCommandContext(stepName, stepArgs) {
-        const cmd = new DashboardCommandContext(this, stepName, stepArgs)
+        const cmd = new DashboardCommandContext(this, stepName, stepArgs.map(arg => arg.toString()))
         this.commands.push(cmd)
         return cmd
     }

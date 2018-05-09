@@ -71,8 +71,8 @@ module.exports = function (sel, isError, txt) {
             txtContainer.style['pointer-events'] = 'none'; // be able to click through this element
             txtContainer.style.opacity = 0.8;
 
-            txtContainer.style.width = '150px'
-            txtContainer.style.height = '80px'
+            txtContainer.style.width = '250px'
+            txtContainer.style.height = '40px'
             txtContainer.style.top = (rect.top + window.scrollY - 50) + 'px'
             txtContainer.style.left = (rect.left + window.scrollX) + 'px'
                         

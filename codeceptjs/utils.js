@@ -48,6 +48,8 @@ const mapStepToSource = step => {
   const sourceFileName = step.line().match(/\(([^)]*):[0-9]+:[0-9]+\)/)[1]
   const sourceLine = step.line().match(/:([0-9]+):/)[1]
 
+  console.log('MAPPING', step)
+
   return {
     name: step.name,
     sourceFile: sourceFileName,
