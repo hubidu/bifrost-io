@@ -45,16 +45,23 @@ const getErrorScreenshotFileName = (test, uniqueScreenshotNames) => {
  * Create a mapping between step and location in source file
  */
 const mapStepToSource = step => {
-  const sourceFileName = step.line().match(/\(([^)]*):[0-9]+:[0-9]+\)/)[1]
-  const sourceLine = step.line().match(/:([0-9]+):/)[1]
-
-  console.log('MAPPING', step)
-
-  return {
-    name: step.name,
-    sourceFile: sourceFileName,
-    sourceLine: Number(sourceLine)
+  const mapSingleStackLine = (stepName, stepLine) => {
+    const sourceFileName = stepLine.match(/\(([^)]*):[0-9]+:[0-9]+\)/)[1]
+    const sourceLine = stepLine.match(/:([0-9]+):/)[1]
+  
+    return {
+      name: stepName,
+      sourceFile: sourceFileName,
+      sourceLine: Number(sourceLine)
+    }  
   }
+
+  const stackLines = step.stack.split('\n').splice(3)
+  const indexOfTestStackLine = stackLines.findIndex(l => l.indexOf('Test.Scenario') > -1)
+  const stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
+
+  return stacklinesUpToTestFile
+    .map(stackLine => mapSingleStackLine(step.name, stackLine))
 }
 
 /**

@@ -15,11 +15,17 @@
 - DONE Fix TypeError: Cannot read property 'addExistingScreenshot' of undefined
 - DONE Fix: Why do I see waitFor... as screenshot commands?
 - DONE Add formatted step.name and args to report app (and report model)
+- DONE Externalize config
+- DONE Include page object source snippet
+- CHECK Fix: Incorrect source line location in stack trace
 - Implement support for xpath selectors
-- Fix: Incorrect source line location in stack trace
+- Add correct stack trace for this.clickLink()
 - HOw can I add the result of a rest api call?
+- Better parser for codeceptjs assertion errors
+- Parse standard assertion errors
 - Supply test source code to dashboard server
 - Extract tags from test title
+- HIde sensitive data in test source, steps and step.args
 - Add more error details (actual/expected)
 - Improve error messages
 - Make html snapshot

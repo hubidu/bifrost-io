@@ -3,8 +3,10 @@ const fs = require('fs')
 const rp = require('request-promise')
 const debug = require('debug')('dashboard-client')
 
-const HOST = process.env.DASHBOARD_HOST
-const PORT = process.env.DASHBOARD_PORT || 8003
+const config = require('./config')
+
+const HOST = process.env.DASHBOARD_HOST || config.dashboardHost
+const PORT = process.env.DASHBOARD_PORT || config.dashboardPort || 8003
 
 const UPLOAD_URL = `http://${HOST}:${PORT}/upload`;
 const GETDASHBOARD_URL = `http://${HOST}:${PORT}/dashboard-url`;

@@ -68,7 +68,7 @@ class MyHelper extends Helper {
 
   async _after(test) {
     if (!testCtx) {
-      console.log('WARN Expected a test context in order to commit the report data')
+      // console.log('WARN Expected a test context in order to commit the report data')
       return
     }
     testCtx.commit()
@@ -77,19 +77,23 @@ class MyHelper extends Helper {
 
   async _beforeStep(step) {
     if (!testCtx) {
-      console.log('WARN Expected a test context in order to make a screenshot')
+      // console.log('WARN Expected a test context in order to make a screenshot')
       return
     }
+
+    /* NOTE Command context must be created here, since afterStep might be skipped
+     * in case the test fails
+     */
     commandCtx = testCtx.createCommandContext(step.name, step.args)
   }
 
   async _afterStep(step) {
     if (!testCtx) {
-      console.log('WARN Expected a test context in order to make a screenshot')
+      // console.log('WARN Expected a test context in order to make a screenshot')
       return
     }
     if (!commandCtx) {
-      throw new Error('WARN Expected a test context in order to make a screenshot')
+      throw new Error('WARN Expected a command context in order to make a screenshot')
     }
     const browser = this._getBrowser()
 
@@ -118,15 +122,15 @@ class MyHelper extends Helper {
 
   async _passed(test) {
     if (!testCtx) {
-      console.log('WARN Expected a test context in order to make a screenshot')
+      // console.log('WARN Expected a test context in order to make a screenshot')
       return
     }
 
     const browser = this._getBrowser()
 
-    const stepsToSource = test.steps.map(mapStepToSource)
+    const stepsToSourceSnipptes = test.steps.map(mapStepToSource)
     testCtx.commands.forEach((cmd,i ) => {
-      cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
+      cmd.addSourceSnippets(stepsToSourceSnipptes[i])
     })
 
     const {value: userAgent} = await browser.execute(getUserAgent)
@@ -139,7 +143,7 @@ class MyHelper extends Helper {
 
   async _failed(test) {  
     if (!testCtx) {
-      console.log('WARN Expected a test context in order to make a screenshot')
+      // console.log('WARN Expected a test context in order to make a screenshot')
       return
     }
 
@@ -154,9 +158,9 @@ class MyHelper extends Helper {
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
-    const stepsToSource = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
+    const stepsToSourceSnipptes = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
     testCtx.commands.forEach((cmd,i ) => {
-      cmd.addSourceSnippet(stepsToSource[i].sourceFile, stepsToSource[i].sourceLine)
+      cmd.addSourceSnippets(stepsToSourceSnipptes[i])
     })
 
     testCtx.markFailed(toError(test.err))

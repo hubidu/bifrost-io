@@ -2,11 +2,10 @@ const assert = require('assert')
 
 module.exports = (ctx) => {
     assert(ctx, 'Please provide a text context')
-    if (!process.env.OWNER_KEY) throw new Error('Please provide an owner key in process.env.OWNER_KEY')
 
     return {
-        ownerKey: process.env.OWNER_KEY,
-        project: process.env.TEST_PROJECT || 'Unknown test project',
+        ownerKey: ctx.OWNER_KEY,
+        project: ctx.TEST_PROJECT || 'Unknown test project',
         runid: ctx.runid,
         type: 'test', // Dont remember what this is for
         result: ctx.result,

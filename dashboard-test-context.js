@@ -5,6 +5,7 @@ const uuidv1 = require('uuid/v1')
 const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
+const config = require('./config')
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
 const zipDirectory = require('./zip-directory')
@@ -63,6 +64,9 @@ class DashboardCommandContext {
             } else if (this.args.length === 2) {
                 return this.args[1]
             }
+        } else {
+            // TODO Should be configurable with autoscreenshotPrefixes (see shouldTakeScreenshot)
+            return this.args[0]
         }
     }
 
@@ -70,7 +74,11 @@ class DashboardCommandContext {
      * Decide before which commands a screenshot should be taken
      */
     shouldTakeScreenshot() {
-        return this.name.indexOf('click') >= 0 || this.name.indexOf('amOnPage') >= 0 || this.name.indexOf('see') >= 0
+        const isCustomPrefix = (prefixes = []) => prefixes.find(prefix => this.name.indexOf(prefix) >= 0)
+        return this.name.indexOf('click') >= 0 || 
+            this.name.indexOf('amOnPage') >= 0 || 
+            this.name.indexOf('see') >= 0 || 
+            isCustomPrefix(config.autoscreenshotMethodPrefixes)
     }
 
     /**
@@ -100,14 +108,16 @@ class DashboardCommandContext {
     /**
      * Associate a source code snippet with the command
      */
-    addSourceSnippet(sourceFile, sourceLine) {
-        this.codeStack.push({
-            location: {
-                line: sourceLine,
-                file: sourceFile
-            },
-            source: codeExcerpt(fileToString(sourceFile), sourceLine),
-        })
+    addSourceSnippets(sourceSnippets) {
+        this.codeStack = sourceSnippets.map(({sourceLine, sourceFile}) => {
+            return {
+                location: {
+                    line: sourceLine,
+                    file: sourceFile
+                },
+                source: codeExcerpt(fileToString(sourceFile), sourceLine),
+            }
+        }).reverse()
     }
 
     addPageInfo(pageInfo) {
@@ -137,9 +147,9 @@ class DashboardCommandContext {
 class DashboardTestContext {
     constructor(runid, suiteTitle, testTitle) {
         assert(runid, 'Expected an runid (id which identifies this test run)')
-        this.OWNER_KEY = process.env.OWNER_KEY
+        this.OWNER_KEY = config.ownerkey
         assert(this.OWNER_KEY, 'Expected an access OWNER_KEY for the dashboard service (process.env.OWNER_KEY)')
-        this.TEST_PROJECT = process.env.TEST_PROJECT
+        this.TEST_PROJECT = config.project
         assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.TEST_PROJECT)')
 
         suiteTitle = cleanTitle(suiteTitle)
