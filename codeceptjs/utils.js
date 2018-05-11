@@ -58,7 +58,12 @@ const mapStepToSource = step => {
 
   const stackLines = step.stack.split('\n').splice(3)
   const indexOfTestStackLine = stackLines.findIndex(l => l.indexOf('Test.Scenario') > -1)
-  const stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
+  let stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
+
+  if (stacklinesUpToTestFile.length === 0) {
+    console.log(`INFO Could not find the test file in command stack trace of '${step.name} ${step.args.join(',')}'. This can happen with codeceptjs.`)
+    stacklinesUpToTestFile = [step.stack.split('\n')[3]]
+  }
 
   return stacklinesUpToTestFile
     .map(stackLine => mapSingleStackLine(step.name, stackLine))

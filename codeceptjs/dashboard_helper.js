@@ -137,13 +137,13 @@ class MyHelper extends Helper {
 
     const browser = this._getBrowser()
 
+    assert(test.steps.length === testCtx.commands.length)
     const stepsToSourceSnippets = test.steps.map(mapStepToSource)
     testCtx.commands.forEach((cmd,i ) => {
       cmd.addSourceSnippets(stepsToSourceSnippets[i])
     })
 
-    // const {value: userAgent} = await browser.execute(getUserAgent)
-    // const viewportSize = await browser.getViewportSize()
+    // Add device info
     const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
@@ -159,7 +159,7 @@ class MyHelper extends Helper {
 
     const browser = this._getBrowser()
 
-    // Add url and title
+    // Need to add url and title for the failed command
     const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
     commandCtx.addPageInfo({
       url,
@@ -167,13 +167,17 @@ class MyHelper extends Helper {
     })
 
     const codeceptjsErrorScreenshot = getCodeceptjsErrorScreenshotPath(test, this.options.uniqueScreenshotNames)
-
-    commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err)) 
+    try {
+      commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
+    } catch (err) {
+      console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`, err)
+    }
 
     const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
+    assert(test.steps.length === testCtx.commands.length)
     const stepsToSourceSnippets = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
     testCtx.commands.forEach((cmd,i ) => {
       cmd.addSourceSnippets(stepsToSourceSnippets[i])

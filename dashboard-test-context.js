@@ -140,7 +140,8 @@ class DashboardCommandContext {
      * Create a filename (e. g. to save a screenshot) for the current step
      */
     getFileName(ext = '.png') {
-        return makeFileName(`${this.stepNo} - I.${this.name}(${this.args.join(',')}).png`)
+        const stepName = `${this.name}(${this.args.join(',')})`.slice(0, 20) // limit to max chars
+        return makeFileName(`${this.stepNo} - I.${stepName}.png`)
     }
     
 }
