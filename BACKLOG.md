@@ -17,7 +17,8 @@
 - DONE Add formatted step.name and args to report app (and report model)
 - DONE Externalize config
 - DONE Include page object source snippet
-- CHECK Fix: Incorrect source line location in stack trace
+- DONE CHECK Fix: Incorrect source line location in stack trace
+- There are still cases where stack traces seem weird (e. g. When I am not a civil servant Then I dont see special details @tariffDetails)
 - Implement support for xpath selectors
 - Add correct stack trace for this.clickLink()
 - HOw can I add the result of a rest api call?
