@@ -1,5 +1,11 @@
 const assert = require('assert')
 
+const toString = v => {
+    if (typeof v === 'object') return JSON.stringify(v)
+    return v.toString()
+}
+  
+
 module.exports = (ctx) => {
     assert(ctx, 'Please provide a text context')
 
@@ -23,7 +29,7 @@ module.exports = (ctx) => {
             return Object.assign({}, cmd.screenshot, {
                 cmd: {
                     name: cmd.name,
-                    args: cmd.args
+                    args: cmd.args.map(toString)
                 },
                 page: cmd.pageInfo,
                 codeStack: cmd.codeStack

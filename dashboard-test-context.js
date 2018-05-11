@@ -66,7 +66,8 @@ class DashboardCommandContext {
             }
         } else {
             // TODO Should be configurable with autoscreenshotPrefixes (see shouldTakeScreenshot)
-            return this.args[0]
+            // TODO Implement a better selector detection
+            return undefined
         }
     }
 

@@ -87,6 +87,9 @@ class MyHelper extends Helper {
     commandCtx = testCtx.createCommandContext(step.name, step.args)
   }
 
+  /**
+   * NOTE _afterStep() will be skipped when the step fails
+   */
   async _afterStep(step) {
     if (!testCtx) {
       // console.log('WARN Expected a test context in order to make a screenshot')
@@ -99,7 +102,11 @@ class MyHelper extends Helper {
 
     // Highlight element
     const sel = commandCtx.getSelector()
-    if (sel) await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)
+    try {
+      if (sel) await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+    } catch (err) {
+      console.log(`WARNING Failed to highlight element ${sel}`, err)
+    }
 
     if (commandCtx.shouldTakeScreenshot()) {
       const screenshotFileName = commandCtx.getFileName()
@@ -110,9 +117,11 @@ class MyHelper extends Helper {
 
     if (sel) await browser.execute(dehighlightElement)
 
+    // Add url and title
+    const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
     commandCtx.addPageInfo({
-      url: await browser.getUrl(),
-      title: await browser.getTitle()
+      url,
+      title
     })
   }
 
@@ -128,13 +137,14 @@ class MyHelper extends Helper {
 
     const browser = this._getBrowser()
 
-    const stepsToSourceSnipptes = test.steps.map(mapStepToSource)
+    const stepsToSourceSnippets = test.steps.map(mapStepToSource)
     testCtx.commands.forEach((cmd,i ) => {
-      cmd.addSourceSnippets(stepsToSourceSnipptes[i])
+      cmd.addSourceSnippets(stepsToSourceSnippets[i])
     })
 
-    const {value: userAgent} = await browser.execute(getUserAgent)
-    const viewportSize = await browser.getViewportSize()
+    // const {value: userAgent} = await browser.execute(getUserAgent)
+    // const viewportSize = await browser.getViewportSize()
+    const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
@@ -149,18 +159,24 @@ class MyHelper extends Helper {
 
     const browser = this._getBrowser()
 
+    // Add url and title
+    const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
+    commandCtx.addPageInfo({
+      url,
+      title
+    })
+
     const codeceptjsErrorScreenshot = getCodeceptjsErrorScreenshotPath(test, this.options.uniqueScreenshotNames)
 
     commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err)) 
 
-    const {value: userAgent} = await browser.execute(getUserAgent)
-    const viewportSize = await browser.getViewportSize()
+    const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
-    const stepsToSourceSnipptes = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
+    const stepsToSourceSnippets = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
     testCtx.commands.forEach((cmd,i ) => {
-      cmd.addSourceSnippets(stepsToSourceSnipptes[i])
+      cmd.addSourceSnippets(stepsToSourceSnippets[i])
     })
 
     testCtx.markFailed(toError(test.err))
