@@ -117,6 +117,9 @@ class MyHelper extends Helper {
 
     if (sel) await browser.execute(dehighlightElement)
 
+    // Convert stack to source snippets and add to command context
+    commandCtx.addSourceSnippets(mapStepToSource(step))
+
     // Add url and title
     const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
     commandCtx.addPageInfo({
@@ -136,12 +139,6 @@ class MyHelper extends Helper {
     }
 
     const browser = this._getBrowser()
-
-    assert.equal(test.steps.length, testCtx.commands.length, 'Expected number of steps to equal number of commands')
-    const stepsToSourceSnippets = test.steps.map(mapStepToSource)
-    testCtx.commands.forEach((cmd,i ) => {
-      cmd.addSourceSnippets(stepsToSourceSnippets[i])
-    })
 
     // Add device info
     const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
@@ -177,11 +174,12 @@ class MyHelper extends Helper {
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
-    assert(test.steps.length === testCtx.commands.length)
-    const stepsToSourceSnippets = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
-    testCtx.commands.forEach((cmd,i ) => {
-      cmd.addSourceSnippets(stepsToSourceSnippets[i])
-    })
+    // assert(test.steps.length === testCtx.commands.length)
+    // const stepsToSourceSnippets = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
+    // testCtx.commands.forEach((cmd,i ) => {
+    //   cmd.addSourceSnippets(stepsToSourceSnippets[i])
+    // })
+    // Need to up
 
     testCtx.markFailed(toError(test.err))
   }

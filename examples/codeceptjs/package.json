@@ -4,7 +4,7 @@
   "description": "Codeceptjs example project with awesome reporting",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env OWNER_KEY=y9b8hFbiv3 TEST_PROJECT=codeceptjs-demo codeceptjs run"
+    "test": "codeceptjs run"
   },
   "author": "",
   "license": "ISC",

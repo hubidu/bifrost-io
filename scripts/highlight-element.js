@@ -18,10 +18,10 @@ module.exports = function (sel, isError, txt) {
             return document.querySelectorAll(sel)
         } else if (isXPath(cssOrXPath)) {
             // TODO Implement this
-            // return document.evaluate(cssOrXPath, document, null, XPathResult.ANY_TYPE, null )  
-            return undefined
+            return [document.evaluate(cssOrXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue]
+            // return undefined
         } else {
-            return undefined
+            return document.getElementsByTagName(sel)
         }
     }
 
@@ -47,7 +47,7 @@ module.exports = function (sel, isError, txt) {
         newOutline.style['padding'] = '1px';
         newOutline.style['z-index'] = '1000';
         newOutline.style['pointer-events'] = 'none'; // be able to click through this element
-        newOutline.style.opacity = 0.5;
+        newOutline.style.opacity = 0.2;
         newOutline.style['background-color'] = highlightColor
     
         newOutline.style.width = rect.width + 'px'
@@ -65,6 +65,7 @@ module.exports = function (sel, isError, txt) {
             txtContainer.style['color'] = 'white'
             txtContainer.style['background-color'] = highlightColor
             txtContainer.style['font-size'] = '10px';
+            txtContainer.style['font-weight'] = 'bold';
             txtContainer.style['z-index'] = '1000';
             txtContainer.style['pointer-events'] = 'none'; // be able to click through this element
             txtContainer.style.opacity = 0.8;
