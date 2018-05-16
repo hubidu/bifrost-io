@@ -174,6 +174,9 @@ class MyHelper extends Helper {
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
+    assert(test.steps.length > 0)
+    const failedStep = test.steps[0]
+    testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))
     // assert(test.steps.length === testCtx.commands.length)
     // const stepsToSourceSnippets = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
     // testCtx.commands.forEach((cmd,i ) => {
