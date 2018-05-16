@@ -13,6 +13,10 @@ const zipDirectory = require('./zip-directory')
 const OUTPUT_BASE = './__out'
 const REPORT_FILENAME = 'report.json'
 
+const toString = val => {
+    if (!val) return val
+    return val.toString()
+}
 const makeFileName = str => str.replace(/[^0-9a-zA-Z\- \.\(\),]/g, '')
 const fileToString = fileName => fs.readFileSync(fileName).toString()
 const toSeconds = num => num / 1000;
@@ -40,8 +44,8 @@ class DashboardCommandContext {
             success: err !== undefined ? false : true,
             message: err && err.toString(),
             orgStack: err && err.stack,
-            actual: err && err.actual,
-            expected: err && err.expected,
+            actual: err && toString(err.actual),
+            expected: err && toString(err.expected),
             screenshot: screenshotFileName,
         }
     }

@@ -32,7 +32,7 @@ module.exports = (ctx) => {
                     args: cmd.args.map(toString)
                 },
                 page: cmd.pageInfo,
-                codeStack: cmd.codeStack
+                codeStack: cmd.codeStack.reverse() // code snippet of command is first
             })
         }).filter(cmd => !!cmd.screenshot).reverse(),
         deviceSettings: ctx.deviceSettings, // TODO map this

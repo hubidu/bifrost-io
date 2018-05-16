@@ -137,7 +137,7 @@ class MyHelper extends Helper {
 
     const browser = this._getBrowser()
 
-    assert(test.steps.length === testCtx.commands.length)
+    assert.equal(test.steps.length, testCtx.commands.length, 'Expected number of steps to equal number of commands')
     const stepsToSourceSnippets = test.steps.map(mapStepToSource)
     testCtx.commands.forEach((cmd,i ) => {
       cmd.addSourceSnippets(stepsToSourceSnippets[i])

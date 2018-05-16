@@ -18,6 +18,8 @@
 - DONE Externalize config
 - DONE Include page object source snippet
 - DONE CHECK Fix: Incorrect source line location in stack trace
+- Check this test: \When_I_go_through_the_wizard_Then_I_always_see_the_wireframe_@wireframe_@smoke_@release
+- Check this test for stacktraces: When I go through the wizard Then I always see the wireframe @wireframe @smoke @release
 - There are still cases where stack traces seem weird (e. g. When I am not a civil servant Then I dont see special details @tariffDetails)
 - Implement support for xpath selectors
 - Add correct stack trace for this.clickLink()
