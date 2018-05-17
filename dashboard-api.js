@@ -1,7 +1,7 @@
 const assert = require('assert')
 const fs = require('fs')
 const rp = require('request-promise')
-const debug = require('debug')('dashboard-client')
+const debug = require('debug')('bifrost-io:dashboard-api')
 
 const config = require('./config')
 

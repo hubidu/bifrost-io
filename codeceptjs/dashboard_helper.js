@@ -1,4 +1,5 @@
 const assert = require('assert')
+const debug = require('debug')('bifrost-io:codeceptjs-helper')
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
@@ -102,10 +103,13 @@ class MyHelper extends Helper {
 
     // Highlight element
     const sel = commandCtx.getSelector()
-    try {
-      if (sel) await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
-    } catch (err) {
-      console.log(`WARNING Failed to highlight element ${sel}`, err)
+    if (commandCtx.shouldHighlight()) {
+      try {
+        debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
+        if (sel) await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+      } catch (err) {
+        console.log(`WARNING Failed to highlight element ${sel}`, err)
+      }  
     }
 
     if (commandCtx.shouldTakeScreenshot()) {
@@ -115,13 +119,11 @@ class MyHelper extends Helper {
       commandCtx.addScreenshot(screenshotFileName) 
     }
 
-    if (sel) await browser.execute(dehighlightElement)
-
     // Convert stack to source snippets and add to command context
     commandCtx.addSourceSnippets(mapStepToSource(step))
 
     // Add url and title
-    const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
+    const [url, title, _] = await Promise.all([ browser.getUrl(), browser.getTitle(), browser.execute(dehighlightElement)])
     commandCtx.addPageInfo({
       url,
       title
@@ -177,12 +179,6 @@ class MyHelper extends Helper {
     assert(test.steps.length > 0)
     const failedStep = test.steps[0]
     testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))
-    // assert(test.steps.length === testCtx.commands.length)
-    // const stepsToSourceSnippets = test.steps.map(mapStepToSource).reverse() // IMPORTANT codeceptjs reverses the steps if the test case fails (last step is now the first in list)
-    // testCtx.commands.forEach((cmd,i ) => {
-    //   cmd.addSourceSnippets(stepsToSourceSnippets[i])
-    // })
-    // Need to up
 
     testCtx.markFailed(toError(test.err))
   }

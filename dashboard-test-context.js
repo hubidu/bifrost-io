@@ -62,6 +62,8 @@ class DashboardCommandContext {
             }
         } else if (this.name.indexOf('fillField') === 0) {
             return this.args[0]
+        } else if (this.name === 'seeNumberOfVisibleElements') {
+            return this.args[0]
         } else if (this.name.indexOf('see') === 0) {
             if (this.args.length === 1) {
                 return this.args[0]
@@ -84,6 +86,14 @@ class DashboardCommandContext {
             this.name.indexOf('amOnPage') >= 0 || 
             this.name.indexOf('see') >= 0 || 
             isCustomPrefix(config.autoscreenshotMethodPrefixes)
+    }
+
+    /**
+     * Decide on which commands to do element highlighting on the web page
+     */
+    shouldHighlight() {
+        return this.name.indexOf('click') >= 0 || 
+            this.name.indexOf('see') >= 0
     }
 
     /**
