@@ -62,9 +62,7 @@ class DashboardCommandContext {
             }
         } else if (this.name.indexOf('fillField') === 0) {
             return this.args[0]
-        } else if (this.name === 'seeNumberOfVisibleElements') {
-            return this.args[0]
-        } else if (this.name === 'seeInField') {
+        } else if (this.name === 'seeNumberOfVisibleElements' || this.name === 'seeElementInDOM' || this.name === 'seeInField') {
             return this.args[0]
         } else if (this.name.indexOf('see') === 0) {
             if (this.args.length === 1) {

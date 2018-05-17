@@ -8,7 +8,12 @@
       "keepBrowserState": false,
       "keepCookies": false,
       "smartWait": 2000,
-      "waitForTimeout": 10000
+      "waitForTimeout": 10000,
+      "desiredCapabilities": {
+        "chromeOptions": {
+          "args": [ "--disable-gpu", "--window-size=800,1200" ]
+        }
+      }      
     },
     "BifrostHelper": {
       "require": "bifrost-io/codeceptjs/dashboard_helper.js"

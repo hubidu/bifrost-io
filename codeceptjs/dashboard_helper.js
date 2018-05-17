@@ -106,7 +106,9 @@ class MyHelper extends Helper {
     if (commandCtx.shouldHighlight()) {
       try {
         debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
-        if (sel) await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+        if (sel) {
+          await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+        }
       } catch (err) {
         console.log(`WARNING Failed to highlight element ${sel}`, err)
       }  

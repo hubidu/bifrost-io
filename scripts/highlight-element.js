@@ -9,10 +9,12 @@ module.exports = function (sel, isError, txt) {
     }
 
     function querySel(cssOrXPath) {
-        const isCss = (str) => ['.', '#', '[', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div'].some(el => str.indexOf(el) === 0)
+        const isCss = (str) => ['.', '#', '[', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'input', 'button', 'a '].some(el => str.indexOf(el) === 0)
         function isXPath(str) {
             return str.indexOf('//') === 0 || str.indexOf('text()') >= 0
         }
+
+        if (typeof cssOrXPath !== 'string') return
 
         if(isCss(cssOrXPath)) {
             return document.querySelectorAll(sel)
@@ -26,14 +28,13 @@ module.exports = function (sel, isError, txt) {
     }
 
     var elems = querySel(sel)
-    if (!elems) return
+    if (!elems) return `No element to highlight found with ${sel}`
 
     // Remove previous highlight
     var oldOutlines = document.querySelectorAll('.wdio-outline')
     for (oldOutline of oldOutlines) {
         oldOutline.remove()
     }
-
 
     for (el of elems) {
         var rect = el.getBoundingClientRect()
@@ -45,7 +46,7 @@ module.exports = function (sel, isError, txt) {
         newOutline.style['border-radius'] = '5px';
         newOutline.style.border = `2px solid ${highlightColor}`
         newOutline.style['padding'] = '1px';
-        newOutline.style['z-index'] = '1000';
+        newOutline.style['z-index'] = '10000';
         newOutline.style['pointer-events'] = 'none'; // be able to click through this element
         newOutline.style.opacity = 0.2;
         newOutline.style['background-color'] = highlightColor
@@ -66,7 +67,7 @@ module.exports = function (sel, isError, txt) {
             txtContainer.style['background-color'] = highlightColor
             txtContainer.style['font-size'] = '10px';
             txtContainer.style['font-weight'] = 'bold';
-            txtContainer.style['z-index'] = '1000';
+            txtContainer.style['z-index'] = '10000';
             txtContainer.style['pointer-events'] = 'none'; // be able to click through this element
             txtContainer.style.opacity = 0.8;
 
@@ -81,5 +82,5 @@ module.exports = function (sel, isError, txt) {
 
         document.querySelector('body').appendChild(newOutline)
     }
-    return true
+    return 'success'
 }
