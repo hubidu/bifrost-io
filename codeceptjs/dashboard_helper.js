@@ -117,17 +117,17 @@ class MyHelper extends Helper {
       await browser.saveScreenshot(screenshotFileName)
 
       commandCtx.addScreenshot(screenshotFileName) 
+
+      // Convert stack to source snippets and add to command context
+      commandCtx.addSourceSnippets(mapStepToSource(step))
+
+      // Add url and title
+      const [url, title, _] = await Promise.all([ browser.getUrl(), browser.getTitle(), browser.execute(dehighlightElement)])
+      commandCtx.addPageInfo({
+        url,
+        title
+      })
     }
-
-    // Convert stack to source snippets and add to command context
-    commandCtx.addSourceSnippets(mapStepToSource(step))
-
-    // Add url and title
-    const [url, title, _] = await Promise.all([ browser.getUrl(), browser.getTitle(), browser.execute(dehighlightElement)])
-    commandCtx.addPageInfo({
-      url,
-      title
-    })
   }
 
   _beforeSuite(suite) {}
