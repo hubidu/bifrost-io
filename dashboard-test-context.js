@@ -1,3 +1,4 @@
+const debug = require('debug')('bifrost-io:dashboard-test-context')
 const fs = require('fs')
 const path = require('path')
 const assert = require('assert')
@@ -42,10 +43,10 @@ class DashboardCommandContext {
         this.screenshot = {
             shotAt: Date.now(),
             success: err !== undefined ? false : true,
-            message: err && err.toString(),
-            orgStack: err && err.stack,
-            actual: err && toString(err.actual),
-            expected: err && toString(err.expected),
+            message: err ? err.toString() : undefined,
+            orgStack: err ? err.stack : undefined,
+            actual: err ? toString(err.actual) : undefined,
+            expected: err ? toString(err.expected) : undefined,
             screenshot: screenshotFileName,
         }
     }
@@ -81,11 +82,17 @@ class DashboardCommandContext {
      * Decide before which commands a screenshot should be taken
      */
     shouldTakeScreenshot() {
-        const isCustomPrefix = (prefixes = []) => prefixes.find(prefix => this.name.indexOf(prefix) >= 0)
-        return this.name.indexOf('click') >= 0 || 
+        const isCustomPrefix = (prefixes = []) => prefixes.find(prefix => this.name.indexOf(prefix) >= 0);
+        
+        const res = this.name.indexOf('click') >= 0 || 
             this.name.indexOf('amOnPage') >= 0 || 
             this.name.indexOf('see') >= 0 || 
-            isCustomPrefix(config.autoscreenshotMethodPrefixes)
+            this.name.indexOf('say') >= 0 || 
+            isCustomPrefix(config.autoscreenshotMethodPrefixes) !== undefined;
+      
+        if (res) debug(`Should take screenshot for ${this.name} = ${res}`)
+        
+        return res
     }
 
     /**
@@ -109,6 +116,8 @@ class DashboardCommandContext {
         const targetFile = moveToTestDirSync(screenshotFileName)
 
         this._createScreenshot(screenshotFileName, err)
+
+        debug(`Added ${err ? 'error' : 'success'} screenshot ${screenshotFileName}`)
         return this
     }
 
@@ -117,6 +126,8 @@ class DashboardCommandContext {
         fs.renameSync(screenshotPath, path.join(this.testContext.outputPath, targetFileName))    
 
         this._createScreenshot(targetFileName, err)
+
+        debug(`Added existing ${err ? 'error' : 'success'} screenshot ${screenshotPath}`)
         return this
     }
 
@@ -132,7 +143,7 @@ class DashboardCommandContext {
                 },
                 source: codeExcerpt(fileToString(sourceFile), sourceLine),
             }
-        }).reverse()
+        }).reverse() // code snippet of the command should be first in list
     }
 
     addPageInfo(pageInfo) {
@@ -147,7 +158,11 @@ class DashboardCommandContext {
         // TODO Do I need this?
         this.screenshot.success = false
         this.screenshot.message = err.message
+        this.actual = err ? toString(err.actual) : undefined,
+        this.expected = err ? toString(err.expected) : undefined,
         this.screenshot.orgStack = err.stack
+
+        debug(`${this.name}: Command failed ${err.message}`)
     }
 
     /**
@@ -219,6 +234,8 @@ class DashboardTestContext {
     markSuccessful() {
         this.result = 'success'
         this.duration = toSeconds(Date.now() - this.startedAt)
+
+        debug(`${this.title}: Test successful`)        
     }
 
     /**
@@ -232,6 +249,8 @@ class DashboardTestContext {
         assert(this.commands.length > 0, 'Expected commands to not be empty')
         const failedCommand = this.commands[this.commands.length - 1]
         failedCommand.markFailed(err)        
+
+        debug(`${this.title}: Test failed ${err.message}`)        
     }
 
     /**
@@ -245,6 +264,7 @@ class DashboardTestContext {
      * Send the report and data to the dashboard service
      */
     async commit() {       
+        debug(`${this.title}: Committing test results`)
         writeReport(this);
 
         if (isDashboardHostConfigured()) {

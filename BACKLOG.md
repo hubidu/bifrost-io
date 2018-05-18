@@ -18,21 +18,22 @@
 - DONE Externalize config
 - DONE Include page object source snippet
 - DONE CHECK Fix: Incorrect source line location in stack trace
-- Check this test: \When_I_go_through_the_wizard_Then_I_always_see_the_wireframe_@wireframe_@smoke_@release
-- Check this test for stacktraces: When I go through the wizard Then I always see the wireframe @wireframe @smoke @release
-- There are still cases where stack traces seem weird (e. g. When I am not a civil servant Then I dont see special details @tariffDetails)
-- Implement support for xpath selectors
-- Add correct stack trace for this.clickLink()
+- DONE There are still cases where stack traces seem weird (e. g. When I am not a civil servant Then I dont see special details @tariffDetails)
+- DONE Implement support for xpath selectors
+- DONE Add correct stack trace for this.clickLink()
+- DONE Parse standard assertion errors
+- DONE Make server report processing more robust
+- Retry holiday test
+- Add say to autoscreenshot methods
+- Incorporate screenshots generated with codeceptjs into report
+- Extract tags from test title
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors
-- Parse standard assertion errors
 - Supply test source code to dashboard server
-- Extract tags from test title
 - HIde sensitive data in test source, steps and step.args
 - Add more error details (actual/expected)
 - Improve error messages
 - Make html snapshot
-- Make server report processing more robust
 - Test with real project
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements

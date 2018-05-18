@@ -1,4 +1,7 @@
-Feature('Search holiday destinations')
+/**
+ * This is also a good example of a flaky test, so lets add a retry
+ */
+Feature('Search holiday destinations', { retry: 1 })
 
 const destinations = new DataTable(['destination', 'airport']);
 destinations.add(['Mallorca', 'München'])
@@ -26,5 +29,6 @@ async (I, current) => {
     I.waitInUrl('/suche')
     I.waitForText('Ergebnisse', '.js-hotel-headline')
     I.waitForInvisible('span.detached-loader')
+    I.waitForVisible('.hotel-list-offer-link')
     I.seeElement('.hotel-list-offer-link')
 })
