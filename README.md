@@ -64,7 +64,7 @@ Go here to see reports:
 
 Just click on the link and view your reports
 
-For a working codeceptjs example project please take a look at [codeceptjs](./examples/codeceptjs).
+For a working codeceptjs example project please take a look at the [codeceptjs demo project](./examples/codeceptjs).
 
 
 ## See in action
