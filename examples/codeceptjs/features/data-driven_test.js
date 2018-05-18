@@ -17,6 +17,9 @@ async (I, current) => {
     I.fillField('#airport-element', current.airport)
     I.pressKey('Enter')
     I.wait(1)
+
+    I.saveScreenshot('after-destination-airport.png')
+
     I.pressKey('Tab')
     I.pressKey('Tab')
     I.pressKey('Tab')

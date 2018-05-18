@@ -23,9 +23,9 @@
 - DONE Add correct stack trace for this.clickLink()
 - DONE Parse standard assertion errors
 - DONE Make server report processing more robust
-- Retry holiday test
-- Add say to autoscreenshot methods
-- Incorporate screenshots generated with codeceptjs into report
+- DONE Retry holiday test
+- DONE Incorporate screenshots generated with codeceptjs into report
+- Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Extract tags from test title
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors

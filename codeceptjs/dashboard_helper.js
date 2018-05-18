@@ -9,18 +9,19 @@ const {getUserAgent, dehighlightElement, highlightElement} = require('../scripts
 const getDeviceSettingsFromUA = require('../get-device-settings-from-ua')
 const DashboardClient = require('../index')
 
-const {writeStringToFileSync, stringify, getErrorScreenshotFileName, mapStepToSource} = require('./utils')
+const {writeStringToFileSync, stringify, getScreenshotFileName, mapStepToSource} = require('./utils')
 
 let Helper = codecept_helper;
 
 let testCtx, commandCtx
 
-const CODECEPTJS_OUTPUT = global.output_dir
 const dashboardClient = new DashboardClient()
 
-const getCodeceptjsErrorScreenshotPath = (test, useUniqueScreenshotNames, targetFileName) => {
-  const errorScreenshot = getErrorScreenshotFileName(test, useUniqueScreenshotNames)
-  return path.join(CODECEPTJS_OUTPUT, errorScreenshot)
+// TODO Should support unique screenshot filenames
+const getScreenshotPath = filename => path.join(global.output_dir, filename);
+const getCodeceptjsScreenshotPath = (test, useUniqueScreenshotNames, targetFileName, isError = true) => {
+  const errorScreenshot = getScreenshotFileName(test, useUniqueScreenshotNames, isError)
+  return path.join(global.output_dir, errorScreenshot)
 }
 
 const toError = err => {
@@ -37,8 +38,9 @@ const toError = err => {
 }
 
 const printToConsole = msg => console.log(info(msg))
+const isScreenshotStep = step => step.name === 'saveScreenshot'
 
-class MyHelper extends Helper {
+class BifrostIOHelper extends Helper {
   constructor(config) {
     super(config)
     // set defaults
@@ -114,11 +116,20 @@ class MyHelper extends Helper {
       }  
     }
 
-    if (commandCtx.shouldTakeScreenshot()) {
-      const screenshotFileName = commandCtx.getFileName()
-      await browser.saveScreenshot(screenshotFileName)
-
-      commandCtx.addScreenshot(screenshotFileName) 
+    if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
+      if (isScreenshotStep(step)) {
+        const codeceptjsScreenshot = getScreenshotPath(step.args[0])
+        try {
+          commandCtx.addExistingScreenshot(codeceptjsScreenshot)   
+        } catch (err) {
+          console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsScreenshot} to command context`, err)
+        }          
+      } else {
+        const screenshotFileName = commandCtx.getFileName()
+        await browser.saveScreenshot(screenshotFileName)
+  
+        commandCtx.addScreenshot(screenshotFileName) 
+      }
 
       // Convert stack to source snippets and add to command context
       commandCtx.addSourceSnippets(mapStepToSource(step))
@@ -167,7 +178,7 @@ class MyHelper extends Helper {
       title
     })
 
-    const codeceptjsErrorScreenshot = getCodeceptjsErrorScreenshotPath(test, this.options.uniqueScreenshotNames)
+    const codeceptjsErrorScreenshot = getCodeceptjsScreenshotPath(test, this.options.uniqueScreenshotNames)
     try {
       commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
     } catch (err) {
@@ -198,4 +209,4 @@ class MyHelper extends Helper {
 
 }
 
-module.exports = MyHelper;
+module.exports = BifrostIOHelper;

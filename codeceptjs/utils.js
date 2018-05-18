@@ -3,7 +3,7 @@ const fs = require('fs')
 /**
  * Determine the filename of codeceptjs error
  */
-const getErrorScreenshotFileName = (test, uniqueScreenshotNames) => {
+const getScreenshotFileName = (test, uniqueScreenshotNames, isError) => {
     const clearString = function (str) {
       /* Replace forbidden symbols in string
        */
@@ -35,7 +35,7 @@ const getErrorScreenshotFileName = (test, uniqueScreenshotNames) => {
       fileName = `${fileName.substring(0, 10)}_${uuid}`;
     }
     if (test._retries < 1 || test._retries === test.retryNum) {
-      fileName = `${fileName}.failed.png`;
+      fileName = `${fileName}${isError ? '.failed' : ''}.png`;
     }
   
     return fileName
@@ -103,7 +103,7 @@ const stringify = (o) => {
 const writeStringToFileSync = (filename, str) => fs.writeFileSync(filename, str)
 
 module.exports = {
-    getErrorScreenshotFileName,
+    getScreenshotFileName,
     mapStepToSource,
     stringify,
     writeStringToFileSync
