@@ -50,14 +50,21 @@ const getScreenshotFileName = (test, uniqueScreenshotNames, isError) => {
  */
 const mapStepToSource = step => {
   const mapSingleStackLine = (stepName, stepLine) => {
-    const sourceFileName = stepLine.match(/\(([^)]*):[0-9]+:[0-9]+\)/)[1]
-    const sourceLine = stepLine.match(/:([0-9]+):/)[1]
-  
-    return {
-      name: stepName,
-      sourceFile: sourceFileName,
-      sourceLine: Number(sourceLine)
-    }  
+    const m1 = stepLine.match(/\(([^)]*):[0-9]+:[0-9]+\)/)
+    const m2 = stepLine.match(/:([0-9]+):/)
+
+    if (m1 && m2) {
+      const sourceFileName = m1[1]
+      const sourceLine = m2[1]
+    
+      return {
+        name: stepName,
+        sourceFile: sourceFileName,
+        sourceLine: Number(sourceLine)
+      }    
+    }
+    console.log(`ERROR Unable to extract source code snippet from stacktrace line ${stepLine} at ${stepName}`)
+    return undefined
   }
 
   const stackLines = step.stack.split('\n').splice(3)
@@ -75,6 +82,7 @@ const mapStepToSource = step => {
 
   return stacklinesUpToTestFile
     .map(stackLine => mapSingleStackLine(step.name, stackLine))
+    .filter(l => !!l) // remove any unparseable stacklines
 }
 
 /**

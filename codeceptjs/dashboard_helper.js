@@ -164,40 +164,44 @@ class BifrostIOHelper extends Helper {
   }
 
   async _failed(test) {  
-    if (!testCtx) {
-      // console.log('WARN Expected a test context in order to make a screenshot')
-      return
-    }
-    if (!commandCtx) {
-      console.log('WARNING Expected to have a command context')
-      return
-    }
-
-    const browser = this._getBrowser()
-
-    // Need to add url and title for the failed command
-    const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
-    commandCtx.addPageInfo({
-      url,
-      title
-    })
-
-    const codeceptjsErrorScreenshot = getCodeceptjsScreenshotPath(test, this.options.uniqueScreenshotNames)
     try {
-      commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
+      if (!testCtx) {
+        // console.log('WARN Expected a test context in order to make a screenshot')
+        return
+      }
+      if (!commandCtx) {
+        console.log('WARNING Expected to have a command context')
+        return
+      }
+  
+      const browser = this._getBrowser()
+  
+      // Need to add url and title for the failed command
+      const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
+      commandCtx.addPageInfo({
+        url,
+        title
+      })
+  
+      const codeceptjsErrorScreenshot = getCodeceptjsScreenshotPath(test, this.options.uniqueScreenshotNames)
+      try {
+        commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
+      } catch (err) {
+        console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`, err)
+      }
+  
+      const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
+      const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
+      testCtx.addDeviceSettings(deviceSettings)
+  
+      assert(test.steps.length > 0)
+      const failedStep = test.steps[0]
+      testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))
+  
+      testCtx.markFailed(toError(test.err))  
     } catch (err) {
-      console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`, err)
+      console.log('ERROR in _failed(test) hook: ', err)
     }
-
-    const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
-    const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
-    testCtx.addDeviceSettings(deviceSettings)
-
-    assert(test.steps.length > 0)
-    const failedStep = test.steps[0]
-    testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))
-
-    testCtx.markFailed(toError(test.err))
   }
   
   async _finishTest(suite) {
