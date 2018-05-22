@@ -26,7 +26,10 @@
 - DONE Retry holiday test
 - DONE Incorporate screenshots generated with codeceptjs into report
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
+- Check UN stack traces
 - Extract tags from test title
+- Add some performance logs
+- Add browser console logs
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors
 - Supply test source code to dashboard server

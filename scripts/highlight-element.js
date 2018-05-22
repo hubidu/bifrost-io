@@ -28,7 +28,7 @@ module.exports = function (sel, isError, txt) {
     }
 
     var elems = querySel(sel)
-    if (!elems) return `No element to highlight found with ${sel}`
+    if (!elems || elems.length === 0) return `No element to highlight found with ${sel}`
 
     // Remove previous highlight
     var oldOutlines = document.querySelectorAll('.wdio-outline')
@@ -37,6 +37,7 @@ module.exports = function (sel, isError, txt) {
     }
 
     for (el of elems) {
+        if (!el) continue
         var rect = el.getBoundingClientRect()
 
         var newOutline = document.createElement('div')

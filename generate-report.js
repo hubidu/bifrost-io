@@ -34,7 +34,7 @@ module.exports = (ctx) => {
                 page: cmd.pageInfo,
                 codeStack: cmd.codeStack.reverse() // code snippet of command is first
             })
-        }).filter(cmd => !!cmd.screenshot).reverse(),
+        }).filter(cmd => cmd.screenshot !== undefined || cmd.success === true).reverse(), // Remove all commands without a screenshot (except if it failed)
         deviceSettings: ctx.deviceSettings, // TODO map this
 
         logs: [] // Browser logs

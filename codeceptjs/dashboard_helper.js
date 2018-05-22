@@ -19,7 +19,7 @@ const dashboardClient = new DashboardClient()
 
 // TODO Should support unique screenshot filenames
 const getScreenshotPath = filename => path.join(global.output_dir, filename);
-const getCodeceptjsScreenshotPath = (test, useUniqueScreenshotNames, targetFileName, isError = true) => {
+const getCodeceptjsScreenshotPath = (test, useUniqueScreenshotNames, isError = true) => {
   const errorScreenshot = getScreenshotFileName(test, useUniqueScreenshotNames, isError)
   return path.join(global.output_dir, errorScreenshot)
 }
@@ -166,6 +166,10 @@ class BifrostIOHelper extends Helper {
   async _failed(test) {  
     if (!testCtx) {
       // console.log('WARN Expected a test context in order to make a screenshot')
+      return
+    }
+    if (!commandCtx) {
+      console.log('WARNING Expected to have a command context')
       return
     }
 

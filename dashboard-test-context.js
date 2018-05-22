@@ -24,6 +24,7 @@ const toSeconds = num => num / 1000;
 const writeReport = (testContext) => fs.writeFileSync(testContext.getReportFileName(), JSON.stringify(generateReport(testContext), null, 2))
 const rmFileSync = filename => fs.unlinkSync(filename) 
 const cleanTitle = str => str.replace(/\r?\n|\r/, ' ').replace(/\s+/g,' ').trim()
+const getErrorMessage = err => err.inspect ? err.inspect() : err.message;
 
 /**
  * Collect data for a single test command
@@ -43,11 +44,11 @@ class DashboardCommandContext {
         this.screenshot = {
             shotAt: Date.now(),
             success: err !== undefined ? false : true,
-            message: err ? err.toString() : undefined,
+            message: err ? getErrorMessage(err) : undefined,
             orgStack: err ? err.stack : undefined,
             actual: err ? toString(err.actual) : undefined,
             expected: err ? toString(err.expected) : undefined,
-            screenshot: screenshotFileName,
+            screenshot: screenshotFileName || 'not_available',
         }
     }
 
@@ -153,14 +154,10 @@ class DashboardCommandContext {
 
     markFailed(err) {
         if (!err) throw new Error('Expected to get an error instance')
-        if (!this.screenshot) throw new Error('Expected to have a screenshot')
-
-        // TODO Do I need this?
-        this.screenshot.success = false
-        this.screenshot.message = err.message
-        this.actual = err ? toString(err.actual) : undefined,
-        this.expected = err ? toString(err.expected) : undefined,
-        this.screenshot.orgStack = err.stack
+        if (!this.screenshot) {
+            console.log(`WARNING Expected to have a screenshot record by now. Will create one now...`)
+            this._createScreenshot(undefined, err)
+        }
 
         debug(`${this.name}: Command failed ${err.message}`)
     }

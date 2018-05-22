@@ -19,7 +19,11 @@ const getScreenshotFileName = (test, uniqueScreenshotNames, isError) => {
         .replace(/\?/g, '.')
         .replace(/\*/g, '^');
     };
-  
+
+    /**
+     * NOTE This logic is basically replicated from lib/helper/WebDriverIO 
+     */
+
     let fileName;
     // Get proper name if we are fail on hook
     if (test.ctx.test.type === 'hook') {
