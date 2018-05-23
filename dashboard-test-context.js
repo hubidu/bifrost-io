@@ -15,7 +15,7 @@ const OUTPUT_BASE = './__out'
 const REPORT_FILENAME = 'report.json'
 
 const toString = val => {
-    if (!val) return val
+    if (val === undefined || val === null) return val
     return val.toString()
 }
 const makeFileName = str => str.replace(/[^0-9a-zA-Z\- \.\(\),]/g, '')
