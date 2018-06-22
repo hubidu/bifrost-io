@@ -30,10 +30,12 @@ const toError = err => {
     message = err.message = err.inspect();
   }
   return {
+    name: err.name,
     message,
     stack: err.stack,
     actual: err.actual,
-    expected: err.expected
+    expected: err.expected,
+    operator: err.operator
   }
 }
 
@@ -196,9 +198,15 @@ class BifrostIOHelper extends Helper {
       const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
       testCtx.addDeviceSettings(deviceSettings)
   
-      assert(test.steps.length > 0)
-      const failedStep = test.steps[0]
-      testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))
+      // assert(test.steps.length > 0, 'Expected test to have steps')
+      if (test.steps.length > 0) {
+        // Generally I expect tests to fail on steps
+        const failedStep = test.steps[0]
+        testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))  
+      } else {
+        // However they could also fail at other places, e. g. on an assert statement in the test
+        // In this case we just report the error
+      }
   
       testCtx.markFailed(toError(test.err))  
     } catch (err) {
