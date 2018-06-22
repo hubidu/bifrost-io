@@ -7,7 +7,6 @@ async (I) => {
     const toNumber = arr => arr.map(priceAsStr => Number(priceAsStr.replace(' €', '').replace(',', '.')))
 
     I.amOnPage('https://www.check24.de/handytarife')
-
     I.click('jetzt vergleichen', 'button')
 
     I.waitInUrl('/handytarife/vergleich')

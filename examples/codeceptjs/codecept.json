@@ -1,7 +1,7 @@
 {
   "output": "./__out",
-  "helpers": {
-    "WebDriverIO": {
+  "helpers": {   
+    "Puppeteer": {
       "url": "http://localhost",
       "browser": "chrome",
       "restart": true,
@@ -13,7 +13,10 @@
         "chromeOptions": {
           "args": [ "--disable-gpu", "--window-size=800,1200" ]
         }
-      }      
+      },
+      "chrome": {
+        "headless": false
+      }
     },
     "BifrostHelper": {
       "require": "bifrost-io/codeceptjs/dashboard_helper.js"

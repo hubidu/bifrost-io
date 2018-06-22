@@ -18,6 +18,7 @@ class CustomHelper extends Helper {
    */
   async clickVisible(locator, context = undefined) {
     const wdio = this.helpers['WebDriverIO']
+    assert(wdio, 'clickVisible() requires WebDriverIO')
     let browser = wdio.browser;
 
     const res = await wdio._locateClickable(locator)

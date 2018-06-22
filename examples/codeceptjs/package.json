@@ -11,6 +11,7 @@
   "dependencies": {
     "bifrost-io": "^0.3.8",
     "codeceptjs": "^1.2.1",
+    "puppeteer": "^1.5.0",
     "webdriverio": "^4.13.0"
   }
 }
