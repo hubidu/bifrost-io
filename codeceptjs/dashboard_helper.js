@@ -13,7 +13,7 @@ const {writeStringToFileSync, stringify, getScreenshotFileName, mapStepToSource}
 
 let Helper = codecept_helper;
 
-let testCtx, commandCtx
+let suiteTitle, testCtx, commandCtx
 
 const dashboardClient = new DashboardClient()
 
@@ -61,13 +61,38 @@ class BifrostIOHelper extends Helper {
 
   _init() {}
 
-  // before/after hooks
-  _before() {
+  /**
+   * Before/After Suite
+   */
+  _beforeSuite(suite) {
+    suiteTitle = suite.title
+  }
+
+  _afterSuite(suite) {
+    suiteTitle = undefined
+  }
+
+  /**
+   * Before/After Test
+   */
+  async _before() {
+    try {
+      testCtx = dashboardClient.createTestContext(suiteTitle, 'before', true)
+    } catch (err) {
+      console.log('ERROR in _before hook', err)
+    }
   }
 
   _test(test) {
+    // Skip if test context already exists (created by before)
+    if (testCtx) {
+      testCtx.updateTitles(test.parent.title, test.title)      
+      return
+    }
+
+    // TODO I think there is no chance anymore to actually get here
     try {
-      testCtx = dashboardClient.createTestContext(test.parent.title, test.title)
+      testCtx = dashboardClient.createTestContext(test.parent.title, test.title)      
     } catch (err) {
       console.log('ERROR in _test hook', err)
     }
@@ -84,7 +109,7 @@ class BifrostIOHelper extends Helper {
 
   async _beforeStep(step) {
     if (!testCtx) {
-      // console.log('WARN Expected a test context in order to make a screenshot')
+      // TODO Create test context on first step
       return
     }
 
@@ -147,16 +172,11 @@ class BifrostIOHelper extends Helper {
     }
   }
 
-  _beforeSuite(suite) {}
-
-  _afterSuite(suite) {}
-
   async _passed(test) {
     if (!testCtx) {
-      // console.log('WARN Expected a test context in order to make a screenshot')
       return
     }
-
+   
     const browser = this._getBrowser()
 
     // Add device info
@@ -167,7 +187,9 @@ class BifrostIOHelper extends Helper {
     testCtx.markSuccessful()
   }
 
-  async _failed(test) {  
+  async _failed(test) { 
+    const isBeforeHook = t => t.ctx && t.ctx._runnable && t.ctx._runnable.title.indexOf('before') >= 0
+
     try {
       if (!testCtx) {
         // console.log('WARN Expected a test context in order to make a screenshot')
@@ -177,7 +199,22 @@ class BifrostIOHelper extends Helper {
         console.log('WARNING Expected to have a command context')
         return
       }
-  
+
+      const codeceptjsErrorScreenshot = getCodeceptjsScreenshotPath(test, this.options.uniqueScreenshotNames)
+
+      /**
+       * In case the test fails in a before hook
+       * we have to tweak the test object
+       */
+      if (isBeforeHook(test)) {
+        testCtx.updateTitles(test.title, test.ctx.currentTest.title)
+        const failedHook = test.ctx._runnable
+        failedHook.err = test.err
+        test = failedHook
+      }
+
+      assert(test.err, 'Exepcted test to have an err property')
+      assert(test.steps, 'Expected test to have a steps property')
       const browser = this._getBrowser()
   
       // Need to add url and title for the failed command
@@ -187,7 +224,6 @@ class BifrostIOHelper extends Helper {
         title
       })
   
-      const codeceptjsErrorScreenshot = getCodeceptjsScreenshotPath(test, this.options.uniqueScreenshotNames)
       try {
         commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
       } catch (err) {
@@ -198,7 +234,6 @@ class BifrostIOHelper extends Helper {
       const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
       testCtx.addDeviceSettings(deviceSettings)
   
-      // assert(test.steps.length > 0, 'Expected test to have steps')
       if (test.steps.length > 0) {
         // Generally I expect tests to fail on steps
         const failedStep = test.steps[0]

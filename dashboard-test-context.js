@@ -206,6 +206,15 @@ class DashboardTestContext {
         this.outline = []
     }
 
+    updateTitles(suiteTitle, testTitle) {
+        suiteTitle = cleanTitle(suiteTitle)
+        testTitle = cleanTitle(testTitle)        
+        
+        this.prefix = `${this.TEST_PROJECT} -- ${suiteTitle}`
+        this.title = testTitle
+        this.fullTitle = `${this.prefix} -- ${testTitle}`
+    }
+
     createCommandContext(stepName, stepArgs) {
         const cmd = new DashboardCommandContext(this, stepName, stepArgs.map(arg => arg.toString()))
         this.commands.push(cmd)

@@ -26,11 +26,11 @@ const getScreenshotFileName = (test, uniqueScreenshotNames, isError) => {
 
     let fileName;
     // Get proper name if we are fail on hook
-    if (test.ctx.test.type === 'hook') {
-      const currentTest = { test: test.ctx.test };
+    if (test.ctx._runnable.type === 'hook') {
+      const currentTest = test.ctx._runnable;
       // ignore retries if we are in hook
       test._retries = -1;
-      fileName = clearString(`${test.title}_${currentTest.test.title}`);
+      fileName = clearString(`${test.title}_${currentTest.title}`);
     } else {
       fileName = clearString(test.title);
     }
