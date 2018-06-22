@@ -27,6 +27,7 @@
 - DONE Incorporate screenshots generated with codeceptjs into report
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Check UN stack traces
+- Support puppeteer in codeceptjs helper
 - Extract tags from test title
 - Add some performance logs
 - Add browser console logs

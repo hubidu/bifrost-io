@@ -5,7 +5,7 @@ const path = require('path')
 const chalk = require('chalk')
 const info = chalk.bold.green.underline
 
-const {getUserAgent, dehighlightElement, highlightElement} = require('../scripts')
+const {getViewportSize, getUserAgent, dehighlightElement, highlightElement} = require('../scripts')
 const getDeviceSettingsFromUA = require('../get-device-settings-from-ua')
 const DashboardClient = require('../index')
 
@@ -53,10 +53,25 @@ class BifrostIOHelper extends Helper {
     Object.assign(this.options, config);
   }
 
-  _getBrowser() {
-    const wdio = this.helpers['WebDriverIO']
-    assert(wdio, 'WebDriverIO helper not configured. Currently only WebDriverIO is supported.')
-    return wdio.browser
+  // _getBrowser() {
+  //   const wdio = this.helpers['WebDriverIO']
+  //   assert(wdio, 'WebDriverIO helper not configured. Currently only WebDriverIO is supported.')
+  //   return wdio.browser
+  // }
+
+  _getSaveScreenshot() {
+    const helper = this.helpers['WebDriverIO']
+    if (helper) return Object.assign({}, {
+      saveScreenshot: helper.browser.saveScreenshot
+    })
+    
+    return {
+      saveScreenshot: async (path) =>  this.helpers['Puppeteer'].page.screenshot({ path })
+    }
+  }
+
+  _getHelper() {
+    return this.helpers['WebDriverIO'] || this.helpers['Puppeteer']
   }
 
   _init() {}
@@ -123,14 +138,15 @@ class BifrostIOHelper extends Helper {
    * NOTE _afterStep() will be skipped when the step fails
    */
   async _afterStep(step) {
+    // Skip when no test context
     if (!testCtx) {
-      // console.log('WARN Expected a test context in order to make a screenshot')
       return
     }
     if (!commandCtx) {
       throw new Error('WARN Expected a command context in order to make a screenshot')
     }
-    const browser = this._getBrowser()
+    const s = this._getSaveScreenshot()
+    const helper = this._getHelper()
 
     // Highlight element
     const sel = commandCtx.getSelector()
@@ -138,7 +154,7 @@ class BifrostIOHelper extends Helper {
       try {
         debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
         if (sel) {
-          await browser.execute(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+          await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
         }
       } catch (err) {
         console.log(`WARNING Failed to highlight element ${sel}`, err)
@@ -155,7 +171,7 @@ class BifrostIOHelper extends Helper {
         }          
       } else {
         const screenshotFileName = commandCtx.getFileName()
-        await browser.saveScreenshot(screenshotFileName)
+        await s.saveScreenshot(screenshotFileName)
   
         commandCtx.addScreenshot(screenshotFileName) 
       }
@@ -164,7 +180,7 @@ class BifrostIOHelper extends Helper {
       commandCtx.addSourceSnippets(mapStepToSource(step))
 
       // Add url and title
-      const [url, title, _] = await Promise.all([ browser.getUrl(), browser.getTitle(), browser.execute(dehighlightElement)])
+      const [url, title, _] = await Promise.all([ helper.grabCurrentUrl(), helper.grabTitle(), helper.executeScript(dehighlightElement)])
       commandCtx.addPageInfo({
         url,
         title
@@ -177,10 +193,10 @@ class BifrostIOHelper extends Helper {
       return
     }
    
-    const browser = this._getBrowser()
+    const helper = this._getHelper()
 
     // Add device info
-    const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
+    const [userAgent, viewportSize] = await Promise.all([helper.executeScript(getUserAgent), helper.executeScript(getViewportSize)])
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
@@ -215,10 +231,12 @@ class BifrostIOHelper extends Helper {
 
       assert(test.err, 'Exepcted test to have an err property')
       assert(test.steps, 'Expected test to have a steps property')
-      const browser = this._getBrowser()
-  
+      // const browser = this._getBrowser()
+      const s = this._getSaveScreenshot()
+      const helper = this._getHelper()
+    
       // Need to add url and title for the failed command
-      const [url, title] = await Promise.all([ browser.getUrl(), browser.getTitle()])
+      const [url, title] = await Promise.all([ helper.grabCurrentUrl(), helper.grabTitle()])
       commandCtx.addPageInfo({
         url,
         title
@@ -233,12 +251,12 @@ class BifrostIOHelper extends Helper {
 
         // So let's just take our own screenshot
         const screenshotFileName = commandCtx.getFileName()
-        await browser.saveScreenshot(screenshotFileName)
+        await s.saveScreenshot(screenshotFileName)
   
         commandCtx.addScreenshot(screenshotFileName)         
       }
   
-      const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])
+      const [userAgent, viewportSize] = await Promise.all([helper.executeScript(getUserAgent), helper.executeScript(getViewportSize)])
       const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
       testCtx.addDeviceSettings(deviceSettings)
   
