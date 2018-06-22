@@ -52,7 +52,9 @@ class BifrostIOHelper extends Helper {
   }
 
   _getBrowser() {
-    return this.helpers['WebDriverIO'].browser
+    const wdio = this.helpers['WebDriverIO']
+    assert(wdio, 'WebDriverIO helper not configured. Currently only WebDriverIO is supported.')
+    return wdio.browser
   }
 
   _init() {}
