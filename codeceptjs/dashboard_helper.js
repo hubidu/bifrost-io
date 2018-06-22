@@ -228,6 +228,14 @@ class BifrostIOHelper extends Helper {
         commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
       } catch (err) {
         console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`, err)
+        // NOTE This can happen since codeceptjs may fail to produce an error screenshot
+        //   (e. g. in the case with large data tables)
+
+        // So let's just take our own screenshot
+        const screenshotFileName = commandCtx.getFileName()
+        await browser.saveScreenshot(screenshotFileName)
+  
+        commandCtx.addScreenshot(screenshotFileName)         
       }
   
       const [{value: userAgent}, viewportSize] = await Promise.all([browser.execute(getUserAgent), browser.getViewportSize()])

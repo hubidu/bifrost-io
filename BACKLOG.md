@@ -40,4 +40,4 @@
 - Test with real project
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements
-- Implement scenario outline
+- Create a scenario outline from I.say(...) statements in the test
