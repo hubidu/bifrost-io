@@ -1,10 +1,11 @@
 {
   "name": "bifrost-io",
-  "version": "0.3.9",
-  "description": "Client library for heimall (an e2e dashboard server)",
+  "version": "0.3.8",
+  "description": "Client library for heimdall (an e2e dashboard server)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified yet\" && exit 1"
+    "test": "echo \"Error: no test specified yet\" && exit 1",
+    "release": "release-it --github.release"
   },
   "author": {
     "name": "Stefan Huber",
@@ -22,5 +23,8 @@
     "shortid": "^2.2.8",
     "ua-parser-js": "^0.7.18",
     "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "release-it": "^7.4.7"
   }
 }
