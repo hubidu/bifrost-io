@@ -1,7 +1,7 @@
 {
   "output": "./__out",
   "helpers": {   
-    "Puppeteer": {
+    "WebDriverIO": {
       "url": "http://localhost",
       "browser": "chrome",
       "restart": true,
@@ -11,7 +11,7 @@
       "waitForTimeout": 10000,
       "desiredCapabilities": {
         "chromeOptions": {
-          "args": [ "--disable-gpu", "--window-size=800,1200" ]
+          "args": [ "--disable-gpu", "--window-size=1200,1200" ]
         }
       },
       "chrome": {
