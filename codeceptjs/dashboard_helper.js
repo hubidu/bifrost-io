@@ -245,7 +245,9 @@ class BifrostIOHelper extends Helper {
       try {
         commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
       } catch (err) {
-        console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`, err)
+        debug(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`, 
+          JSON.stringify(err, null, 2))
+        console.log(`WARNING Could not add existing error screenshot ${codeceptjsErrorScreenshot}`)
         // NOTE This can happen since codeceptjs may fail to produce an error screenshot
         //   (e. g. in the case with large data tables)
 

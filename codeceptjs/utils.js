@@ -68,7 +68,8 @@ const mapStepToSource = step => {
   }
 
   const stackLines = step.stack.split('\n').splice(3)
-  const indexOfTestStackLine = stackLines.findIndex(l => l.indexOf('Test.Scenario') > -1 || l.indexOf('Test.<anonymous>') >= 0)
+  const indexOfTestStackLine = 
+    stackLines.findIndex(l => l.indexOf('Test.Scenario') > -1 || l.indexOf('Test.<anonymous>') >= 0 || l.indexOf('Context.Before') >= 0)
   let stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
 
   if (stacklinesUpToTestFile.length === 0) {
