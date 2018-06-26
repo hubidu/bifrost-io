@@ -25,10 +25,12 @@
 - DONE Make server report processing more robust
 - DONE Retry holiday test
 - DONE Incorporate screenshots generated with codeceptjs into report
+- DONE Test with real project
+- Add environment info
+- Extract tags from test title
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Check UN stack traces
 - Support puppeteer in codeceptjs helper
-- Extract tags from test title
 - Add some performance logs
 - Add browser console logs
 - HOw can I add the result of a rest api call?
@@ -38,7 +40,6 @@
 - Add more error details (actual/expected)
 - Improve error messages
 - Make html snapshot
-- Test with real project
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements
 - Create a scenario outline from I.say(...) statements in the test

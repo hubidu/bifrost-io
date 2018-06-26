@@ -4,6 +4,7 @@ let Helper = codecept_helper;
 // use any assertion library you like
 const assert = require('assert')
 const ElementNotFound = require('codeceptjs/lib/helper/errors/ElementNotFound');
+// const Locator = require('codeceptjs/lib/helper/locator');
 
 
 function assertElementExists(res, locator, prefix, suffix) {
@@ -12,12 +13,7 @@ function assertElementExists(res, locator, prefix, suffix) {
     }
 }
   
-class CustomHelper extends Helper {
-  /**
-   * Click the first visible element matching the locator and context
-   */
-  async clickVisible(locator, context = undefined) {
-    const wdio = this.helpers['WebDriverIO']
+async function clickVisibleWDIO(wdio, locator, context) {
     assert(wdio, 'clickVisible() requires WebDriverIO')
     let browser = wdio.browser;
 
@@ -33,6 +29,22 @@ class CustomHelper extends Helper {
         assertElementExists(visibleClickableElement, locator, 'Clickable element');
     }
     return browser.elementIdClick(visibleClickableElement.ELEMENT)
+}
+
+async function clickVisiblePP(pp, locator, context) {
+
+}
+
+class CustomHelper extends Helper {
+  /**
+   * Click the first visible element matching the locator and context
+   */
+  async clickVisible(locator, context = undefined) {
+    const wdio = this.helpers['WebDriverIO']
+    const pp = this.helpers['Puppeteer']
+
+    if (wdio) return clickVisibleWDIO(wdio, locator, context)
+    if (pp) return clickVisiblePP(pp, locator, context)
   }
 }
 
