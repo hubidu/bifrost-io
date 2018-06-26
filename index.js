@@ -1,9 +1,9 @@
 const assert = require('assert')
 const shortid = require('shortid');
 
-const config = require('./config')
-const DashboardTestContext = require('./dashboard-test-context')
-const { getDashboardUrl } = require('./dashboard-api')
+const config = require('./src/config')
+const DashboardTestContext = require('./src/dashboard-test-context')
+const { getDashboardUrl } = require('./src/dashboard-api')
 
 class DashboardClient {
     constructor() {

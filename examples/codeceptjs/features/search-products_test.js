@@ -1,8 +1,8 @@
 const assert = require('assert')
 
-Feature('Search for Handytarife')
+Feature('Search for Handytarife @search')
 
-Scenario(`When I search for "Handytarife" without specifying any details Then I will get a list of various tariffs`, 
+Scenario(`When I search for "Handytarife" without specifying any details Then I will get a list of various tariffs @search_handy`, 
 async (I) => {
     const toNumber = arr => {
         if (!Array.isArray(arr)) arr = [arr]

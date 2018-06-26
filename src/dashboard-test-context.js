@@ -7,9 +7,9 @@ const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
 const config = require('./config')
+const {zipDirectory, extractTags} = require('./utils')
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
-const zipDirectory = require('./zip-directory')
 
 const OUTPUT_BASE = './__out'
 const REPORT_FILENAME = 'report.json'
@@ -180,14 +180,17 @@ class DashboardTestContext {
         this.TEST_PROJECT = config.project
         assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.TEST_PROJECT)')
 
-        suiteTitle = cleanTitle(suiteTitle)
-        testTitle = cleanTitle(testTitle)
-
+        const res1 = extractTags(suiteTitle)
+        suiteTitle = res1.str
+        const res2 = extractTags(testTitle)
+        testTitle = cleanTitle(res2.str)
+        
         this.TEST_BASE = `${makeFileName(suiteTitle)} -- ${makeFileName(testTitle)}`
         this.TEST_DIR = `${Date.now()}`
         this.outputPath = path.join(OUTPUT_BASE, this.TEST_BASE, this.TEST_DIR)
         mkdirp.sync(this.outputPath)
       
+        this.tags = res1.tags.concat(res2.tags)
         this.runid = runid
         this.result = undefined
         this.reportFileName = REPORT_FILENAME // just the filename of the report data file
@@ -207,8 +210,10 @@ class DashboardTestContext {
     }
 
     updateTitles(suiteTitle, testTitle) {
-        suiteTitle = cleanTitle(suiteTitle)
-        testTitle = cleanTitle(testTitle)        
+        const res1 = extractTags(suiteTitle)
+        suiteTitle = res1.str
+        const res2 = extractTags(testTitle)
+        testTitle = cleanTitle(res2.str)
         
         this.prefix = `${this.TEST_PROJECT} -- ${suiteTitle}`
         this.title = testTitle

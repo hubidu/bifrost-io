@@ -22,6 +22,7 @@ module.exports = (ctx) => {
         duration: ctx.duration,
         prefix: ctx.prefix,
         title: ctx.title,
+        tags: ctx.tags,
         fullTitle: ctx.fullTitle,
 
         // outline: ctx.outline // scenario outline

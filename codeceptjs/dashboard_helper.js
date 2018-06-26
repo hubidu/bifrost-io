@@ -5,8 +5,8 @@ const path = require('path')
 const chalk = require('chalk')
 const info = chalk.bold.green.underline
 
-const {getViewportSize, getUserAgent, dehighlightElement, highlightElement} = require('../scripts')
-const getDeviceSettingsFromUA = require('../get-device-settings-from-ua')
+const {getViewportSize, getUserAgent, dehighlightElement, highlightElement} = require('../src/scripts')
+const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
 const DashboardClient = require('../index')
 
 const {writeStringToFileSync, stringify, getScreenshotFileName, mapStepToSource} = require('./utils')
@@ -52,12 +52,6 @@ class BifrostIOHelper extends Helper {
     }
     Object.assign(this.options, config);
   }
-
-  // _getBrowser() {
-  //   const wdio = this.helpers['WebDriverIO']
-  //   assert(wdio, 'WebDriverIO helper not configured. Currently only WebDriverIO is supported.')
-  //   return wdio.browser
-  // }
 
   _getSaveScreenshot() {
     const helper = this.helpers['WebDriverIO']
