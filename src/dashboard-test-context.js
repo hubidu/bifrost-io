@@ -89,6 +89,7 @@ class DashboardCommandContext {
             this.name.indexOf('amOnPage') >= 0 || 
             this.name.indexOf('see') >= 0 || 
             this.name.indexOf('say') >= 0 || 
+            this.name.indexOf('selectOption') >= 0 || 
             isCustomPrefix(config.autoscreenshotMethodPrefixes) !== undefined;
       
         if (res) debug(`Should take screenshot for ${this.name} = ${res}`)
