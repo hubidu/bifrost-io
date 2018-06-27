@@ -4,7 +4,7 @@
   "description": "Client library for heimdall (an e2e dashboard server)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified yet\" && exit 1",
+    "test": "ava",
     "release": "release-it -n --github.release --npm.publish --no-src.commit --no-src.tag --no-src.push"
   },
   "author": {
