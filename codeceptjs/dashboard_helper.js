@@ -1,6 +1,5 @@
 const assert = require('assert')
 const debug = require('debug')('bifrost-io:codeceptjs-helper')
-const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
 const info = chalk.bold.green.underline
@@ -9,7 +8,7 @@ const {getViewportSize, getUserAgent, dehighlightElement, highlightElement} = re
 const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
 const DashboardClient = require('../index')
 
-const {writeStringToFileSync, stringify, getScreenshotFileName, mapStepToSource} = require('./utils')
+const {stringify, getScreenshotFileName, mapStepToSource} = require('./utils')
 
 let Helper = codecept_helper;
 
@@ -249,7 +248,7 @@ class BifrostIOHelper extends Helper {
         const screenshotFileName = commandCtx.getFileName()
         await s.saveScreenshot(screenshotFileName)
   
-        commandCtx.addScreenshot(screenshotFileName)         
+        commandCtx.addScreenshot(screenshotFileName, toError(test.err))         
       }
   
       const [userAgent, viewportSize] = await Promise.all([helper.executeScript(getUserAgent), helper.executeScript(getViewportSize)])
