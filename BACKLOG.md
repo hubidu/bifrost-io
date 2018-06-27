@@ -26,11 +26,11 @@
 - DONE Retry holiday test
 - DONE Incorporate screenshots generated with codeceptjs into report
 - DONE Test with real project
-- Add environment info
-- Extract tags from test title
+- DONE Add environment info
+- DONE Extract tags from test title
+- DONE Support puppeteer in codeceptjs helper
+- Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
-- Check UN stack traces
-- Support puppeteer in codeceptjs helper
 - Add some performance logs
 - Add browser console logs
 - HOw can I add the result of a rest api call?
