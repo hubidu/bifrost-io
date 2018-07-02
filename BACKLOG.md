@@ -29,6 +29,13 @@
 - DONE Add environment info
 - DONE Extract tags from test title
 - DONE Support puppeteer in codeceptjs helper
+- BUG BU Stackframes missing:
+    http://veve-dev-test-01.intern.v.check24.de:4000/details?ownerkey=sIzM3ZEHRb&project=%23All&id=5b3a060eda6113df5fb9a351&hashcategory=454011395
+- BUG BU Tags not extracted:
+    When no wp cookie is set and wpSet is provided in url Then converted wp1/wp2 are in url @wp @smoke @release
+- BUG BU Failed test has no error message:
+    When I create an offer for students Then I see the thank you page @offer @smoke @release
+- No stacktrace when within session (probably same for within)
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs

@@ -6,5 +6,6 @@ async (I) => {
     I.fillField('#search', 'react mocha docker')
     I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
     I.waitInUrl('/search')
+    I.seeElementInDOM('.filter--section')
     I.seeNumberOfVisibleElements('.vacancy--boxitem', 1)
 })

@@ -67,7 +67,10 @@ const mapStepToSource = step => {
     return undefined
   }
 
-  const stackLines = step.stack.split('\n').splice(3)
+  const stackLines = step.stack.split('\n')
+    .splice(3)
+    .filter(l => l.indexOf('node_modules') < 0) // Remove all stack frames pointing to a package dep
+
   const indexOfTestStackLine = 
     stackLines.findIndex(l => l.indexOf('Test.Scenario') > -1 || l.indexOf('Test.<anonymous>') >= 0 || l.indexOf('Context.Before') >= 0)
   let stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
