@@ -29,12 +29,12 @@
 - DONE Add environment info
 - DONE Extract tags from test title
 - DONE Support puppeteer in codeceptjs helper
-- Can I detect device mode from within browser?
 - No stacktrace when within session (probably same for within)
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs
 - Add browser console logs
+- Support for custom auto screenshot methods
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors
 - Supply test source code to dashboard server

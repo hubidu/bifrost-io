@@ -66,13 +66,14 @@ const mapStepToSource = step => {
     console.log(`ERROR Unable to extract source code snippet from stacktrace line ${stepLine} at ${stepName}`)
     return undefined
   }
+  const isLineInTestFile = l => l.indexOf('Test.Scenario') > -1 || l.indexOf('Test.<anonymous>') >= 0 || l.indexOf('Context.Before') >= 0 || l.indexOf('at within') >= 0 || l.indexOf('at session') >= 0
 
   const stackLines = step.stack.split('\n')
     .splice(3)
     .filter(l => l.indexOf('node_modules') < 0) // Remove all stack frames pointing to a package dep
 
   const indexOfTestStackLine = 
-    stackLines.findIndex(l => l.indexOf('Test.Scenario') > -1 || l.indexOf('Test.<anonymous>') >= 0 || l.indexOf('Context.Before') >= 0)
+    stackLines.findIndex(l => isLineInTestFile(l))
   let stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
 
   if (stacklinesUpToTestFile.length === 0) {
