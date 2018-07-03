@@ -9,7 +9,7 @@ module.exports = function (sel, isError, txt) {
     }
 
     function querySel(cssOrXPath) {
-        const isCss = (str) => ['.', '#', '[', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'input', 'button', 'a '].some(el => str.indexOf(el) === 0)
+        const isCss = (str) => ['.', '#', '[', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'input', 'button', 'a ', 'a['].some(el => str.indexOf(el) === 0)
         function isXPath(str) {
             return str.indexOf('//') === 0 || str.indexOf('text()') >= 0
         }
