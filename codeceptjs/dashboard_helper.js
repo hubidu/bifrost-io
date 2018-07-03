@@ -154,6 +154,7 @@ class BifrostIOHelper extends Helper {
       }  
     }
 
+    // TODO Actually screenshots should be taken in before step
     if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
       if (isScreenshotStep(step)) {
         const codeceptjsScreenshot = getScreenshotPath(step.args[0])
@@ -190,7 +191,7 @@ class BifrostIOHelper extends Helper {
 
     // Add device info
     const [userAgent, viewportSize] = await Promise.all([helper.executeScript(getUserAgent), helper.executeScript(getViewportSize)])
-    const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
+    const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
     testCtx.addDeviceSettings(deviceSettings)
 
     testCtx.markSuccessful()

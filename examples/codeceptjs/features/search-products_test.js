@@ -26,11 +26,22 @@ async (I) => {
     I.click('jetzt vergleichen', 'button')
 
     I.waitInUrl('/handytarife/vergleich')
-    I.see('Handytarife im Vergleich', 'h1')
-    I.seeElement('//filter')
-    I.seeElement('product-item')
 
-    const prices = await I.grabTextFrom('product-item:nth-child(1) .price')
-    const netPrice = toNumber(prices)[0]
-    assert(netPrice < 10, 'Expected best price to be less than 10 EUR')
+    if (process.env.TEST_DEVICE === 'mobile') {
+        I.seeElement('//c24-header-tabs')
+        I.seeElement('c24-result-list-item')
+
+        const prices = await I.grabTextFrom('c24-result-list-item:nth-child(1) .price .value')
+        const netPrice = toNumber(prices)[2]
+        assert(netPrice < 10, 'Expected best price to be less than 10 EUR')
+    } else {
+        I.see('Handytarife im Vergleich', 'h1')
+        I.seeElement('//filter')
+        I.seeElement('product-item')
+
+        const prices = await I.grabTextFrom('product-item:nth-child(1) .price')
+        const netPrice = toNumber(prices)[0]
+        assert(netPrice < 10, 'Expected best price to be less than 10 EUR')
+    }
+
 })
