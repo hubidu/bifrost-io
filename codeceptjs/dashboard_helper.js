@@ -4,11 +4,19 @@ const path = require('path')
 const chalk = require('chalk')
 const info = chalk.bold.green.underline
 
-const {getViewportSize, getUserAgent, dehighlightElement, highlightElement} = require('../src/scripts')
-const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
 const DashboardClient = require('../index')
-
-const {stringify, getScreenshotFileName, mapStepToSource} = require('./utils')
+const {
+  getViewportSize, 
+  getUserAgent, 
+  dehighlightElement, 
+  highlightElement} = require('../src/scripts')
+const {
+  stringify,
+  fileToStringSync,
+  getTestFilePathFromStack, 
+  getScreenshotFileName, 
+  mapStepToSource} = require('./utils')
+const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
 
 let Helper = codecept_helper;
 
@@ -194,6 +202,11 @@ class BifrostIOHelper extends Helper {
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
     testCtx.addDeviceSettings(deviceSettings)
 
+    if (test.steps.length > 0) {
+      const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
+      testCtx.addSource(sourceCode)
+    }
+
     testCtx.markSuccessful()
   }
 
@@ -263,6 +276,11 @@ class BifrostIOHelper extends Helper {
       } else {
         // However they could also fail at other places, e. g. on an assert statement in the test
         // In this case we just report the error
+      }
+  
+      if (test.steps.length > 0) {
+        const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
+        testCtx.addSource(sourceCode)
       }
   
       testCtx.markFailed(toError(test.err))  

@@ -29,7 +29,8 @@
 - DONE Add environment info
 - DONE Extract tags from test title
 - DONE Support puppeteer in codeceptjs helper
-- No stacktrace when within session (probably same for within)
+- DONE No stacktrace when within session (probably same for within)
+- DONE Supply test source code to dashboard server
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs
@@ -37,7 +38,6 @@
 - Support for custom auto screenshot methods
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors
-- Supply test source code to dashboard server
 - HIde sensitive data in test source, steps and step.args
 - Add more error details (actual/expected)
 - Improve error messages

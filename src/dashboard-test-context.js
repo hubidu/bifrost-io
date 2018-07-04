@@ -13,6 +13,7 @@ const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
 
 const OUTPUT_BASE = './__out'
 const REPORT_FILENAME = 'report.json'
+const SOURCE_FILENAME = 'source.txt'
 
 const toString = val => {
     if (val === undefined || val === null) return val
@@ -241,6 +242,14 @@ class DashboardTestContext {
     }
 
     /**
+     * Add a file with the test's source code to the report data
+     */
+    addSource(source = 'No test source found') {
+        const sourceFile = this.getSourceFileName()
+        fs.writeFileSync(sourceFile, source)
+    }
+
+    /**
      * Call it when the test succeeded
      */
     markSuccessful() {
@@ -270,6 +279,10 @@ class DashboardTestContext {
      */
     getReportFileName(ext = '.json') {
         return path.join(this.outputPath, REPORT_FILENAME)
+    }
+
+    getSourceFileName(ext = '.txt') {
+        return path.join(this.outputPath, SOURCE_FILENAME)
     }
 
     /**

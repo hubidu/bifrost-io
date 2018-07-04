@@ -1,5 +1,16 @@
 const fs = require('fs')
 
+// Private utils
+const isStackframeOfTest = l => 
+  l.indexOf('Test.Scenario') > -1 || 
+  l.indexOf('Test.Data.Scenario') > -1 || 
+  l.indexOf('Test.<anonymous>') >= 0 || 
+  l.indexOf('Context.Before') >= 0 || 
+  l.indexOf('at within') >= 0 || 
+  l.indexOf('at session') >= 0
+const matchSourceFileName = stackframe => stackframe.match(/\(([^)]*):[0-9]+:[0-9]+\)/)
+const filterStackframe = stackframe => stackframe.indexOf('node_modules') < 0
+
 /**
  * Determine the filename of codeceptjs error
  */
@@ -45,12 +56,32 @@ const getScreenshotFileName = (test, uniqueScreenshotNames, isError) => {
     return fileName
 }
 
+
+/**
+ * Get the path of the test file from a stacktrace
+ */
+const getTestFilePathFromStack = stack => {
+  const stackLines = stack.split('\n')
+    .splice(3)
+    .filter(l => filterStackframe(l)) // Remove all stack frames pointing to a package dep
+
+  const indexOfTestStackLine = 
+    stackLines.findIndex(l => isStackframeOfTest(l))
+
+  if (indexOfTestStackLine < 0) {
+    console.log('WARNING Could not find test in stack', stackLines)
+    return
+  }
+
+  return matchSourceFileName(stackLines[indexOfTestStackLine])[1]
+}
+
 /**
  * Create a mapping between step and location in source file
  */
 const mapStepToSource = step => {
   const mapSingleStackLine = (stepName, stepLine) => {
-    const m1 = stepLine.match(/\(([^)]*):[0-9]+:[0-9]+\)/)
+    const m1 = matchSourceFileName(stepLine)
     const m2 = stepLine.match(/:([0-9]+):/)
 
     if (m1 && m2) {
@@ -66,14 +97,13 @@ const mapStepToSource = step => {
     console.log(`ERROR Unable to extract source code snippet from stacktrace line ${stepLine} at ${stepName}`)
     return undefined
   }
-  const isLineInTestFile = l => l.indexOf('Test.Scenario') > -1 || l.indexOf('Test.<anonymous>') >= 0 || l.indexOf('Context.Before') >= 0 || l.indexOf('at within') >= 0 || l.indexOf('at session') >= 0
 
   const stackLines = step.stack.split('\n')
     .splice(3)
-    .filter(l => l.indexOf('node_modules') < 0) // Remove all stack frames pointing to a package dep
+    .filter(l => filterStackframe(l)) // Remove all stack frames pointing to a package dep
 
   const indexOfTestStackLine = 
-    stackLines.findIndex(l => isLineInTestFile(l))
+    stackLines.findIndex(l => isStackframeOfTest(l))
   let stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
 
   if (stacklinesUpToTestFile.length === 0) {
@@ -112,11 +142,18 @@ const stringify = (o) => {
   return res
 }
 
+/**
+ * Write a string to a file
+ */
 const writeStringToFileSync = (filename, str) => fs.writeFileSync(filename, str)
+
+const fileToStringSync = (path) => path ? fs.readFileSync(path, 'utf8') : undefined;
 
 module.exports = {
     getScreenshotFileName,
     mapStepToSource,
+    getTestFilePathFromStack,    
     stringify,
-    writeStringToFileSync
+    writeStringToFileSync,
+    fileToStringSync,
 }
