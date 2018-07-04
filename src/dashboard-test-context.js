@@ -12,8 +12,10 @@ const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
 
 const OUTPUT_BASE = './__out'
+
 const REPORT_FILENAME = 'report.json'
 const SOURCE_FILENAME = 'source.txt'
+const BROWSERLOGS_FILENAME = 'browserlogs.json'
 
 const toString = val => {
     if (val === undefined || val === null) return val
@@ -21,6 +23,7 @@ const toString = val => {
 }
 const makeFileName = str => str.replace(/[^0-9a-zA-Z\- \.\(\),]/g, '')
 const fileToString = fileName => fs.readFileSync(fileName).toString()
+const stringToFile = (filename, str) => fs.writeFileSync(filename, str)
 const toSeconds = num => num / 1000;
 const writeReport = (testContext) => fs.writeFileSync(testContext.getReportFileName(), JSON.stringify(generateReport(testContext), null, 2))
 const rmFileSync = filename => fs.unlinkSync(filename) 
@@ -246,7 +249,15 @@ class DashboardTestContext {
      */
     addSource(source = 'No test source found') {
         const sourceFile = this.getSourceFileName()
-        fs.writeFileSync(sourceFile, source)
+        stringToFile(sourceFile, source)
+    }
+
+    /**
+     * Add a file containing the browser logs
+     */
+    addBrowserLogs(logs = []) {
+        const browserLogsFileName = this.getBrowserLogsFileName()
+        stringToFile(browserLogsFileName, JSON.stringify(logs, null, 2))
     }
 
     /**
@@ -283,6 +294,10 @@ class DashboardTestContext {
 
     getSourceFileName(ext = '.txt') {
         return path.join(this.outputPath, SOURCE_FILENAME)
+    }
+
+    getBrowserLogsFileName(ext = '.txt') {
+        return path.join(this.outputPath, BROWSERLOGS_FILENAME)
     }
 
     /**
