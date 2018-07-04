@@ -31,11 +31,11 @@
 - DONE Support puppeteer in codeceptjs helper
 - DONE No stacktrace when within session (probably same for within)
 - DONE Supply test source code to dashboard server
-
+- DONE Add browser console logs
+- Dont include project in title
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs
-- Add browser console logs
 - Support for custom auto screenshot methods
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors

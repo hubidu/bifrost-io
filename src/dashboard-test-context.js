@@ -202,9 +202,9 @@ class DashboardTestContext {
         this.reportDir = [this.OWNER_KEY, this.TEST_PROJECT, this.TEST_BASE, this.TEST_DIR].join('/')
         this.startedAt = Date.now()
         this.duration = undefined // in seconds
-        this.prefix = `${this.TEST_PROJECT} -- ${suiteTitle}`
+        this.prefix = `${suiteTitle}`
         this.title = testTitle
-        this.fullTitle = `${this.prefix} -- ${testTitle}`
+        this.fullTitle = `${this.TEST_PROJECT} -- ${this.prefix} -- ${testTitle}`
 
         this.commands = []
         this.deviceSettings = undefined
