@@ -198,7 +198,13 @@ class BifrostIOHelper extends Helper {
     const helper = this._getHelper()
 
     // Add device info
-    const [userAgent, viewportSize] = await Promise.all([helper.executeScript(getUserAgent), helper.executeScript(getViewportSize)])
+    // const [userAgent, viewportSize] = await Promise.all([helper.executeScript(getUserAgent), helper.executeScript(getViewportSize)])
+    const [userAgent, viewportSize, browserLogs] = await Promise.all([
+      helper.executeScript(getUserAgent), 
+      helper.executeScript(getViewportSize),
+      helper.grabBrowserLogs()
+    ])
+
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
     testCtx.addDeviceSettings(deviceSettings)
 
@@ -206,6 +212,8 @@ class BifrostIOHelper extends Helper {
       const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
       testCtx.addSource(sourceCode)
     }
+
+    testCtx.addBrowserLogs(browserLogs)
 
     testCtx.markSuccessful()
   }
