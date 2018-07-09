@@ -37,6 +37,7 @@
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs
+- Use regexes for proper css detection
 - Support for custom auto screenshot methods
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors

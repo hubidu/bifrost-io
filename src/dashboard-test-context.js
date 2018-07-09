@@ -243,6 +243,7 @@ class DashboardTestContext {
         this.prefix = `${this.TEST_PROJECT} -- ${suiteTitle}`
         this.title = testTitle
         this.fullTitle = `${this.prefix} -- ${testTitle}`
+        this.tags = res1.tags.concat(res2.tags)
     }
 
     createCommandContext(stepName, stepArgs) {
