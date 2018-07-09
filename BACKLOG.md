@@ -32,7 +32,8 @@
 - DONE No stacktrace when within session (probably same for within)
 - DONE Supply test source code to dashboard server
 - DONE Add browser console logs
-- Dont include project in title
+- DONE Dont include project in title
+- Report also git user and git revision
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs
@@ -42,6 +43,6 @@
 - HIde sensitive data in test source, steps and step.args
 - BETTER DO IN REPORT Add more error details (actual/expected)
 - BETTER DO IN REPORT Improve error messages
-- Make html snapshot
+- On Error also create an html snapshot
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements

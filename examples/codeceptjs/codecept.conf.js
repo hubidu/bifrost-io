@@ -36,7 +36,8 @@ exports.config = {
     },  
     "include": {
       "I": "./custom-steps.js",
-      "loginPage": "./pages/login.page.js"
+      "loginPage": "./pages/login.page.js",
+      "onHandyTariffsPage": "./pages/handy-tariffs.page.js",
     },
     "mocha": {},
     "bootstrap": false,

@@ -2,7 +2,6 @@ const debug = require('debug')('bifrost-io:dashboard-test-context')
 const fs = require('fs')
 const path = require('path')
 const assert = require('assert')
-const uuidv1 = require('uuid/v1')
 const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
@@ -17,6 +16,27 @@ const REPORT_FILENAME = 'report.json'
 const SOURCE_FILENAME = 'source.txt'
 const BROWSERLOGS_FILENAME = 'browserlogs.json'
 
+/**
+ * Stringify with circular refs
+ */
+const stringify = (o) => { 
+    // Note: cache should not be re-used by repeated calls to JSON.stringify.
+    var cache = [];
+    const res = JSON.stringify(o, function(key, value) {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+                // Circular reference found, discard key
+                return;
+            }
+            // Store value in our collection
+            cache.push(value);
+        }
+        return value;
+    });
+    cache = null; // Enable ga
+  
+    return res
+  } 
 const toString = val => {
     if (val === undefined || val === null) return val
     return val.toString()
@@ -257,7 +277,7 @@ class DashboardTestContext {
      */
     addBrowserLogs(logs = []) {
         const browserLogsFileName = this.getBrowserLogsFileName()
-        stringToFile(browserLogsFileName, JSON.stringify(logs, null, 2))
+        stringToFile(browserLogsFileName, stringify(logs, null, 2))
     }
 
     /**
