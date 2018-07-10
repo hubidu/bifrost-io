@@ -1,11 +1,11 @@
 const assert = require('assert')
+const gitUser = require('./utils/git-user')
 
 const toString = v => {
     if (typeof v === 'object') return JSON.stringify(v)
     return v.toString()
 }
   
-
 module.exports = (ctx) => {
     assert(ctx, 'Please provide a text context')
 
@@ -25,6 +25,7 @@ module.exports = (ctx) => {
         tags: ctx.tags,
         fullTitle: ctx.fullTitle,
 
+        user: gitUser(), // reporting git user
         // outline: ctx.outline // scenario outline
 
         screenshots: ctx.commands.map(cmd => {

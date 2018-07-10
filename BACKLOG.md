@@ -33,7 +33,7 @@
 - DONE Supply test source code to dashboard server
 - DONE Add browser console logs
 - DONE Dont include project in title
-- Report also git user and git revision
+- DONE Report also git user and git revision
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs
