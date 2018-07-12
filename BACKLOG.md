@@ -34,6 +34,8 @@
 - DONE Add browser console logs
 - DONE Dont include project in title
 - DONE Report also git user and git revision
+- Autoscreenshots on grab... ?
+- BUG Highlighting xpath expressions with puppeteer does not work
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs

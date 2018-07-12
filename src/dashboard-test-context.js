@@ -113,6 +113,8 @@ class DashboardCommandContext {
             this.name.indexOf('amOnPage') >= 0 || 
             this.name.indexOf('see') >= 0 || 
             this.name.indexOf('say') >= 0 || 
+            this.name.indexOf('grabTextFrom') >= 0 || 
+            this.name.indexOf('grabValueFrom') >= 0 || 
             // this.name.indexOf('selectOption') >= 0 || 
             isCustomPrefix(config.autoscreenshotMethodPrefixes) !== undefined;
       
