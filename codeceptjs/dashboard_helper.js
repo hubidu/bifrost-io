@@ -149,6 +149,7 @@ class BifrostIOHelper extends Helper {
     const s = this._getSaveScreenshot()
     const helper = this._getHelper()
 
+    // TODO Should highlight in beforeStep (in afterStep element could already be gone)
     // Highlight element
     const sel = commandCtx.getSelector()
     if (commandCtx.shouldHighlight()) {
@@ -208,6 +209,7 @@ class BifrostIOHelper extends Helper {
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
     testCtx.addDeviceSettings(deviceSettings)
 
+    // Add source (make sure we have steps, actually that should be always the case here)
     if (test.steps.length > 0) {
       const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
       testCtx.addSource(sourceCode)
@@ -249,14 +251,7 @@ class BifrostIOHelper extends Helper {
       // const browser = this._getBrowser()
       const s = this._getSaveScreenshot()
       const helper = this._getHelper()
-    
-      // Need to add url and title for the failed command
-      const [url, title] = await Promise.all([ helper.grabCurrentUrl(), helper.grabTitle()])
-      commandCtx.addPageInfo({
-        url,
-        title
-      })
-  
+      
       try {
         commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
       } catch (err) {
@@ -273,16 +268,28 @@ class BifrostIOHelper extends Helper {
         commandCtx.addScreenshot(screenshotFileName, toError(test.err))         
       }
   
-      const [userAgent, viewportSize, browserLogs] = await Promise.all([
+      const [pageSource, url, title, userAgent, viewportSize, browserLogs] = await Promise.all([
+        helper.grabSource(),
+        helper.grabCurrentUrl(), 
+        helper.grabTitle(),
         helper.executeScript(getUserAgent), 
         helper.executeScript(getViewportSize),
         helper.grabBrowserLogs()
       ])
+
+      // Add url and page title
+      commandCtx.addPageInfo({
+        url,
+        title
+      })
+
+      // Add device settings
       const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
       testCtx.addDeviceSettings(deviceSettings)
   
       if (test.steps.length > 0) {
         // Generally I expect tests to fail on steps
+        // so I report the step
         const failedStep = test.steps[0]
         testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))  
       } else {
@@ -290,13 +297,19 @@ class BifrostIOHelper extends Helper {
         // In this case we just report the error
       }
   
+      // Add the source file (extracted from the step stack)
       if (test.steps.length > 0) {
         const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
         testCtx.addSource(sourceCode)
       }
 
+      // Add the browserlogs
       testCtx.addBrowserLogs(browserLogs)
   
+      // Add html of page
+      testCtx.addPageHtml(pageSource)
+
+      // Mark the test as failed
       testCtx.markFailed(toError(test.err))  
     } catch (err) {
       console.log('ERROR in _failed(test) hook: ', err)

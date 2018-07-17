@@ -36,6 +36,10 @@ module.exports = {
     }
   },
 
+  ISeeNthProvider(providerName, i) {
+    I.see(providerName, '.provider-name')
+  },
+
   async IGrabBestPrice(amountInEuro) {
     if (process.env.TEST_DEVICE === 'mobile') {
         const prices = await I.grabTextFrom('c24-result-list-item:nth-child(1) .price .value')

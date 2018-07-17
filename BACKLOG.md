@@ -34,7 +34,11 @@
 - DONE Add browser console logs
 - DONE Dont include project in title
 - DONE Report also git user and git revision
-- Autoscreenshots on grab... ?
+- DONE Autoscreenshots on grab... ?
+
+- On Error also create an html snapshot
+- IDEA Add a mini-thumbnail bar (filmstrip) to quickly navigate between screenshots
+- IDEA Add forward/backward buttons to quickly navigate between screenshots
 - BUG Highlighting xpath expressions with puppeteer does not work
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
@@ -46,6 +50,5 @@
 - HIde sensitive data in test source, steps and step.args
 - BETTER DO IN REPORT Add more error details (actual/expected)
 - BETTER DO IN REPORT Improve error messages
-- On Error also create an html snapshot
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements
