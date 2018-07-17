@@ -292,6 +292,11 @@ class DashboardTestContext {
         stringToFile(browserLogsFileName, stringify(logs, null, 2))
     }
 
+    addPerformanceLogs(logs = []) {
+        const browserLogsFileName = path.join(this.outputPath, 'performance-logs.json')
+        stringToFile(browserLogsFileName, stringify(logs, null, 2))
+    }
+
     /**
      * Call it when the test succeeded
      */

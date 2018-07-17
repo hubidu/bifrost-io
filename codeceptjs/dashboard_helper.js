@@ -8,7 +8,8 @@ const DashboardClient = require('../index')
 const {
   getViewportSize, 
   getUserAgent, 
-  dehighlightElement, 
+  dehighlightElement,
+  getPerformance,
   highlightElement} = require('../src/scripts')
 const {
   stringify,
@@ -268,13 +269,14 @@ class BifrostIOHelper extends Helper {
         commandCtx.addScreenshot(screenshotFileName, toError(test.err))         
       }
   
-      const [pageSource, url, title, userAgent, viewportSize, browserLogs] = await Promise.all([
+      const [pageSource, url, title, userAgent, viewportSize, browserLogs, performance] = await Promise.all([
         helper.grabSource(),
         helper.grabCurrentUrl(), 
         helper.grabTitle(),
         helper.executeScript(getUserAgent), 
         helper.executeScript(getViewportSize),
-        helper.grabBrowserLogs()
+        helper.grabBrowserLogs(),
+        helper.executeScript(getPerformance),
       ])
 
       // Add url and page title
@@ -305,6 +307,8 @@ class BifrostIOHelper extends Helper {
 
       // Add the browserlogs
       testCtx.addBrowserLogs(browserLogs)
+
+      testCtx.addPerformanceLogs(performance)
   
       // Add html of page
       testCtx.addPageHtml(pageSource)
