@@ -34,8 +34,27 @@
 - DONE Add browser console logs
 - DONE Dont include project in title
 - DONE Report also git user and git revision
+
+- FINDOUT: grab... : Can I get the value and report it?
 - Autoscreenshots on grab... ?
 - BUG Highlighting xpath expressions with puppeteer does not work
+- XPATH Should also detect .// as xpath
+- Elements are not highlighted on failed steps
+- Make this codeceptjs error nicer:
+    'expected element .ResultTariffListItem-tariffName to include "B1"'
+
+    Expected  'B1'
+    Found  '120
+    ___(next element)___
+    SecurAL BV 10 AU
+    ___(next element)___
+    S-M.A.R.T
+    ___(next element)___
+    Getsurance Job mit Option Psyche
+    ___(next element)___
+    XL
+    ___(next element)___
+    --( 69 lines more )---'
 - Add a proper cahngelog
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Add some performance logs
