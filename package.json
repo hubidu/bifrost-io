@@ -1,6 +1,6 @@
 {
   "name": "bifrost-io",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Client library for heimdall (an e2e dashboard server)",
   "main": "index.js",
   "scripts": {
@@ -22,9 +22,8 @@
     "parse-git-config": "^2.0.2",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
-    "shortid": "^2.2.8",
-    "ua-parser-js": "^0.7.18",
-    "uuid": "^3.2.1"
+    "shortid": "^2.2.12",
+    "ua-parser-js": "^0.7.18"
   },
   "devDependencies": {
     "ava": "^0.25.0",

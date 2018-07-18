@@ -130,10 +130,24 @@ class BifrostIOHelper extends Helper {
       return
     }
 
+    const helper = this._getHelper()
+
     /* NOTE Command context must be created here, since afterStep might be skipped
      * in case the test fails
      */
     commandCtx = testCtx.createCommandContext(step.name, step.args)
+
+    const sel = commandCtx.getSelector()
+    if (commandCtx.shouldHighlight()) {
+      try {
+        debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
+        if (sel) {
+          await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+        }
+      } catch (err) {
+        console.log(`WARNING Failed to highlight element ${sel}`, err)
+      }  
+    }
   }
 
   /**
@@ -152,17 +166,17 @@ class BifrostIOHelper extends Helper {
 
     // TODO Should highlight in beforeStep (in afterStep element could already be gone)
     // Highlight element
-    const sel = commandCtx.getSelector()
-    if (commandCtx.shouldHighlight()) {
-      try {
-        debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
-        if (sel) {
-          await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
-        }
-      } catch (err) {
-        console.log(`WARNING Failed to highlight element ${sel}`, err)
-      }  
-    }
+    // const sel = commandCtx.getSelector()
+    // if (commandCtx.shouldHighlight()) {
+    //   try {
+    //     debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
+    //     if (sel) {
+    //       await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+    //     }
+    //   } catch (err) {
+    //     console.log(`WARNING Failed to highlight element ${sel}`, err)
+    //   }  
+    // }
 
     // TODO Actually screenshots should be taken in before step
     if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
@@ -199,24 +213,30 @@ class BifrostIOHelper extends Helper {
    
     const helper = this._getHelper()
 
-    // Add device info
-    // const [userAgent, viewportSize] = await Promise.all([helper.executeScript(getUserAgent), helper.executeScript(getViewportSize)])
-    const [userAgent, viewportSize, browserLogs] = await Promise.all([
+    // Get various data from the browser
+    const [
+      userAgent, 
+      viewportSize, 
+      browserLogs,
+      performanceLogs,
+    ] = await Promise.all([
       helper.executeScript(getUserAgent), 
       helper.executeScript(getViewportSize),
-      helper.grabBrowserLogs()
+      helper.grabBrowserLogs(),
+      helper.executeScript(getPerformance),
     ])
 
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
     testCtx.addDeviceSettings(deviceSettings)
 
-    // Add source (make sure we have steps, actually that should be always the case here)
+    // Add source (make sure we have steps, TODO actually that should be always the case here)
     if (test.steps.length > 0) {
       const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
       testCtx.addSource(sourceCode)
     }
 
     testCtx.addBrowserLogs(browserLogs)
+    testCtx.addPerformanceLogs(performanceLogs)
 
     testCtx.markSuccessful()
   }
@@ -269,7 +289,7 @@ class BifrostIOHelper extends Helper {
         commandCtx.addScreenshot(screenshotFileName, toError(test.err))         
       }
   
-      const [pageSource, url, title, userAgent, viewportSize, browserLogs, performance] = await Promise.all([
+      const [pageSource, url, title, userAgent, viewportSize, browserLogs, performanceLogs] = await Promise.all([
         helper.grabSource(),
         helper.grabCurrentUrl(), 
         helper.grabTitle(),
@@ -308,7 +328,7 @@ class BifrostIOHelper extends Helper {
       // Add the browserlogs
       testCtx.addBrowserLogs(browserLogs)
 
-      testCtx.addPerformanceLogs(performance)
+      testCtx.addPerformanceLogs(performanceLogs)
   
       // Add html of page
       testCtx.addPageHtml(pageSource)

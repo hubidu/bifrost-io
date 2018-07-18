@@ -1,5 +1,7 @@
 const assert = require('assert')
 
+const randomInt = num => Math.floor(Math.random() * num)
+
 Feature('Search for Handytarife @search')
 
 Scenario(`When I search for "Handytarife" without specifying any details Then I will get a list of various tariffs @search_handy`, 
@@ -25,7 +27,7 @@ async (I, onHandyTariffsPage) => {
     onHandyTariffsPage.ISeeHeadline()
     onHandyTariffsPage.ISeeFilterWidget()
     onHandyTariffsPage.ISeeHandyTariffs()
-    onHandyTariffsPage.ISeeNthProvider('LT 1500', 1)
+    onHandyTariffsPage.ISeeNthProvider(['Allnet Flat', 'Foo 1984'][randomInt(2)], 1)
 
     const netPrice = await onHandyTariffsPage.IGrabBestPrice()
 
