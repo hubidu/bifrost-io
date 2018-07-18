@@ -25,6 +25,7 @@ async (I, onHandyTariffsPage) => {
     onHandyTariffsPage.ISeeHeadline()
     onHandyTariffsPage.ISeeFilterWidget()
     onHandyTariffsPage.ISeeHandyTariffs()
+    onHandyTariffsPage.ISeeNthProvider('LT 1500', 1)
 
     const netPrice = await onHandyTariffsPage.IGrabBestPrice()
 

@@ -34,11 +34,12 @@
 - DONE Add browser console logs
 - DONE Dont include project in title
 - DONE Report also git user and git revision
+- DONE Autoscreenshots on grab... ?
 
+- On Error also create an html snapshot
 - FINDOUT: grab... : Can I get the value and report it?
-- Autoscreenshots on grab... ?
 - BUG Highlighting xpath expressions with puppeteer does not work
-- XPATH Should also detect .// as xpath
+- XPATH Should also detect .// as xpath (imporove css/xpath detection)
 - Elements are not highlighted on failed steps
 - Make this codeceptjs error nicer:
     'expected element .ResultTariffListItem-tariffName to include "B1"'
@@ -65,6 +66,5 @@
 - HIde sensitive data in test source, steps and step.args
 - BETTER DO IN REPORT Add more error details (actual/expected)
 - BETTER DO IN REPORT Improve error messages
-- On Error also create an html snapshot
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements

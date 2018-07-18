@@ -15,6 +15,7 @@ const OUTPUT_BASE = './__out'
 const REPORT_FILENAME = 'report.json'
 const SOURCE_FILENAME = 'source.txt'
 const BROWSERLOGS_FILENAME = 'browserlogs.json'
+const HTML_FILENAME = 'error-page.html'
 
 /**
  * Stringify with circular refs
@@ -276,10 +277,23 @@ class DashboardTestContext {
     }
 
     /**
+     * Add html source of page
+     */
+    addPageHtml(html = 'No page source available') {
+        const htmlFile = this.getPageHtmlFileName()
+        stringToFile(htmlFile, html)
+    }
+
+    /**
      * Add a file containing the browser logs
      */
     addBrowserLogs(logs = []) {
         const browserLogsFileName = this.getBrowserLogsFileName()
+        stringToFile(browserLogsFileName, stringify(logs, null, 2))
+    }
+
+    addPerformanceLogs(logs = []) {
+        const browserLogsFileName = path.join(this.outputPath, 'performance-logs.json')
         stringToFile(browserLogsFileName, stringify(logs, null, 2))
     }
 
@@ -317,6 +331,10 @@ class DashboardTestContext {
 
     getSourceFileName(ext = '.txt') {
         return path.join(this.outputPath, SOURCE_FILENAME)
+    }
+
+    getPageHtmlFileName(ext = '.html') {
+        return path.join(this.outputPath, HTML_FILENAME)
     }
 
     getBrowserLogsFileName(ext = '.txt') {
