@@ -1,5 +1,5 @@
 module.exports = function() {
   if (window.performance) {
-    return window.performance.getEntries();
+    return  JSON.stringify(window.performance.getEntries());
   }
 }

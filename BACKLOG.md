@@ -35,8 +35,16 @@
 - DONE Dont include project in title
 - DONE Report also git user and git revision
 - DONE Autoscreenshots on grab... ?
+- DONE puppeteer: Use this for perf logs:
+    const performance = JSON.parse(await page.evaluate(
+      () => JSON.stringify(window.performance)
+    ));
+- DONE On Error also create an html snapshot
 
-- On Error also create an html snapshot
+- BUG BU CreateOffer test: Has no source
+- Html snapshot: Make all relative image and css links absolute
+- Performance logs: Must take performance logs for each new page
+- Performance: Try out setting performance markers
 - FINDOUT: grab... : Can I get the value and report it?
 - BUG Highlighting xpath expressions with puppeteer does not work
 - XPATH Should also detect .// as xpath (imporove css/xpath detection)

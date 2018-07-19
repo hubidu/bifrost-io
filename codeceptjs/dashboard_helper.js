@@ -164,21 +164,7 @@ class BifrostIOHelper extends Helper {
     const s = this._getSaveScreenshot()
     const helper = this._getHelper()
 
-    // TODO Should highlight in beforeStep (in afterStep element could already be gone)
-    // Highlight element
-    // const sel = commandCtx.getSelector()
-    // if (commandCtx.shouldHighlight()) {
-    //   try {
-    //     debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
-    //     if (sel) {
-    //       await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
-    //     }
-    //   } catch (err) {
-    //     console.log(`WARNING Failed to highlight element ${sel}`, err)
-    //   }  
-    // }
-
-    // TODO Actually screenshots should be taken in before step
+    // TODO Should I take screenshots in before rather?
     if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
       if (isScreenshotStep(step)) {
         const codeceptjsScreenshot = getScreenshotPath(step.args[0])
@@ -236,7 +222,7 @@ class BifrostIOHelper extends Helper {
     }
 
     testCtx.addBrowserLogs(browserLogs)
-    testCtx.addPerformanceLogs(performanceLogs)
+    testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
 
     testCtx.markSuccessful()
   }
@@ -328,7 +314,7 @@ class BifrostIOHelper extends Helper {
       // Add the browserlogs
       testCtx.addBrowserLogs(browserLogs)
 
-      testCtx.addPerformanceLogs(performanceLogs)
+      testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
   
       // Add html of page
       testCtx.addPageHtml(pageSource)
