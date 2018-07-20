@@ -6,7 +6,7 @@ const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
 const config = require('./config')
-const {zipDirectory, extractTags} = require('./utils')
+const {zipDirectory, extractTags, makeUrlsAbsolute} = require('./utils')
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
 
@@ -279,9 +279,13 @@ class DashboardTestContext {
     /**
      * Add html source of page
      */
-    addPageHtml(html = 'No page source available') {
+    addPageHtml(html = 'No page source available', pageBaseUrl) {
+        assert(pageBaseUrl)
+
         const htmlFile = this.getPageHtmlFileName()
-        stringToFile(htmlFile, html)
+
+        const snapshotHtml = makeUrlsAbsolute(html, pageBaseUrl)
+        stringToFile(htmlFile, snapshotHtml)
     }
 
     /**

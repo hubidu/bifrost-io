@@ -1,5 +1,4 @@
-## TODO
-
+## Done
 - DONE Reverse screenshot order (actually report app should order by time)
 - DONE report-app: Filter by token and project
 - DONE Add project id
@@ -41,8 +40,16 @@
     ));
 - DONE On Error also create an html snapshot
 
-- BUG BU CreateOffer test: Has no source
+
+# Doing
+
 - Html snapshot: Make all relative image and css links absolute
+
+# Backlog
+
+- IDEA Improve errors (try to find out what exactly went wrong): 
+    * Does not make sense to trigger a retry if an assertion failed (like wrong text in input field) while it does make sense if an element could not be found
+- BUG BU CreateOffer test: Has no source
 - Performance logs: Must take performance logs for each new page
 - Performance: Try out setting performance markers
 - FINDOUT: grab... : Can I get the value and report it?
@@ -76,3 +83,5 @@
 - BETTER DO IN REPORT Improve error messages
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements
+
+

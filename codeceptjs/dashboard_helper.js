@@ -11,12 +11,15 @@ const {
   dehighlightElement,
   getPerformance,
   highlightElement} = require('../src/scripts')
+// TODO Refactor Move all this to utils
 const {
   stringify,
   fileToStringSync,
   getTestFilePathFromStack, 
   getScreenshotFileName, 
   mapStepToSource} = require('./utils')
+const { extractBaseUrl } = require('../src/utils')
+
 const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
 
 let Helper = codecept_helper;
@@ -317,7 +320,7 @@ class BifrostIOHelper extends Helper {
       testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
   
       // Add html of page
-      testCtx.addPageHtml(pageSource)
+      testCtx.addPageHtml(pageSource, extractBaseUrl(url))
 
       // Mark the test as failed
       testCtx.markFailed(toError(test.err))  
