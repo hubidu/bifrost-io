@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "release": "release-it -n --github.release --npm.publish --no-src.commit --no-src.tag --no-src.push"
+    "release": "release-it -n --github.release --npm.publish --no-src.commit --no-src.tag --no-src.push",
+    "release-minor": "release-it minor -n --github.release --npm.publish --no-src.commit --no-src.tag --no-src.push"
   },
   "author": {
     "name": "Stefan Huber",
