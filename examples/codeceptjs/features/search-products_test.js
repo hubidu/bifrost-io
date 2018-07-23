@@ -2,7 +2,7 @@ const assert = require('assert')
 
 const randomInt = num => Math.floor(Math.random() * num)
 
-Feature('Search for Handytarife @search')
+Feature('Search for Handytarife @search @flaky')
 
 Scenario(`When I search for "Handytarife" without specifying any details Then I will get a list of various tariffs @search_handy`, 
 async (I, onHandyTariffsPage) => {
