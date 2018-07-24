@@ -45,6 +45,7 @@
 
 # Doing
 
+- BUG git changes are obviously fro bifrost not from the test project
 
 # Backlog
 

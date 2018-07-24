@@ -9,5 +9,5 @@ module.exports = () => new Promise((resolve, reject) => {
         commit.authoredOn = Number(commit.authoredOn)
 
         return resolve(commit)
-    })
+    }, { dst: process.cwd() })
 })
