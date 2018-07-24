@@ -39,23 +39,22 @@
       () => JSON.stringify(window.performance)
     ));
 - DONE On Error also create an html snapshot
-
+- Html snapshot: Make all relative image and css links absolute
+- Elements are not highlighted on failed steps
+- Add some performance logs
 
 # Doing
 
-- Html snapshot: Make all relative image and css links absolute
 
 # Backlog
 
+- IDEA Link to stories in test titles using tags: Provide issue tracker url and tag regex template
 - IDEA Improve errors (try to find out what exactly went wrong): 
     * Does not make sense to trigger a retry if an assertion failed (like wrong text in input field) while it does make sense if an element could not be found
-- BUG BU CreateOffer test: Has no source
 - Performance logs: Must take performance logs for each new page
 - Performance: Try out setting performance markers
-- FINDOUT: grab... : Can I get the value and report it?
 - BUG Highlighting xpath expressions with puppeteer does not work
 - XPATH Should also detect .// as xpath (imporove css/xpath detection)
-- Elements are not highlighted on failed steps
 - Make this codeceptjs error nicer:
     'expected element .ResultTariffListItem-tariffName to include "B1"'
 
@@ -71,9 +70,8 @@
     XL
     ___(next element)___
     --( 69 lines more )---'
-- Add a proper cahngelog
+- Add a proper cahngelog for the project
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
-- Add some performance logs
 - Use regexes for proper css detection
 - Support for custom auto screenshot methods
 - HOw can I add the result of a rest api call?
