@@ -25,6 +25,7 @@ module.exports = (ctx) => {
         tags: ctx.tags,
         fullTitle: ctx.fullTitle,
 
+        lastSourceCommit: ctx.lastSourceCommit,
         user: gitUser(), // reporting git user
         // outline: ctx.outline // scenario outline
 

@@ -6,7 +6,7 @@ const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
 const config = require('./config')
-const {zipDirectory, extractTags, makeUrlsAbsolute} = require('./utils')
+const { zipDirectory, extractTags, makeUrlsAbsolute, gitLastCommit } = require('./utils')
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
 
@@ -229,6 +229,7 @@ class DashboardTestContext {
         this.title = testTitle
         this.fullTitle = `${this.TEST_PROJECT} -- ${this.prefix} -- ${testTitle}`
 
+        this.lastSourceCommit = undefined
         this.commands = []
         this.deviceSettings = undefined
         this.stepCounter = 1
@@ -350,6 +351,13 @@ class DashboardTestContext {
      */
     async commit() {       
         debug(`${this.title}: Committing test results`)
+
+        try {
+            this.lastSourceCommit = await gitLastCommit()
+        } catch (err) {
+            console.log('WARNING Failed to get last git commit', err)
+        }
+
         writeReport(this);
 
         if (isDashboardHostConfigured()) {
