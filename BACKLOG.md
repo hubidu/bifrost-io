@@ -47,6 +47,11 @@
 # Doing
 
 
+# Backlog Release
+
+- Support for custom auto screenshot methods
+
+
 # Backlog
 
 - BUG codeceptjs: Converts { xpath: '' } selector into a string (in step args) -> file a bug
@@ -77,7 +82,6 @@
 - Add a proper cahngelog for the project
 - Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
 - Use regexes for proper css detection
-- Support for custom auto screenshot methods
 - HOw can I add the result of a rest api call?
 - Better parser for codeceptjs assertion errors
 - HIde sensitive data in test source, steps and step.args
