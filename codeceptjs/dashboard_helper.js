@@ -140,7 +140,9 @@ class BifrostIOHelper extends Helper {
      */
     commandCtx = testCtx.createCommandContext(step.name, step.args)
 
-    const sel = commandCtx.getSelector()
+    let sel = commandCtx.getSelector()
+    sel = typeof sel === 'object' ? sel.css || sel.xpath : sel // HACKY
+    // console.log('SELECTOR', typeof sel, sel)
     if (commandCtx.shouldHighlight()) {
       try {
         debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
@@ -230,7 +232,7 @@ class BifrostIOHelper extends Helper {
     testCtx.markSuccessful()
   }
 
-  async _failed(test) { 
+  async _failed(test) {    
     const isBeforeHook = t => t.ctx && t.ctx._runnable && t.ctx._runnable.title.indexOf('before') >= 0
 
     try {
@@ -309,9 +311,13 @@ class BifrostIOHelper extends Helper {
       }
   
       // Add the source file (extracted from the step stack)
-      if (test.steps.length > 0) {
-        const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
-        testCtx.addSource(sourceCode)
+      let testFile = test.file
+      if (!testFile && test.steps && test.steps.length > 0) { // if no file prop extract from stack
+        testFile = getTestFilePathFromStack(test.steps[0].stack)
+      }
+      if (testFile) {
+        const sourceCode = fileToStringSync(testFile)
+        testCtx.addSource(sourceCode)  
       }
 
       // Add the browserlogs

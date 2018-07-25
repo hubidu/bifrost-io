@@ -16,7 +16,7 @@ module.exports = function (sel, isError, txt) {
             'td', 'td:', 'td[',
         ].some(el => str.indexOf(el) === 0)
         function isXPath(str) {
-            return str.indexOf('//') === 0 || str.indexOf('text()') >= 0
+            return str.indexOf('//') === 0 || str.indexOf('text()') >= 0 || str.indexOf('(//') >= 0 || str.indexOf('.//') >= 0
         }
 
         if (typeof cssOrXPath !== 'string') return

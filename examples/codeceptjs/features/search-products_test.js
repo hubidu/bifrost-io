@@ -4,7 +4,7 @@ const randomInt = num => Math.floor(Math.random() * num)
 
 Feature('Search for Handytarife @search @flaky')
 
-Scenario(`When I search for "Handytarife" without specifying any details Then I will get a list of various tariffs @search_handy`, 
+Scenario(`When I search for "Handytarife" without specifying any details Then I will get a list of various tariffs @search @handy`, 
 async (I, onHandyTariffsPage) => {
     I.amOnPage('https://www.check24.de/handytarife')
 
@@ -27,9 +27,19 @@ async (I, onHandyTariffsPage) => {
     onHandyTariffsPage.ISeeHeadline()
     onHandyTariffsPage.ISeeFilterWidget()
     onHandyTariffsPage.ISeeHandyTariffs()
-    onHandyTariffsPage.ISeeNthProvider(['Allnet Flat', 'Foo 1984'][randomInt(2)], 1)
+
+    // Introduce some flakiness
+    if (randomInt(2) > 0) {
+        I.selectOption('data_included', 'ab 8 GB')
+    } else {
+        I.selectOption('data_included', 'ab 3 GB')
+    }
+    
+    I.waitForInvisible('.spin-item')
+
+    onHandyTariffsPage.ISeeNthProvider('LTE All', 1)
 
     const netPrice = await onHandyTariffsPage.IGrabBestPrice()
 
-    assert(netPrice < 10, 'Expected best price to be less than 10 EUR')
+    assert(netPrice < 10, `Expected best price ${netPrice} to be less than 10 EUR`)
 })

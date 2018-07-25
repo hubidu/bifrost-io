@@ -37,7 +37,7 @@ module.exports = {
   },
 
   ISeeNthProvider(providerName, i) {
-    I.see(providerName, '.provider-name')
+    I.see(providerName, { xpath: `(//div[contains(@class, 'provider-name')])[${i}]` })
   },
 
   async IGrabBestPrice(amountInEuro) {

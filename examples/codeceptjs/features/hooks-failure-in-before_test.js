@@ -9,7 +9,7 @@ Before((I) => {
     I.amOnPage('https://www.check24.de/versicherungscenter') // we won't get here
 })
 
-Scenario(`OK TO FAIL: When the test fails in a before() hook, a report should still be created`, 
+Scenario(`When the test fails in a before() hook, a report should still be created @failing`, 
 async (I) => {
     I.amOnPage('https://www.check24.de/handytarife') // we won't get here
 })

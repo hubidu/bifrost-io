@@ -8,12 +8,12 @@ parameter.add([
 ]);
 
 Data(parameter).
-Scenario('OK TO FAIL: When the test has a lots of data attributes, Then a report is not created', function(I, current) {
+Scenario('When the test has a lots of data attributes, Then a report is not created @failing', function(I, current) {
     I.amOnPage('http://www.check24.de');
     I.see('something that is not there');
 });
 
-Scenario('OK TO FAIL: When the test has no data or a small data table Then a report is created', function(I) {  
+Scenario('When the test has no data or a small data table Then a report is created @failing', function(I) {  
     I.amOnPage('http://www.check24.de');
     I.see('something that is not there');
 });

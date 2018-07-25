@@ -42,13 +42,16 @@
 - Html snapshot: Make all relative image and css links absolute
 - Elements are not highlighted on failed steps
 - Add some performance logs
+- BUG git changes are obviously fro bifrost not from the test project
 
 # Doing
 
-- BUG git changes are obviously fro bifrost not from the test project
 
 # Backlog
 
+- BUG codeceptjs: Converts { xpath: '' } selector into a string (in step args) -> file a bug
+- Make highlighting for xpath selectors work
+- PRB When a test throws an assertion, the error does not have a stack property (which would be nice to mark the actual source location of the failure)
 - IDEA Link to stories in test titles using tags: Provide issue tracker url and tag regex template
 - IDEA Improve errors (try to find out what exactly went wrong): 
     * Does not make sense to trigger a retry if an assertion failed (like wrong text in input field) while it does make sense if an element could not be found

@@ -1,7 +1,7 @@
 
 Feature('Login');
 
-Scenario('When I login with an invalid username and password then I will see an error message', 
+Scenario('When I login with an invalid username and password then I will see an error message @login', 
 (I, loginPage) => {
     I.amOnPage('http://www.check24.de')
     I.say('I click "Anmelden" on the landing page')

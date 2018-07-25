@@ -1,6 +1,6 @@
 Feature('Search jobs')
 
-Scenario(`When I search for react jobs I should get matching job offers`, 
+Scenario(`When I search for react jobs I should get matching job offers @search @jobs`, 
 async (I) => {
     I.amOnPage('https://jobs.check24.de/')
     I.fillField('#search', 'react docker')
@@ -10,7 +10,7 @@ async (I) => {
     I.seeNumberOfVisibleElements('.vacancy--boxitem', 3)
 })
 
-Scenario(`When I search for .NET jobs I should get matching job offers`, 
+Scenario(`When I search for .NET jobs I should get matching job offers @search @jobs`, 
 async (I) => {
     I.amOnPage('https://jobs.check24.de/')
     I.fillField('#search', 'c#')

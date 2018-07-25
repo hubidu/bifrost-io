@@ -7,7 +7,7 @@ const destinations = new DataTable(['destination', 'airport']);
 destinations.add(['Mallorca', 'München'])
 destinations.add(['Mallorca', 'Frankfurt'])
 
-Data(destinations).Scenario(`When I search for various holiday destinations from different airports I should always get some results`, 
+Data(destinations).Scenario(`When I search for various holiday destinations from different airports I should always get some results @search @holiday`, 
 async (I, current) => {
     I.amOnPage('https://urlaub.check24.de/produkte')
     I.fillField('#destination-element', current.destination)
