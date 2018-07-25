@@ -7,6 +7,7 @@ const codeExcerpt = require('code-excerpt')
 
 const config = require('./config')
 const { zipDirectory, extractTags, makeUrlsAbsolute, gitLastCommit } = require('./utils')
+const onlyUnique = (value, index, self) => self.indexOf(value) === index
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
 
@@ -218,7 +219,7 @@ class DashboardTestContext {
         this.outputPath = path.join(OUTPUT_BASE, this.TEST_BASE, this.TEST_DIR)
         mkdirp.sync(this.outputPath)
       
-        this.tags = res1.tags.concat(res2.tags)
+        this.tags = res1.tags.concat(res2.tags).filter(onlyUnique)
         this.runid = runid
         this.result = undefined
         this.reportFileName = REPORT_FILENAME // just the filename of the report data file
@@ -247,7 +248,7 @@ class DashboardTestContext {
         this.prefix = `${this.TEST_PROJECT} -- ${suiteTitle}`
         this.title = testTitle
         this.fullTitle = `${this.prefix} -- ${testTitle}`
-        this.tags = res1.tags.concat(res2.tags)
+        this.tags = res1.tags.concat(res2.tags).filter(onlyUnique)
     }
 
     createCommandContext(stepName, stepArgs) {
