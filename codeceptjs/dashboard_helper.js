@@ -24,7 +24,8 @@ const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
 
 let Helper = codecept_helper;
 
-let suiteTitle, testCtx, commandCtx
+let suiteTitle, testCtx, commandCtx, currentUrl
+let testPerformanceLogs = []
 
 const dashboardClient = new DashboardClient()
 
@@ -98,6 +99,8 @@ class BifrostIOHelper extends Helper {
   async _before() {
     try {
       testCtx = dashboardClient.createTestContext(suiteTitle, 'before', true)
+      testPerformanceLogs = []
+      currentUrl = undefined
     } catch (err) {
       console.log('ERROR in _before hook', err)
     }
@@ -185,6 +188,7 @@ class BifrostIOHelper extends Helper {
         commandCtx.addScreenshot(screenshotFileName) 
       }
 
+
       // Convert stack to source snippets and add to command context
       commandCtx.addSourceSnippets(mapStepToSource(step))
 
@@ -194,6 +198,15 @@ class BifrostIOHelper extends Helper {
         url,
         title
       })
+
+      // Add to current test performance logs
+      // TODO Move that to test context
+      if (url !== currentUrl) {
+        const performanceLogs = await helper.executeScript(getPerformance)
+        testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
+        console.log(step.name, currentUrl, url, testPerformanceLogs.length)
+        currentUrl = url
+      }
     }
   }
 
@@ -209,12 +222,10 @@ class BifrostIOHelper extends Helper {
       userAgent, 
       viewportSize, 
       browserLogs,
-      performanceLogs,
     ] = await Promise.all([
       helper.executeScript(getUserAgent), 
       helper.executeScript(getViewportSize),
       helper.grabBrowserLogs(),
-      helper.executeScript(getPerformance),
     ])
 
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
@@ -227,7 +238,7 @@ class BifrostIOHelper extends Helper {
     }
 
     testCtx.addBrowserLogs(browserLogs)
-    testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
+    testCtx.addPerformanceLogs(testPerformanceLogs)
 
     testCtx.markSuccessful()
   }
