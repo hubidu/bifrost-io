@@ -46,14 +46,20 @@
 
 # Doing
 
+- Research failing tests in puppeteer together with bifrost helper: e2e-insurance-login-app-tests, branch is feature/VETHVPM-2668-rethink-test-approach
+- Research "MaxListenersExceededWarning: Possible EventEmitter memory leak ": Create a contract me, partner, 4 other persons with additional occupation
 
 # Backlog Release
 
+- Take screenshots in beforeStep()
 - Support for custom auto screenshot methods
 
 
 # Backlog
 
+- Always take fullscreen screenshots
+- Take html snapshots on first run or first run after failed
+- FIX report git changes for test file (not whole repo)
 - BUG codeceptjs: Converts { xpath: '' } selector into a string (in step args) -> file a bug
 - Make highlighting for xpath selectors work
 - PRB When a test throws an assertion, the error does not have a stack property (which would be nice to mark the actual source location of the failure)
