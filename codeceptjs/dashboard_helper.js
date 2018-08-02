@@ -136,6 +136,7 @@ class BifrostIOHelper extends Helper {
       return
     }
 
+    const s = this._getSaveScreenshot()
     const helper = this._getHelper()
 
     /* NOTE Command context must be created here, since afterStep might be skipped
@@ -156,23 +157,7 @@ class BifrostIOHelper extends Helper {
         console.log(`WARNING Failed to highlight element ${sel}`, err)
       }  
     }
-  }
 
-  /**
-   * NOTE _afterStep() will be skipped when the step fails
-   */
-  async _afterStep(step) {
-    // Skip when no test context
-    if (!testCtx) {
-      return
-    }
-    if (!commandCtx) {
-      throw new Error('WARN Expected a command context in order to make a screenshot')
-    }
-    const s = this._getSaveScreenshot()
-    const helper = this._getHelper()
-
-    // TODO Should I take screenshots in before rather?
     if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
       if (isScreenshotStep(step)) {
         const codeceptjsScreenshot = getScreenshotPath(step.args[0])
@@ -183,16 +168,18 @@ class BifrostIOHelper extends Helper {
         }          
       } else {
         const screenshotFileName = commandCtx.getFileName()
+        debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot to ${screenshotFileName}`)
+
         await s.saveScreenshot(screenshotFileName)
   
         commandCtx.addScreenshot(screenshotFileName) 
       }
 
-
       // Convert stack to source snippets and add to command context
       commandCtx.addSourceSnippets(mapStepToSource(step))
 
       // Add url and title
+      debug(`${step.name}: Getting page url and title after step`)
       const [url, title, _] = await Promise.all([ helper.grabCurrentUrl(), helper.grabTitle(), helper.executeScript(dehighlightElement)])
       commandCtx.addPageInfo({
         url,
@@ -202,11 +189,22 @@ class BifrostIOHelper extends Helper {
       // Add to current test performance logs
       // TODO Move that to test context
       if (url !== currentUrl) {
+        debug(`${step.name} ${step.humanizeArgs()}: Getting performance logs ${currentUrl} -> ${url}`)
         const performanceLogs = await helper.executeScript(getPerformance)
         testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
-        console.log(step.name, currentUrl, url, testPerformanceLogs.length)
+        // console.log(step.name, currentUrl, url, testPerformanceLogs.length)
         currentUrl = url
       }
+    }
+  }
+
+  /**
+   * NOTE _afterStep() will be skipped when the step fails
+   */
+  async _afterStep(step) {
+    // Skip when no test context
+    if (!testCtx) {
+      return
     }
   }
 
@@ -274,7 +272,9 @@ class BifrostIOHelper extends Helper {
       // const browser = this._getBrowser()
       const s = this._getSaveScreenshot()
       const helper = this._getHelper()
-      
+
+      debug(`Test FAILED with ${test.err.message}`)
+
       try {
         commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
       } catch (err) {
@@ -291,6 +291,7 @@ class BifrostIOHelper extends Helper {
         commandCtx.addScreenshot(screenshotFileName, toError(test.err))         
       }
   
+      debug('Getting data from page (source, url, title, browserlogs ...)')
       const [pageSource, url, title, userAgent, viewportSize, browserLogs, performanceLogs] = await Promise.all([
         helper.grabSource(),
         helper.grabCurrentUrl(), 
