@@ -45,20 +45,19 @@
 - BUG git changes are obviously fro bifrost not from the test project
 - Research failing tests in puppeteer together with bifrost helper: e2e-insurance-login-app-tests, branch is feature/VETHVPM-2668-rethink-test-approach
 - Research "MaxListenersExceededWarning: Possible EventEmitter memory leak ": Create a contract me, partner, 4 other persons with additional occupation
+- Take screenshots in beforeStep()
 
 # Doing
 
 
 # Backlog Release
 
-- Take screenshots in beforeStep()
 - Make fullpage screenshots
 - Support for custom auto screenshot methods
 
-
 # Backlog
 
-- IDEA When an error occurs get more detailed context info from the page
+- IDEA When an error occurs extract more detailed context info from the page
 - Always take fullscreen screenshots
 - Take html snapshots on first run or first run after failed
 - FIX report git changes for test file (not whole repo)
