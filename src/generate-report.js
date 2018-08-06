@@ -10,7 +10,7 @@ module.exports = (ctx) => {
     assert(ctx, 'Please provide a text context')
 
     return {
-        environment: process.env.NODE_ENV || 'production',
+        environment: process.env.NODE_ENV || 'development',
         ownerKey: ctx.OWNER_KEY,
         project: ctx.TEST_PROJECT || 'Unknown test project',
         runid: ctx.runid,
