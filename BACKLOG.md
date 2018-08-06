@@ -50,9 +50,10 @@
 # Doing
 
 
-# Backlog Release
+# Backlog V 2.1 Release
 
-- Make fullpage screenshots
+- Send bifrost version with report data
+- Test fullpage screenshots
 - Support for custom auto screenshot methods
 
 # Backlog

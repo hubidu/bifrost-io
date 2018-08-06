@@ -136,65 +136,70 @@ class BifrostIOHelper extends Helper {
       return
     }
 
-    const s = this._getSaveScreenshot()
-    const helper = this._getHelper()
+    try {    
+      const s = this._getSaveScreenshot()
+      const helper = this._getHelper()
 
-    /* NOTE Command context must be created here, since afterStep might be skipped
-     * in case the test fails
-     */
-    commandCtx = testCtx.createCommandContext(step.name, step.args)
+      /* NOTE Command context must be created here, since afterStep might be skipped
+      * in case the test fails
+      */
+      commandCtx = testCtx.createCommandContext(step.name, step.args)
 
-    let sel = commandCtx.getSelector()
-    sel = typeof sel === 'object' ? sel.css || sel.xpath : sel // HACKY
-    // console.log('SELECTOR', typeof sel, sel)
-    if (commandCtx.shouldHighlight()) {
-      try {
-        debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
-        if (sel) {
-          await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
-        }
-      } catch (err) {
-        console.log(`WARNING Failed to highlight element ${sel}`, err)
-      }  
-    }
-
-    if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
-      if (isScreenshotStep(step)) {
-        const codeceptjsScreenshot = getScreenshotPath(step.args[0])
+      let sel = commandCtx.getSelector()
+      sel = typeof sel === 'object' ? sel.css || sel.xpath : sel // HACKY
+      // console.log('SELECTOR', typeof sel, sel)
+      if (commandCtx.shouldHighlight()) {
         try {
-          commandCtx.addExistingScreenshot(codeceptjsScreenshot)   
+          debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
+          if (sel) {
+            await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+          }
         } catch (err) {
-          console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsScreenshot} to command context`, err)
-        }          
-      } else {
-        const screenshotFileName = commandCtx.getFileName()
-        debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot to ${screenshotFileName}`)
-
-        await s.saveScreenshot(screenshotFileName)
-  
-        commandCtx.addScreenshot(screenshotFileName) 
+          console.log(`WARNING Failed to highlight element ${sel}`, err)
+        }  
       }
 
-      // Convert stack to source snippets and add to command context
-      commandCtx.addSourceSnippets(mapStepToSource(step))
+      if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
+        if (isScreenshotStep(step)) {
+          const codeceptjsScreenshot = getScreenshotPath(step.args[0])
+          try {
+            commandCtx.addExistingScreenshot(codeceptjsScreenshot)   
+          } catch (err) {
+            console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsScreenshot} to command context`, err)
+          }          
+        } else {
+          const screenshotFileName = commandCtx.getFileName()
+          debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot to ${screenshotFileName}`)
 
-      // Add url and title
-      debug(`${step.name}: Getting page url and title after step`)
-      const [url, title, _] = await Promise.all([ helper.grabCurrentUrl(), helper.grabTitle(), helper.executeScript(dehighlightElement)])
-      commandCtx.addPageInfo({
-        url,
-        title
-      })
+          await s.saveScreenshot(screenshotFileName, true)
+    
+          commandCtx.addScreenshot(screenshotFileName) 
+        }
 
-      // Add to current test performance logs
-      // TODO Move that to test context
-      if (url !== currentUrl) {
-        debug(`${step.name} ${step.humanizeArgs()}: Getting performance logs ${currentUrl} -> ${url}`)
-        const performanceLogs = await helper.executeScript(getPerformance)
-        testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
-        // console.log(step.name, currentUrl, url, testPerformanceLogs.length)
-        currentUrl = url
+        // Convert stack to source snippets and add to command context
+        commandCtx.addSourceSnippets(mapStepToSource(step))
+
+        // Add url and title
+        debug(`${step.name}: Getting page url and title after step`)
+        const [url, title, _] = await Promise.all([ helper.grabCurrentUrl(), helper.grabTitle(), helper.executeScript(dehighlightElement)])
+        commandCtx.addPageInfo({
+          url,
+          title
+        })
+
+        // Add to current test performance logs
+        // TODO Move that to test context
+        if (url !== currentUrl) {
+          debug(`${step.name} ${step.humanizeArgs()}: Getting performance logs ${currentUrl} -> ${url}`)
+          const performanceLogs = await helper.executeScript(getPerformance)
+          testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
+          // console.log(step.name, currentUrl, url, testPerformanceLogs.length)
+          currentUrl = url
+        }
       }
+
+    } catch (err) {
+      console.log(`ERROR Unexpected error in beforeStep():`, err)
     }
   }
 
