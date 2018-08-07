@@ -3,6 +3,8 @@ exports.config = {
     "helpers": {   
       "WebDriverIO": {
         "url": "http://localhost",
+        "host": process.env.SELENIUM_HOST || 'localhost',
+        "port": process.env.SELENIUM_PORT || 4444,
         "browser": "chrome",
         "restart": true,
         "keepBrowserState": false,

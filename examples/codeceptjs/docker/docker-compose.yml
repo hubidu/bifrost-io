@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  ui_tests:
+    build: ..
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
+    links:
+      - selenium
+    extra_hosts:
+      - heimdall.io:your-heimdall-ip-here
+    command: ["./wait-for-it.sh", "-h", "selenium", "-p", "24444", "--", "npm", "start"]    
+    environment:
+      - SELENIUM_HOST=selenium
+      - SELENIUM_PORT=24444
+
+  selenium:
+    privileged: true
+    image: elgalu/selenium
+    shm_size: 1g
+    environment:
+      - MAX_INSTANCES=2
+      - MAX_SESSIONS=2
+      - CHROME=true
+      - FIREFOX=true
+    ports:
+     - 25900:25900
+    volumes:
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
+      - /dev/shm:/dev/shm

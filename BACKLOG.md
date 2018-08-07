@@ -55,6 +55,7 @@
 - Send bifrost version with report data
 - Test fullpage screenshots
 - Support for custom auto screenshot methods
+- Better error message: I.click(text, context): Should show me clickable elements with similar text
 
 # Backlog
 
