@@ -46,15 +46,15 @@
 - Research failing tests in puppeteer together with bifrost helper: e2e-insurance-login-app-tests, branch is feature/VETHVPM-2668-rethink-test-approach
 - Research "MaxListenersExceededWarning: Possible EventEmitter memory leak ": Create a contract me, partner, 4 other persons with additional occupation
 - Take screenshots in beforeStep()
+- Send bifrost version with report data
+- Externalize autoscreenshot config
+- Test fullpage screenshots
 
 # Doing
 
-- Send bifrost version with report data
-- Externalize autoscreenshot config
 
 # Backlog V 2.1 Release
 
-- Test fullpage screenshots
 - Support for custom auto screenshot methods
 - Better error message: I.click(text, context): Should show me clickable elements with similar text
 

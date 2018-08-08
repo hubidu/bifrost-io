@@ -159,7 +159,7 @@ class BifrostIOHelper extends Helper {
         }  
       }
 
-      if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot()) {
+      if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot('before')) {
         if (isScreenshotStep(step)) {
           const codeceptjsScreenshot = getScreenshotPath(step.args[0])
           try {
@@ -210,6 +210,32 @@ class BifrostIOHelper extends Helper {
     // Skip when no test context
     if (!testCtx) {
       return
+    }
+
+    try {
+      const s = this._getSaveScreenshot()
+
+      if (commandCtx.shouldTakeScreenshot('after')) {
+        const afterCommandCtx = testCtx.createCommandContext(step.name + 'After', step.args)
+  
+        const screenshotFileName = afterCommandCtx.getFileName()
+        debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot (after step) to ${screenshotFileName}`)
+  
+        await s.saveScreenshot(screenshotFileName, true)
+  
+        afterCommandCtx.addScreenshot(screenshotFileName) 
+        
+        // Convert stack to source snippets and add to command context
+        afterCommandCtx.addSourceSnippets(mapStepToSource(step))     
+
+        afterCommandCtx.addPageInfo({
+          title: step.args[0], // NOTE be careful to get url and page title on puppeteer (Navigation Context destroyed exception)
+          url: step.args[0]
+        })
+
+      }  
+    } catch (err) {
+      console.log(`ERROR Unexpected error in afterStep():`, err)
     }
   }
 

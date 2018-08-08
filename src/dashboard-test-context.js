@@ -6,7 +6,14 @@ const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
 const config = require('./config')
-const { zipDirectory, extractTags, makeUrlsAbsolute, gitLastCommit } = require('./utils')
+const { 
+    shouldTakeScreenshot, 
+    zipDirectory, 
+    extractTags, 
+    makeUrlsAbsolute, 
+    gitLastCommit 
+} = require('./utils')
+
 const onlyUnique = (value, index, self) => self.indexOf(value) === index
 const generateReport = require('./generate-report')
 const {sendReport, isDashboardHostConfigured} = require('./dashboard-api')
@@ -108,21 +115,8 @@ class DashboardCommandContext {
     /**
      * Decide before which commands a screenshot should be taken
      */
-    shouldTakeScreenshot() {
-        const isCustomPrefix = (prefixes = []) => prefixes.find(prefix => this.name.indexOf(prefix) >= 0);
-        
-        const res = this.name.indexOf('click') >= 0 || 
-            this.name.indexOf('amOnPage') >= 0 || 
-            this.name.indexOf('see') >= 0 || 
-            this.name.indexOf('say') >= 0 || 
-            this.name.indexOf('grabTextFrom') >= 0 || 
-            this.name.indexOf('grabValueFrom') >= 0 || 
-            // this.name.indexOf('selectOption') >= 0 || 
-            isCustomPrefix(config.autoscreenshotMethodPrefixes) !== undefined;
-      
-        if (res) debug(`Should take screenshot for ${this.name} = ${res}`)
-        
-        return res
+    shouldTakeScreenshot(beforeOrAfter) {
+        return shouldTakeScreenshot(beforeOrAfter, this.name)
     }
 
     /**
@@ -143,7 +137,7 @@ class DashboardCommandContext {
             return targetFile            
         }
 
-        const targetFile = moveToTestDirSync(screenshotFileName)
+        moveToTestDirSync(screenshotFileName)
 
         this._createScreenshot(screenshotFileName, err)
 
