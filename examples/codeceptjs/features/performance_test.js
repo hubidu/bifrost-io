@@ -1,7 +1,7 @@
 
 Feature('Performance @performance');
 
-Scenario('When ', 
+Scenario('When I visit multiple pages performance logs should be collected for all of them', 
 (I) => {
     I.amOnPage('http://www.check24.de')
     I.scrollPageToBottom()

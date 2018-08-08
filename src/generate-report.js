@@ -1,5 +1,6 @@
 const assert = require('assert')
 const gitUser = require('./utils/git-user')
+const packageJson = require('../package.json')
 
 const toString = v => {
     if (typeof v === 'object') return JSON.stringify(v)
@@ -10,6 +11,7 @@ module.exports = (ctx) => {
     assert(ctx, 'Please provide a text context')
 
     return {
+        client: `${packageJson.name} v${packageJson.version}`,
         environment: process.env.NODE_ENV || 'development',
         ownerKey: ctx.OWNER_KEY,
         project: ctx.TEST_PROJECT || 'Unknown test project',

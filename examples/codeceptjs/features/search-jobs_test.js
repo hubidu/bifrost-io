@@ -7,7 +7,7 @@ async (I) => {
     I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
     I.waitInUrl('/search')
     I.seeElementInDOM('.filter--section')
-    I.seeNumberOfVisibleElements('.vacancy--boxitem', 3)
+    I.seeNumberOfVisibleElements('.vacancy--boxitem', 4)
 })
 
 Scenario(`When I search for .NET jobs I should get matching job offers @search @jobs`, 
