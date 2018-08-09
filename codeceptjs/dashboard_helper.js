@@ -19,15 +19,7 @@ const {
   getScreenshotFileName, 
   mapStepToSource} = require('./utils')
 const { extractBaseUrl } = require('../src/utils')
-
 const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
-
-let Helper = codecept_helper;
-
-let suiteTitle, testCtx, commandCtx, currentUrl
-let testPerformanceLogs = []
-
-const dashboardClient = new DashboardClient()
 
 // TODO Should support unique screenshot filenames
 const getScreenshotPath = filename => path.join(global.output_dir, filename);
@@ -35,7 +27,6 @@ const getCodeceptjsScreenshotPath = (test, useUniqueScreenshotNames, isError = t
   const errorScreenshot = getScreenshotFileName(test, useUniqueScreenshotNames, isError)
   return path.join(global.output_dir, errorScreenshot)
 }
-
 const toError = err => {
   let message = err.message;
   if (err.inspect) { // AssertionFailedError
@@ -50,11 +41,20 @@ const toError = err => {
     operator: err.operator
   }
 }
-
 const printToConsole = msg => console.log(info(msg))
 const isScreenshotStep = step => step.name === 'saveScreenshot'
-
 const ignoreError = promise =>  promise.catch(e => undefined)
+
+/**
+ * Some global variables
+ */
+let Helper = codecept_helper;
+
+let suiteTitle, testCtx, commandCtx, currentUrl
+let testPerformanceLogs = []
+
+const dashboardClient = new DashboardClient()
+
 
 class BifrostIOHelper extends Helper {
   constructor(config) {
@@ -138,7 +138,8 @@ class BifrostIOHelper extends Helper {
       return
     }
 
-    try {    
+    try {   
+
       const s = this._getSaveScreenshot()
       const helper = this._getHelper()
 
@@ -161,22 +162,13 @@ class BifrostIOHelper extends Helper {
         }  
       }
 
-      if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot('before')) {
-        if (isScreenshotStep(step)) {
-          const codeceptjsScreenshot = getScreenshotPath(step.args[0])
-          try {
-            commandCtx.addExistingScreenshot(codeceptjsScreenshot)   
-          } catch (err) {
-            console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsScreenshot} to command context`, err)
-          }          
-        } else {
-          const screenshotFileName = commandCtx.getFileName()
-          debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot to ${screenshotFileName}`)
+      if (commandCtx.shouldTakeScreenshot('before')) {
+        const screenshotFileName = commandCtx.getFileName()
+        debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot to ${screenshotFileName}`)
 
-          await s.saveScreenshot(screenshotFileName, true)
-    
-          commandCtx.addScreenshot(screenshotFileName) 
-        }
+        await s.saveScreenshot(screenshotFileName, true)
+  
+        commandCtx.addScreenshot(screenshotFileName) 
 
         // Convert stack to source snippets and add to command context
         commandCtx.addSourceSnippets(mapStepToSource(step))
@@ -214,28 +206,39 @@ class BifrostIOHelper extends Helper {
       return
     }
 
-    try {
-      const s = this._getSaveScreenshot()
+    const s = this._getSaveScreenshot()
 
-      if (commandCtx.shouldTakeScreenshot('after')) {
-        const afterCommandCtx = testCtx.createCommandContext(step.name + 'After', step.args)
-  
-        const screenshotFileName = afterCommandCtx.getFileName()
-        debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot (after step) to ${screenshotFileName}`)
-  
-        await s.saveScreenshot(screenshotFileName, true)
-  
-        afterCommandCtx.addScreenshot(screenshotFileName) 
-        
+    try {
+
+      if (isScreenshotStep(step) || commandCtx.shouldTakeScreenshot('after')) {
+        const afterCommandCtx = testCtx.createCommandContext(step.name + '.after', step.args)
+
+        if (isScreenshotStep(step)) { // NOTE MUST be in after Step
+          // Move screenshot made in test to report
+          const codeceptjsScreenshot = getScreenshotPath(step.args[0])
+          try {
+            afterCommandCtx.addExistingScreenshot(codeceptjsScreenshot)   
+          } catch (err) {
+            console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsScreenshot} to command context`, err)
+          }          
+        } else {
+          // Take screenshot
+          const screenshotFileName = afterCommandCtx.getFileName()
+          debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot (after step) to ${screenshotFileName}`)
+
+          await s.saveScreenshot(screenshotFileName, true)
+
+          afterCommandCtx.addScreenshot(screenshotFileName)
+        }
         // Convert stack to source snippets and add to command context
-        afterCommandCtx.addSourceSnippets(mapStepToSource(step))     
+        afterCommandCtx.addSourceSnippets(mapStepToSource(step))
 
         afterCommandCtx.addPageInfo({
-          title: step.args[0], // NOTE be careful to get url and page title on puppeteer (Navigation Context destroyed exception)
-          url: step.args[0]
+          title: step.name === 'amOnPage' ? step.args[0] : 'unknown', // NOTE be careful to get url and page title on puppeteer (Navigation Context destroyed exception)
+          url: step.name === 'amOnPage' ? step.args[0] : 'unknown'
         })
-
       }  
+
     } catch (err) {
       console.log(`ERROR Unexpected error in afterStep():`, err)
     }
