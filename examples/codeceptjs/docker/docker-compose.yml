@@ -14,7 +14,7 @@ services:
     environment:
       - SELENIUM_HOST=selenium
       - SELENIUM_PORT=24444
-      - TEST_BROWSER=firefox
+      - TEST_BROWSER=chrome
 
   selenium:
     privileged: true

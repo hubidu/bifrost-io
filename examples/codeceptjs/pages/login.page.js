@@ -10,8 +10,8 @@ module.exports = {
   },
 
   loginWith(username, password) {
-    I.fillField('#email', username)
-    I.fillField('#password', password)
-    I.click('#c24-kb-register-btn')
+    I.fillField('body #email', username)
+    I.fillField('body #password', password)
+    I.click('body #c24-kb-register-btn')
   }
 }

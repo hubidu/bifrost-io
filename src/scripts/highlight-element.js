@@ -11,7 +11,7 @@ module.exports = function (sel, isError, txt) {
     function querySel(cssOrXPath) {
         // TODO Refactor this
         const isCss = (str) => [
-            '.', '#', '[', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'input', 'button', 'a ', 'a[',
+            '.', '#', '[', 'body', 'table', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'input', 'button', 'a ', 'a[',
             'tr', 'tr:', 'tr[',
             'td', 'td:', 'td[',
         ].some(el => str.indexOf(el) === 0)
