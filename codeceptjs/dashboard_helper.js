@@ -257,7 +257,7 @@ class BifrostIOHelper extends Helper {
       helper.executeScript(getUserAgent), 
       helper.executeScript(getViewportSize),
       helper.grabBrowserLogs(),
-    ])
+    ].map(ignoreError))
 
     const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
     testCtx.addDeviceSettings(deviceSettings)

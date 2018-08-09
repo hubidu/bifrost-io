@@ -9,7 +9,7 @@ Scenario('The test will fail and should still get a report When I throw an asser
 
 Scenario('The test will fail When an element on the page can not be found @failing', async (I) => {
     I.amOnPage('http://www.check24.de')
-    I.click('#this-selector-does-not-exist')
+    I.click('body #this-selector-does-not-exist')
 })
 
 Scenario('The test will fail When checking for a non-existing element within a context @failing', async (I) => {
