@@ -56,6 +56,7 @@
 # Backlog V 2.1 Release
 
 - Support for custom auto screenshot methods
+- Highlight element by text (e. g. in I.click('button text'))
 - Better error message: I.click(text, context): Should show me clickable elements with similar text
 
 # Backlog
