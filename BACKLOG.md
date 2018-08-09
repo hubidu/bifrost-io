@@ -47,7 +47,7 @@
 - Research "MaxListenersExceededWarning: Possible EventEmitter memory leak ": Create a contract me, partner, 4 other persons with additional occupation
 - Take screenshots in beforeStep()
 - Send bifrost version with report data
-- Externalize autoscreenshot config
+- Take screenshot in afterStep for I.amOnPage
 - Test fullpage screenshots
 
 # Doing

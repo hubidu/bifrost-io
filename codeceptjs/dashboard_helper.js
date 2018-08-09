@@ -54,6 +54,8 @@ const toError = err => {
 const printToConsole = msg => console.log(info(msg))
 const isScreenshotStep = step => step.name === 'saveScreenshot'
 
+const ignoreError = promise =>  promise.catch(e => undefined)
+
 class BifrostIOHelper extends Helper {
   constructor(config) {
     super(config)
@@ -331,7 +333,7 @@ class BifrostIOHelper extends Helper {
         helper.executeScript(getViewportSize),
         helper.grabBrowserLogs(),
         helper.executeScript(getPerformance),
-      ])
+      ].map(ignoreError))
 
       // Add url and page title
       commandCtx.addPageInfo({

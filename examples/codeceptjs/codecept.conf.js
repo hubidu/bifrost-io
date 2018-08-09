@@ -5,7 +5,7 @@ exports.config = {
         "url": "http://localhost",
         "host": process.env.SELENIUM_HOST || 'localhost',
         "port": process.env.SELENIUM_PORT || 4444,
-        "browser": "chrome",
+        "browser": process.env.TEST_BROWSER || 'chrome',
         "restart": true,
         "keepBrowserState": false,
         "keepCookies": false,

@@ -9,11 +9,12 @@ services:
     links:
       - selenium
     extra_hosts:
-      - heimdall.io:your-heimdall-ip-here
+      - heimdall.io:172.30.128.105
     command: ["./wait-for-it.sh", "-h", "selenium", "-p", "24444", "--", "npm", "start"]    
     environment:
       - SELENIUM_HOST=selenium
       - SELENIUM_PORT=24444
+      - TEST_BROWSER=firefox
 
   selenium:
     privileged: true
