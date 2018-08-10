@@ -21,6 +21,10 @@ Scenario('When this test tagged  with a failing tag fails, it should be shown as
     I.see('Something which is not there')
 })
 
+Scenario('When this test tagged with a failing tag succeeds, it should be shown as failed (failing tests MUST NOT succeed) @failing', (I) => {
+    I.amOnPage('http://www.google.de')
+})
+
 Scenario('When the test contains a story tag it should be linked to the issue tracker @story:FOO-12345', (I) => {
     I.amOnPage('http://www.google.de')
 })
