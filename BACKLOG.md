@@ -58,6 +58,8 @@
 - Support for custom auto screenshot methods
 - Highlight element by text (e. g. in I.click('button text'))
 - Better error message: I.click(text, context): Should show me clickable elements with similar text
+- Try: run parallel with puppeteer
+- Should not generate multiple runids when running in parallel
 
 # Backlog
 

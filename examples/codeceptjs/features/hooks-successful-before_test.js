@@ -1,4 +1,4 @@
-Feature('@hooks Successful before each hooks')
+Feature('Successful before each hooks')
 
 Before((I) => {
     I.amOnPage('https://www.check24.de')
