@@ -56,7 +56,7 @@
 
 # Backlog V 2.1 Release
 
-- seeInField: should highlight field
+- seeInField: should highlight field (even when command failed)
 - Highlight element by text (e. g. in I.click('button text'))
 - Better error message: I.click(text, context): Should show me clickable elements with similar text
 - Try: run parallel with puppeteer
