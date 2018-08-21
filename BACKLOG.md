@@ -52,10 +52,11 @@
 
 # Doing
 
+- Support for custom auto screenshot methods
 
 # Backlog V 2.1 Release
 
-- Support for custom auto screenshot methods
+- seeInField: should highlight field
 - Highlight element by text (e. g. in I.click('button text'))
 - Better error message: I.click(text, context): Should show me clickable elements with similar text
 - Try: run parallel with puppeteer
