@@ -1,5 +1,7 @@
+const OutputDir = './__out'
+
 exports.config = {
-    "output": "./__out",
+    "output": OutputDir,
     "helpers": {   
       "WebDriverIO": {
         "url": "http://localhost",
@@ -41,7 +43,22 @@ exports.config = {
       "loginPage": "./pages/login.page.js",
       "onHandyTariffsPage": "./pages/handy-tariffs.page.js",
     },
-    "mocha": {},
+    mocha: {
+      reporterOptions: {
+        'codeceptjs-cli-reporter': {
+          stdout: '-',
+          options: {
+            steps: true,
+          },
+        },
+        'mocha-junit-reporter': {
+          stdout: '-',
+          options: {
+            mochaFile: '${OutputDir}/result.xml',
+          },
+        },
+      },
+    },
     "bootstrap": false,
     "teardown": null,
     "hooks": [],

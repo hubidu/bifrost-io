@@ -10,11 +10,11 @@ destinations.add(['Mallorca', 'Frankfurt'])
 Data(destinations).Scenario(`When I search for various holiday destinations from different airports I should always get some results @search @holiday`, 
 async (I, current) => {
     I.amOnPage('https://urlaub.check24.de/produkte')
-    I.fillField('body #destination-element', current.destination)
+    I.fillField('body #c24-travel-destination-element', current.destination)
     I.pressKey('Enter')
     I.wait(1)
     I.pressKey('Tab')
-    I.fillField('body #airport-element', current.airport)
+    I.fillField('body #c24-travel-airport-element', current.airport)
     I.pressKey('Enter')
     I.wait(1)
 
@@ -26,7 +26,8 @@ async (I, current) => {
     I.pressKey('Tab')
     I.pressKey('Tab')
     I.wait(1)
-    I.clickVisible('label[for="duration-2"]')
+    // I.clickVisible('label[for="duration-2"]')
+    I.selectOption('#c24-travel-travel-duration-element', '1w')
     I.click('Reise finden') 
 
     I.waitInUrl('/suche')

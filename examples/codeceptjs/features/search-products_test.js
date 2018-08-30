@@ -32,9 +32,9 @@ async (I, onHandyTariffsPage) => {
 
     // Introduce some flakiness
     if (randomInt(2) > 0) {
-        I.selectOption('data_included', 'ab 8 GB')
+        I.selectOption('#data_included', 'ab 8 GB')
     } else {
-        I.selectOption('data_included', 'ab 3 GB')
+        I.selectOption('#data_included', 'ab 3 GB')
     }
     
     // There is a hidden flakiness here, because
@@ -42,7 +42,7 @@ async (I, onHandyTariffsPage) => {
     // have been updated
     I.waitForInvisible('.spin-item')
 
-    onHandyTariffsPage.ISeeNthProvider('LTE All', 1)
+    onHandyTariffsPage.ISeeNthProvider('Allnet-Flat Comfort', 1) // Best provider expected for 3GB option
 
     const netPrice = await onHandyTariffsPage.IGrabBestPrice()
 

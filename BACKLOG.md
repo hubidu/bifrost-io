@@ -65,6 +65,7 @@
 
 # Backlog
 
+- IDEA Just rerun failed tests (get from heimdall backend)
 - IDEA When an error occurs extract more detailed context info from the page
 - Always take fullscreen screenshots
 - Take html snapshots on first run or first run after failed

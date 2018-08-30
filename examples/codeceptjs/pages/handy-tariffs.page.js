@@ -17,27 +17,23 @@ module.exports = {
   },
 
   ISeeHeadline() {
-    if (process.env.TEST_DEVICE !== 'mobile') I.see('Handytarife im Vergleich', 'h1')
+    if (process.env.TEST_DEVICE !== 'mobile') I.see('Handytarife im Vergleich', '.headline')
   },
 
   ISeeFilterWidget() {
     if (process.env.TEST_DEVICE === 'mobile') {
         I.seeElement('//c24-header-tabs')
     } else {
-        I.seeElement('//filter')
+        I.seeElement('//c24-result-list-filter')
     }
   },
 
   ISeeHandyTariffs() {
-    if (process.env.TEST_DEVICE === 'mobile') {
-        I.seeElement('c24-result-list-item')
-    } else {
-        I.seeElement('product-item')
-    }
+    I.seeElement('c24-result-list-item')
   },
 
   ISeeNthProvider(providerName, i) {
-    I.see(providerName, { xpath: `(//div[contains(@class, 'provider-name')])[${i}]` })
+    I.see(providerName, { xpath: `(//c24-result-list-tariff-name)[${i}]` })
   },
 
   async IGrabBestPrice(amountInEuro) {
@@ -46,7 +42,7 @@ module.exports = {
         const netPrice = toNumber(prices)[2]
         return netPrice
     } else {
-        const prices = await I.grabTextFrom('product-item:nth-child(1) .price')
+        const prices = await I.grabTextFrom('c24-result-list-tariff-name:nth-child(1) c24-tariff-price-average .value')
         const netPrice = toNumber(prices)[0]
         return netPrice
     }
