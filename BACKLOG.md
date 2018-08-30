@@ -56,6 +56,7 @@
 
 # Backlog V 2.1 Release
 
+- Android: Extract more info for deviceSettings from native and webview sessions
 - seeInField: should highlight field (even when command failed)
 - Highlight element by text (e. g. in I.click('button text'))
 - Better error message: I.click(text, context): Should show me clickable elements with similar text

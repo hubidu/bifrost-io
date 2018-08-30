@@ -4,6 +4,8 @@ const extractBaseUrl = require('./extract-base-url')
 const makeUrlsAbsolute = require('./make-urls-absolute')
 const gitLastCommit = require('./git-last-commit')
 const shouldTakeScreenshot = require('./should-take-screenshot')
+const getDeviceSettingsFromUA = require('./get-device-settings-from-ua')
+const getDeviceSettingsFromSession = require('./get-device-settings-from-session')
 
 module.exports = {
     extractTags,
@@ -12,4 +14,6 @@ module.exports = {
     makeUrlsAbsolute,
     gitLastCommit,
     shouldTakeScreenshot,
+    getDeviceSettingsFromUA,
+    getDeviceSettingsFromSession
 }

@@ -18,8 +18,11 @@ const {
   getTestFilePathFromStack, 
   getScreenshotFileName, 
   mapStepToSource} = require('./utils')
-const { extractBaseUrl } = require('../src/utils')
-const getDeviceSettingsFromUA = require('../src/get-device-settings-from-ua')
+const { 
+  extractBaseUrl, 
+  getDeviceSettingsFromSession, 
+  getDeviceSettingsFromUA 
+} = require('../src/utils')
 
 // TODO Should support unique screenshot filenames
 const getScreenshotPath = filename => path.join(global.output_dir, filename);
@@ -68,18 +71,48 @@ class BifrostIOHelper extends Helper {
   }
 
   _getSaveScreenshot() {
-    const helper = this.helpers['WebDriverIO']
+    let helper = this.helpers['WebDriverIO']
     if (helper) return Object.assign({}, {
       saveScreenshot: helper.browser.saveScreenshot
     })
     
-    return {
-      saveScreenshot: async (path) =>  this.helpers['Puppeteer'].page.screenshot({ path })
+    helper = this.helpers['Puppeteer']
+    if (helper) {
+      return {
+        saveScreenshot: async (path) =>  this.helpers['Puppeteer'].page.screenshot({ path })
+      }  
+    }
+    
+    helper = this.helpers['Appium']
+    if (helper) {
+      return Object.assign({}, {
+        saveScreenshot: helper.browser.saveScreenshot
+      })
     }
   }
 
   _getHelper() {
-    return this.helpers['WebDriverIO'] || this.helpers['Puppeteer']
+    const webdriverHelper = this.helpers['WebDriverIO']
+    if (webdriverHelper) {
+      return Object.assign(webdriverHelper, {
+        grabSession: async () => undefined,
+      })
+    }
+
+    const puppeteerHelper = this.helpers['Puppeteer']
+    if (puppeteerHelper) {
+      return Object.assign(puppeteerHelper, {
+        grabSession: async () => undefined,
+      })
+    }
+    
+    const appiumHelper = this.helpers['Appium']
+    return Object.assign(appiumHelper, {
+      grabSession: async () => (await appiumHelper.browser.session()).value,
+      grabTitle: async () => '-',
+      grabCurrentUrl: async () => appiumHelper.grabCurrentActivity(),
+      executeScript: async () => Promise.resolve(),
+    })
   }
 
   _init() {}
@@ -186,7 +219,9 @@ class BifrostIOHelper extends Helper {
         if (url !== currentUrl) {
           debug(`${step.name} ${step.humanizeArgs()}: Getting performance logs ${currentUrl} -> ${url}`)
           const performanceLogs = await helper.executeScript(getPerformance)
-          testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
+          if (performanceLogs) {
+            testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
+          }
           // console.log(step.name, currentUrl, url, testPerformanceLogs.length)
           currentUrl = url
         }
@@ -256,13 +291,15 @@ class BifrostIOHelper extends Helper {
       userAgent, 
       viewportSize, 
       browserLogs,
+      session,
     ] = await Promise.all([
       helper.executeScript(getUserAgent), 
       helper.executeScript(getViewportSize),
       helper.grabBrowserLogs(),
+      helper.grabSession()
     ].map(ignoreError))
 
-    const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)   
+    const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)   
     testCtx.addDeviceSettings(deviceSettings)
 
     // Add source (make sure we have steps, TODO actually that should be always the case here)
@@ -328,7 +365,7 @@ class BifrostIOHelper extends Helper {
       }
   
       debug('Getting data from page (source, url, title, browserlogs ...)')
-      const [pageSource, url, title, userAgent, viewportSize, browserLogs, performanceLogs] = await Promise.all([
+      const [pageSource, url, title, userAgent, viewportSize, browserLogs, performanceLogs, session] = await Promise.all([
         helper.grabSource(),
         helper.grabCurrentUrl(), 
         helper.grabTitle(),
@@ -336,6 +373,7 @@ class BifrostIOHelper extends Helper {
         helper.executeScript(getViewportSize),
         helper.grabBrowserLogs(),
         helper.executeScript(getPerformance),
+        helper.grabSession()
       ].map(ignoreError))
 
       // Add url and page title
@@ -345,7 +383,7 @@ class BifrostIOHelper extends Helper {
       })
 
       // Add device settings
-      const deviceSettings = getDeviceSettingsFromUA(userAgent, viewportSize)
+      const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)   
       testCtx.addDeviceSettings(deviceSettings)
   
       if (test.steps.length > 0) {
@@ -371,7 +409,9 @@ class BifrostIOHelper extends Helper {
       // Add the browserlogs
       testCtx.addBrowserLogs(browserLogs)
 
-      testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
+      if (performanceLogs) {
+        testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
+      }
   
       // Add html of page
       testCtx.addPageHtml(pageSource, extractBaseUrl(url))

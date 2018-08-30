@@ -1,6 +1,15 @@
 const UAParser = require('ua-parser-js')
 
 module.exports = (userAgent, viewportSize) => {
+    if (!userAgent) return {
+        name: 'unknown',
+        type: 'unknown',
+        browser: 'unknown',
+        browserVersion: '-',
+        os: 'unknown',
+        width: 0,
+        height: 0
+    }
     const uap = new UAParser(userAgent)
     
     return {
