@@ -6,8 +6,8 @@ const info = chalk.bold.green.underline
 
 const DashboardClient = require('../index')
 const {
-  getViewportSize, 
-  getUserAgent, 
+  getViewportSize,
+  getUserAgent,
   dehighlightElement,
   getPerformance,
   highlightElement} = require('../src/scripts')
@@ -15,13 +15,14 @@ const {
 const {
   stringify,
   fileToStringSync,
-  getTestFilePathFromStack, 
-  getScreenshotFileName, 
+  getTestFilePathFromStack,
+  getScreenshotFileName,
   mapStepToSource} = require('./utils')
-const { 
-  extractBaseUrl, 
-  getDeviceSettingsFromSession, 
-  getDeviceSettingsFromUA 
+const {
+  extractBaseUrl,
+  getDeviceSettingsFromSession,
+  getDeviceSettingsFromUA,
+  normalizePath
 } = require('../src/utils')
 
 // TODO Should support unique screenshot filenames
@@ -75,14 +76,14 @@ class BifrostIOHelper extends Helper {
     if (helper) return Object.assign({}, {
       saveScreenshot: helper.browser.saveScreenshot
     })
-    
+
     helper = this.helpers['Puppeteer']
     if (helper) {
       return {
         saveScreenshot: async (path) =>  this.helpers['Puppeteer'].page.screenshot({ path })
-      }  
+      }
     }
-    
+
     helper = this.helpers['Appium']
     if (helper) {
       return Object.assign({}, {
@@ -105,7 +106,7 @@ class BifrostIOHelper extends Helper {
         grabSession: async () => undefined,
       })
     }
-    
+
     const appiumHelper = this.helpers['Appium']
     return Object.assign(appiumHelper, {
       grabSession: async () => (await appiumHelper.browser.session()).value,
@@ -121,7 +122,25 @@ class BifrostIOHelper extends Helper {
    * Before/After Suite
    */
   _beforeSuite(suite) {
-    suiteTitle = suite.title
+    const makePrefix = suitePath => {
+      suitePath = suitePath && suitePath.replace(path.join(process.cwd(), 'features'), '')
+      if (suitePath) {
+        suitePath = path.dirname(suitePath)
+        if (suitePath[0] === path.sep) {
+          suitePath = suitePath.slice(1)
+        }
+      }
+      return suitePath
+    }
+
+    const suitePath = suite.tests && suite.tests.length > 0 && suite.tests[0].file
+    const suitePrefix = makePrefix(suitePath)
+
+    if (suitePrefix) {
+      suiteTitle = `${normalizePath(suitePrefix)} -- ${suite.title}`
+    } else {
+      suiteTitle = suite.title
+    }
   }
 
   _afterSuite(suite) {
@@ -144,13 +163,14 @@ class BifrostIOHelper extends Helper {
   _test(test) {
     // Skip if test context already exists (created by before)
     if (testCtx) {
-      testCtx.updateTitles(test.parent.title, test.title)      
+      // testCtx.updateTitles(test.parent.title, test.title)
+      testCtx.updateTitles(suiteTitle, test.title)
       return
     }
 
     // TODO I think there is no chance anymore to actually get here
     try {
-      testCtx = dashboardClient.createTestContext(test.parent.title, test.title)      
+      testCtx = dashboardClient.createTestContext(suiteTitle, test.title)
     } catch (err) {
       console.log('ERROR in _test hook', err)
     }
@@ -171,7 +191,7 @@ class BifrostIOHelper extends Helper {
       return
     }
 
-    try {   
+    try {
 
       const s = this._getSaveScreenshot()
       const helper = this._getHelper()
@@ -188,11 +208,11 @@ class BifrostIOHelper extends Helper {
         try {
           debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
           if (sel) {
-            await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)  
+            await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)
           }
         } catch (err) {
           console.log(`WARNING Failed to highlight element ${sel}`, err)
-        }  
+        }
       }
 
       if (commandCtx.shouldTakeScreenshot('before')) {
@@ -200,8 +220,8 @@ class BifrostIOHelper extends Helper {
         debug(`${step.name} ${step.humanizeArgs()}: Taking screenshot to ${screenshotFileName}`)
 
         await s.saveScreenshot(screenshotFileName, true)
-  
-        commandCtx.addScreenshot(screenshotFileName) 
+
+        commandCtx.addScreenshot(screenshotFileName)
 
         // Convert stack to source snippets and add to command context
         commandCtx.addSourceSnippets(mapStepToSource(step))
@@ -252,10 +272,10 @@ class BifrostIOHelper extends Helper {
           // Move screenshot made in test to report
           const codeceptjsScreenshot = getScreenshotPath(step.args[0])
           try {
-            afterCommandCtx.addExistingScreenshot(codeceptjsScreenshot)   
+            afterCommandCtx.addExistingScreenshot(codeceptjsScreenshot)
           } catch (err) {
             console.log(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsScreenshot} to command context`, err)
-          }          
+          }
         } else {
           // Take screenshot
           const screenshotFileName = afterCommandCtx.getFileName()
@@ -272,7 +292,7 @@ class BifrostIOHelper extends Helper {
           title: step.name === 'amOnPage' ? step.args[0] : 'unknown', // NOTE be careful to get url and page title on puppeteer (Navigation Context destroyed exception)
           url: step.name === 'amOnPage' ? step.args[0] : 'unknown'
         })
-      }  
+      }
 
     } catch (err) {
       console.log(`ERROR Unexpected error in afterStep():`, err)
@@ -283,28 +303,29 @@ class BifrostIOHelper extends Helper {
     if (!testCtx) {
       return
     }
-   
+
     const helper = this._getHelper()
 
     // Get various data from the browser
     const [
-      userAgent, 
-      viewportSize, 
+      userAgent,
+      viewportSize,
       browserLogs,
       session,
     ] = await Promise.all([
-      helper.executeScript(getUserAgent), 
+      helper.executeScript(getUserAgent),
       helper.executeScript(getViewportSize),
       helper.grabBrowserLogs(),
       helper.grabSession()
     ].map(ignoreError))
 
-    const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)   
+    const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)
     testCtx.addDeviceSettings(deviceSettings)
 
     // Add source (make sure we have steps, TODO actually that should be always the case here)
     if (test.steps.length > 0) {
-      const sourceCode = fileToStringSync(getTestFilePathFromStack(test.steps[0].stack))
+      const testFilePath = getTestFilePathFromStack(test.steps[0].stack)
+      const sourceCode = fileToStringSync(testFilePath)
       testCtx.addSource(sourceCode)
     }
 
@@ -314,7 +335,7 @@ class BifrostIOHelper extends Helper {
     testCtx.markSuccessful()
   }
 
-  async _failed(test) {    
+  async _failed(test) {
     const isBeforeHook = t => t.ctx && t.ctx._runnable && t.ctx._runnable.title.indexOf('before') >= 0
 
     try {
@@ -334,7 +355,8 @@ class BifrostIOHelper extends Helper {
        * we have to tweak the test object
        */
       if (isBeforeHook(test)) {
-        testCtx.updateTitles(test.title, test.ctx.currentTest.title)
+        // testCtx.updateTitles(test.title, test.ctx.currentTest.title)
+        testCtx.updateTitles(suiteTitle, test.ctx.currentTest.title)
         const failedHook = test.ctx._runnable
         failedHook.err = test.err
         test = failedHook
@@ -349,9 +371,9 @@ class BifrostIOHelper extends Helper {
       debug(`Test FAILED with ${test.err.message}`)
 
       try {
-        commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))   
+        commandCtx.addExistingScreenshot(codeceptjsErrorScreenshot, toError(test.err))
       } catch (err) {
-        debug(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`, 
+        debug(`WARNING Failed to add codeceptjs error screenshot ${codeceptjsErrorScreenshot} to command context`,
           JSON.stringify(err, null, 2))
         console.log(`WARNING Could not add existing error screenshot ${codeceptjsErrorScreenshot}`)
         // NOTE This can happen since codeceptjs may fail to produce an error screenshot
@@ -360,16 +382,16 @@ class BifrostIOHelper extends Helper {
         // So let's just take our own screenshot
         const screenshotFileName = commandCtx.getFileName()
         await s.saveScreenshot(screenshotFileName)
-  
-        commandCtx.addScreenshot(screenshotFileName, toError(test.err))         
+
+        commandCtx.addScreenshot(screenshotFileName, toError(test.err))
       }
-  
+
       debug('Getting data from page (source, url, title, browserlogs ...)')
       const [pageSource, url, title, userAgent, viewportSize, browserLogs, performanceLogs, session] = await Promise.all([
         helper.grabSource(),
-        helper.grabCurrentUrl(), 
+        helper.grabCurrentUrl(),
         helper.grabTitle(),
-        helper.executeScript(getUserAgent), 
+        helper.executeScript(getUserAgent),
         helper.executeScript(getViewportSize),
         helper.grabBrowserLogs(),
         helper.executeScript(getPerformance),
@@ -383,19 +405,19 @@ class BifrostIOHelper extends Helper {
       })
 
       // Add device settings
-      const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)   
+      const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)
       testCtx.addDeviceSettings(deviceSettings)
-  
+
       if (test.steps.length > 0) {
         // Generally I expect tests to fail on steps
         // so I report the step
         const failedStep = test.steps[0]
-        testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))  
+        testCtx.commands[testCtx.commands.length - 1].addSourceSnippets(mapStepToSource(failedStep))
       } else {
         // However they could also fail at other places, e. g. on an assert statement in the test
         // In this case we just report the error
       }
-  
+
       // Add the source file (extracted from the step stack)
       let testFile = test.file
       if (!testFile && test.steps && test.steps.length > 0) { // if no file prop extract from stack
@@ -403,7 +425,7 @@ class BifrostIOHelper extends Helper {
       }
       if (testFile) {
         const sourceCode = fileToStringSync(testFile)
-        testCtx.addSource(sourceCode)  
+        testCtx.addSource(sourceCode)
       }
 
       // Add the browserlogs
@@ -412,17 +434,17 @@ class BifrostIOHelper extends Helper {
       if (performanceLogs) {
         testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
       }
-  
+
       // Add html of page
       testCtx.addPageHtml(pageSource, extractBaseUrl(url))
 
       // Mark the test as failed
-      testCtx.markFailed(toError(test.err))  
+      testCtx.markFailed(toError(test.err))
     } catch (err) {
       console.log('ERROR in _failed(test) hook: ', err)
     }
   }
-  
+
   async _finishTest(suite) {
     const url = await dashboardClient.getDashboardUrl()
     if (url) {

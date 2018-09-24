@@ -18,7 +18,7 @@ module.exports = (userAgent, viewportSize) => {
         browser: uap.getBrowser().name.toLowerCase(), // name of the browser: chrome, firefox ...
         browserVersion: uap.getBrowser().version,
         os: uap.getOS().name,
-        width: viewportSize.width,
-        height: viewportSize.height
+        width: viewportSize && viewportSize.width,
+        height: viewportSize && viewportSize.height
     }
 }

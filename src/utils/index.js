@@ -6,6 +6,7 @@ const gitLastCommit = require('./git-last-commit')
 const shouldTakeScreenshot = require('./should-take-screenshot')
 const getDeviceSettingsFromUA = require('./get-device-settings-from-ua')
 const getDeviceSettingsFromSession = require('./get-device-settings-from-session')
+const normalizePath = require('./normalize-path')
 
 module.exports = {
     extractTags,
@@ -15,5 +16,6 @@ module.exports = {
     gitLastCommit,
     shouldTakeScreenshot,
     getDeviceSettingsFromUA,
-    getDeviceSettingsFromSession
+    getDeviceSettingsFromSession,
+    normalizePath,
 }

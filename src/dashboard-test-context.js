@@ -246,7 +246,7 @@ class DashboardTestContext {
     }
 
     createCommandContext(stepName, stepArgs) {
-        const cmd = new DashboardCommandContext(this, stepName, stepArgs.map(arg => arg.toString()))
+        const cmd = new DashboardCommandContext(this, stepName, stepArgs.map(arg => arg && arg.toString()))
         this.commands.push(cmd)
         return cmd
     }
@@ -267,7 +267,7 @@ class DashboardTestContext {
     /**
      * Add a file with the test's source code to the report data
      */
-    addSource(source = 'No test source found') {
+    addSource(source = 'No test source available', ) {
         const sourceFile = this.getSourceFileName()
         stringToFile(sourceFile, source)
     }

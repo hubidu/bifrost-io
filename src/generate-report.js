@@ -3,10 +3,11 @@ const gitUser = require('./utils/git-user')
 const packageJson = require('../package.json')
 
 const toString = v => {
+    if (!v) return 'undefined'
     if (typeof v === 'object') return JSON.stringify(v)
     return v.toString()
 }
-  
+
 module.exports = (ctx) => {
     assert(ctx, 'Please provide a text context')
 

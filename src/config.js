@@ -6,6 +6,7 @@ const CONFIG_FILE = path.join(process.cwd(), '.bifrost.js')
 const cfg = {
     ownerkey: process.env.OWNER_KEY,
     project: process.env.TEST_PROJECT || path.basename(process.cwd()),
+    testBaseDir: path.join(process.cwd(), 'features')
 }
 let cfgFromFile = {}
 

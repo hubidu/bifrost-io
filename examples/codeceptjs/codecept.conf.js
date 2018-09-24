@@ -8,6 +8,9 @@ const mobileEmulation = process.env.TEST_DEVICE !== undefined ? ({
 }) : undefined
 
 exports.config = {
+    "name": "codeceptjs",
+    "tests": "./features/**/*_test.js",
+    "timeout": 10000,
     "output": OutputDir,
     "helpers": {
       "WebDriverIO": {
@@ -66,8 +69,5 @@ exports.config = {
     },
     "bootstrap": false,
     "teardown": null,
-    "hooks": [],
-    "tests": "./features/*_test.js",
-    "timeout": 10000,
-    "name": "codeceptjs"
+    "hooks": []
 }
