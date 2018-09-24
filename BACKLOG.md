@@ -50,10 +50,11 @@
 - Take screenshot in afterStep for I.amOnPage
 - Test fullpage screenshots
 - Check: RUnning tests in mobile emulation mode
+- Dont add project name to prefix
 
 # Doing
 
-- Dont add project name to prefix
+- Extract steps from test source and report
 - Support for custom auto screenshot methods
 
 # Backlog V 2.1 Release

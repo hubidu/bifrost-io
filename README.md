@@ -76,6 +76,18 @@ E. g. you could
   - Categorize by feature category
   - Categorize by application/component and then by feature category
 
+The folder hierarchy will be used in test reports to group test runs nicely.
+
+### Specify the environment when running tests
+
+You should specify NODE_ENV when running your tests. The following environment names are
+supported:
+
+  - development - when you run tests from your development machine
+  - test, integration - when you run your tests against an integration/test system
+  - staging - when you run your tests against a near/pre production environment
+  - production - when you run your tests against a production environment
+
 ### Run tests in mobile emulation mode
 
 In order to run your web browser tests on a different device (using chrome emulation mode)
