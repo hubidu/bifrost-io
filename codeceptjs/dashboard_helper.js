@@ -123,6 +123,7 @@ class BifrostIOHelper extends Helper {
    */
   _beforeSuite(suite) {
     const makePrefix = suitePath => {
+      // TODO make the path configurable or get from codecept.conf
       suitePath = suitePath && suitePath.replace(path.join(process.cwd(), 'features'), '')
       if (suitePath) {
         suitePath = path.dirname(suitePath)
@@ -176,18 +177,19 @@ class BifrostIOHelper extends Helper {
     }
   }
 
-  async _after(test) {
+  async _after() {
     if (!testCtx) {
-      // console.log('WARN Expected a test context in order to commit the report data')
+      // if this happens we just continue
       return
     }
+
     testCtx.commit()
     testCtx = undefined
 }
 
   async _beforeStep(step) {
     if (!testCtx) {
-      // TODO Create test context on first step
+      // if this happens we just continue
       return
     }
 
@@ -332,6 +334,8 @@ class BifrostIOHelper extends Helper {
     testCtx.addBrowserLogs(browserLogs)
     testCtx.addPerformanceLogs(testPerformanceLogs)
 
+    testCtx.extractAndAddStepOutlineFromSource(test.body)
+
     testCtx.markSuccessful()
   }
 
@@ -437,6 +441,8 @@ class BifrostIOHelper extends Helper {
 
       // Add html of page
       testCtx.addPageHtml(pageSource, extractBaseUrl(url))
+
+      testCtx.extractAndAddStepOutlineFromSource(test.body)
 
       // Mark the test as failed
       testCtx.markFailed(toError(test.err))

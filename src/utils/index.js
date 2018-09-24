@@ -7,6 +7,7 @@ const shouldTakeScreenshot = require('./should-take-screenshot')
 const getDeviceSettingsFromUA = require('./get-device-settings-from-ua')
 const getDeviceSettingsFromSession = require('./get-device-settings-from-session')
 const normalizePath = require('./normalize-path')
+const extractStepOutline = require('./extract-step-outline')
 
 module.exports = {
     extractTags,
@@ -18,4 +19,5 @@ module.exports = {
     getDeviceSettingsFromUA,
     getDeviceSettingsFromSession,
     normalizePath,
+    extractStepOutline,
 }

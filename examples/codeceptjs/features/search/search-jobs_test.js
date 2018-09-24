@@ -1,21 +1,31 @@
 Feature('Search jobs')
 
-Scenario(`When I search for react jobs I should get matching job offers @search @jobs`, 
+Scenario(`When I search for react jobs I should get matching job offers @search @jobs`,
 async (I) => {
-    I.amOnPage('https://jobs.check24.de/')
-    I.fillField('body #search', 'react docker')
-    I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
-    I.waitInUrl('/search')
-    I.seeElementInDOM('.filter--section')
-    I.seeNumberOfVisibleElements('.vacancy--boxitem', 3)
+  I.say('I goto the CHECK24 job portal')
+  I.amOnPage('https://jobs.check24.de/')
+
+  I.say('I search for react jobs')
+  I.fillField('body #search', 'react docker')
+  I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
+
+  I.say('I see 3 vacancies')
+  I.waitInUrl('/search')
+  I.seeElementInDOM('.filter--section')
+  I.seeNumberOfVisibleElements('.vacancy--boxitem', 3)
 })
 
-Scenario(`When I search for .NET jobs I should get matching job offers @search @jobs`, 
+Scenario(`When I search for .NET jobs I should get matching job offers @search @jobs`,
 async (I) => {
-    I.amOnPage('https://jobs.check24.de/')
-    I.fillField('body #search', 'c#')
-    I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
-    I.waitInUrl('/search')
-    I.seeElementInDOM('.filter--section')
-    I.seeNumberOfVisibleElements('.vacancy--boxitem', 6)
+  I.say('I goto the CHECK24 job portal')
+  I.amOnPage('https://jobs.check24.de/')
+
+  I.say('I search for C# jobs')
+  I.fillField('body #search', 'c#')
+  I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
+
+  I.say('I see 6 vacancies')
+  I.waitInUrl('/search')
+  I.seeElementInDOM('.filter--section')
+  I.seeNumberOfVisibleElements('.vacancy--boxitem', 6)
 })

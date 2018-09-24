@@ -11,7 +11,8 @@ const {
     zipDirectory,
     extractTags,
     makeUrlsAbsolute,
-    gitLastCommit
+    gitLastCommit,
+    extractStepOutline,
 } = require('./utils')
 
 const onlyUnique = (value, index, self) => self.indexOf(value) === index
@@ -226,11 +227,12 @@ class DashboardTestContext {
 
         this.lastSourceCommit = undefined
         this.commands = []
+        this.steps = []
         this.deviceSettings = undefined
         this.stepCounter = 1
 
-        this.logs = []
-        this.outline = []
+        // this.logs = []
+        // this.outline = []
     }
 
     updateTitles(suiteTitle, testTitle) {
@@ -295,6 +297,10 @@ class DashboardTestContext {
     addPerformanceLogs(logs = []) {
         const browserLogsFileName = path.join(this.outputPath, 'performance-logs.json')
         stringToFile(browserLogsFileName, stringify(logs, null, 2))
+    }
+
+    extractAndAddStepOutlineFromSource(testSource) {
+      this.steps = extractStepOutline(testSource)
     }
 
     /**

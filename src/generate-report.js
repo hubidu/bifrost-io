@@ -32,6 +32,7 @@ module.exports = (ctx) => {
         user: gitUser(), // reporting git user
         // outline: ctx.outline // scenario outline
 
+        steps: ctx.steps,
         screenshots: ctx.commands.map(cmd => {
             return Object.assign({}, cmd.screenshot, {
                 cmd: {
