@@ -68,6 +68,14 @@ For a working codeceptjs example project please take a look at the [codeceptjs d
 
 ## Typical Use Cases
 
+### Categorize your tests in folders
+
+CodeceptJS lets you organize your test files in a folder hierarchy. You should use this to categorize your tests.
+E. g. you could
+
+  - Categorize by feature category
+  - Categorize by application/component and then by feature category
+
 ### Run tests in mobile emulation mode
 
 In order to run your web browser tests on a different device (using chrome emulation mode)
