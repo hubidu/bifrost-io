@@ -49,10 +49,10 @@
 - Send bifrost version with report data
 - Take screenshot in afterStep for I.amOnPage
 - Test fullpage screenshots
+- Check: RUnning tests in mobile emulation mode
 
 # Doing
 
-- Check: RUnning tests in mobile emulation mode
 - Dont add project name to prefix
 - Support for custom auto screenshot methods
 

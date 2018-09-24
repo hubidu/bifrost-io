@@ -6,12 +6,12 @@ const mkdirp = require('mkdirp')
 const codeExcerpt = require('code-excerpt')
 
 const config = require('./config')
-const { 
-    shouldTakeScreenshot, 
-    zipDirectory, 
-    extractTags, 
-    makeUrlsAbsolute, 
-    gitLastCommit 
+const {
+    shouldTakeScreenshot,
+    zipDirectory,
+    extractTags,
+    makeUrlsAbsolute,
+    gitLastCommit
 } = require('./utils')
 
 const onlyUnique = (value, index, self) => self.indexOf(value) === index
@@ -28,7 +28,7 @@ const HTML_FILENAME = 'error-page.html'
 /**
  * Stringify with circular refs
  */
-const stringify = (o) => { 
+const stringify = (o) => {
     // Note: cache should not be re-used by repeated calls to JSON.stringify.
     var cache = [];
     const res = JSON.stringify(o, function(key, value) {
@@ -43,9 +43,9 @@ const stringify = (o) => {
         return value;
     });
     cache = null; // Enable ga
-  
+
     return res
-  } 
+  }
 const toString = val => {
     if (val === undefined || val === null) return val
     return val.toString()
@@ -55,7 +55,7 @@ const fileToString = fileName => fs.readFileSync(fileName).toString()
 const stringToFile = (filename, str) => fs.writeFileSync(filename, str)
 const toSeconds = num => num / 1000;
 const writeReport = (testContext) => fs.writeFileSync(testContext.getReportFileName(), JSON.stringify(generateReport(testContext), null, 2))
-const rmFileSync = filename => fs.unlinkSync(filename) 
+const rmFileSync = filename => fs.unlinkSync(filename)
 const cleanTitle = str => str.replace(/\r?\n|\r/, ' ').replace(/\s+/g,' ').trim()
 const getErrorMessage = err => err.inspect ? err.inspect() : err.message;
 
@@ -71,7 +71,7 @@ class DashboardCommandContext {
         this.pageInfo = undefined
         this.screenshot = undefined
         this.codeStack = []
-    }    
+    }
 
     _createScreenshot(screenshotFileName, err = undefined) {
         this.screenshot = {
@@ -123,7 +123,7 @@ class DashboardCommandContext {
      * Decide on which commands to do element highlighting on the web page
      */
     shouldHighlight() {
-        return this.name.indexOf('click') >= 0 || 
+        return this.name.indexOf('click') >= 0 ||
             this.name.indexOf('see') >= 0
     }
 
@@ -133,8 +133,8 @@ class DashboardCommandContext {
     addScreenshot(screenshotFileName, err = undefined) {
         const moveToTestDirSync = (filename) => {
             const targetFile = path.join(this.testContext.outputPath, filename)
-            fs.renameSync(path.join('.', filename), targetFile)    
-            return targetFile            
+            fs.renameSync(path.join('.', filename), targetFile)
+            return targetFile
         }
 
         moveToTestDirSync(screenshotFileName)
@@ -147,7 +147,7 @@ class DashboardCommandContext {
 
     addExistingScreenshot(screenshotPath, err = undefined) {
         const targetFileName = this.getFileName()
-        fs.renameSync(screenshotPath, path.join(this.testContext.outputPath, targetFileName))    
+        fs.renameSync(screenshotPath, path.join(this.testContext.outputPath, targetFileName))
 
         this._createScreenshot(targetFileName, err)
 
@@ -173,7 +173,7 @@ class DashboardCommandContext {
     addPageInfo(pageInfo) {
         this.pageInfo = pageInfo
         return this
-    }    
+    }
 
     markFailed(err) {
         if (!err) throw new Error('Expected to get an error instance')
@@ -192,7 +192,7 @@ class DashboardCommandContext {
         const stepName = `${this.name}(${this.args.join(',')})`.slice(0, 20) // limit to max chars
         return makeFileName(`${this.stepNo} - I.${stepName}.png`)
     }
-    
+
 }
 
 class DashboardTestContext {
@@ -207,12 +207,12 @@ class DashboardTestContext {
         suiteTitle = res1.str
         const res2 = extractTags(testTitle)
         testTitle = cleanTitle(res2.str)
-        
+
         this.TEST_BASE = `${makeFileName(suiteTitle)} -- ${makeFileName(testTitle)}`
         this.TEST_DIR = `${Date.now()}`
         this.outputPath = path.join(OUTPUT_BASE, this.TEST_BASE, this.TEST_DIR)
         mkdirp.sync(this.outputPath)
-      
+
         this.tags = res1.tags.concat(res2.tags).filter(onlyUnique)
         this.runid = runid
         this.result = undefined
@@ -222,7 +222,7 @@ class DashboardTestContext {
         this.duration = undefined // in seconds
         this.prefix = `${suiteTitle}`
         this.title = testTitle
-        this.fullTitle = `${this.TEST_PROJECT} -- ${this.prefix} -- ${testTitle}`
+        this.fullTitle = `${this.prefix} -- ${testTitle}`
 
         this.lastSourceCommit = undefined
         this.commands = []
@@ -238,8 +238,8 @@ class DashboardTestContext {
         suiteTitle = res1.str
         const res2 = extractTags(testTitle)
         testTitle = cleanTitle(res2.str)
-        
-        this.prefix = `${this.TEST_PROJECT} -- ${suiteTitle}`
+
+        this.prefix = suiteTitle
         this.title = testTitle
         this.fullTitle = `${this.prefix} -- ${testTitle}`
         this.tags = res1.tags.concat(res2.tags).filter(onlyUnique)
@@ -304,7 +304,7 @@ class DashboardTestContext {
         this.result = 'success'
         this.duration = toSeconds(Date.now() - this.startedAt)
 
-        debug(`${this.title}: Test successful`)        
+        debug(`${this.title}: Test successful`)
     }
 
     /**
@@ -317,9 +317,9 @@ class DashboardTestContext {
         // Update the last command (i. e. the error step) with the error
         assert(this.commands.length > 0, 'Expected commands to not be empty')
         const failedCommand = this.commands[this.commands.length - 1]
-        failedCommand.markFailed(err)        
+        failedCommand.markFailed(err)
 
-        debug(`${this.title}: Test failed ${err.message}`)        
+        debug(`${this.title}: Test failed ${err.message}`)
     }
 
     /**
@@ -344,7 +344,7 @@ class DashboardTestContext {
     /**
      * Send the report and data to the dashboard service
      */
-    async commit() {       
+    async commit() {
         debug(`${this.title}: Committing test results`)
 
         try {
@@ -360,7 +360,7 @@ class DashboardTestContext {
             try {
                 await sendReport(zipFile)
             } finally {
-                rmFileSync(zipFile)   
+                rmFileSync(zipFile)
             }
         }
     }
