@@ -59,13 +59,31 @@ After the test run you should see this line in the output
 
 ```
 Go here to see reports:
-  http://heimdall.io:4000/tests?ownerkey=YOUR_KEY&project=YOUR_PROJECT&runid=H1RgPInCM
+  http://YOUR_DASHBOARD_HOST:4000/tests?ownerkey=YOUR_KEY&project=YOUR_PROJECT&runid=H1RgPInCM
 ```
 
 Just click on the link and view your reports
 
 For a working codeceptjs example project please take a look at the [codeceptjs demo project](./examples/codeceptjs).
 
+## Typical Use Cases
+
+### Run tests in mobile emulation mode
+
+In order to run your web browser tests on a different device (using chrome emulation mode)
+
+```
+  # run on iPhone
+  cross-env TEST_DEVICE="iPhone 6" codeceptjs run 
+
+  # Run on iPad
+  cross-env TEST_DEVICE="iPad Pro" codeceptjs run 
+
+  # Run on Google Pixel 2
+  cross-env TEST_DEVICE="Pixel 2" codeceptjs run 
+```
+
+For a list of availabe devices see https://github.com/AndreyBelym/chrome-emulated-devices-list/blob/HEAD/devices.md
 
 ## See in action
 

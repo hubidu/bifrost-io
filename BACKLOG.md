@@ -52,10 +52,15 @@
 
 # Doing
 
+- Check: RUnning tests in mobile emulation mode
+- Dont add project name to prefix
 - Support for custom auto screenshot methods
 
 # Backlog V 2.1 Release
 
+- BUG That should work:
+	WARNING Could not find test in stack [ '    at Object.navigateToLandingPage (/tests/src/page-objects/pages/landing.page.js:21:7)',
+  17-Sep-2018 13:41:11	  '    at Test.Data.only.Scenario (/tests/src/tests/default-segment/landing-pages.test.js:15:17)' ]
 - Android: Extract more info for deviceSettings from native and webview sessions
 - seeInField: should highlight field (even when command failed)
 - Highlight element by text (e. g. in I.click('button text'))

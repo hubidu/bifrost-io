@@ -1,6 +1,8 @@
 'use strict';
 let I;
 
+const {isMobilePhone, isTablet} = require('../devices')
+
 const toNumber = arr => {
     if (!Array.isArray(arr)) arr = [arr]
     return arr.map(priceAsStr => Number(priceAsStr.replace(' €', '').replace(',', '.')))
@@ -17,11 +19,11 @@ module.exports = {
   },
 
   ISeeHeadline() {
-    if (process.env.TEST_DEVICE !== 'mobile') I.see('Handytarife im Vergleich', '.headline')
+    if (!isMobilePhone) I.see('Handytarife im Vergleich', '.headline')
   },
 
   ISeeFilterWidget() {
-    if (process.env.TEST_DEVICE === 'mobile') {
+    if (isMobilePhone) {
         I.seeElement('//c24-header-tabs')
     } else {
         I.seeElement('//c24-result-list-filter')
@@ -33,11 +35,33 @@ module.exports = {
   },
 
   ISeeNthProvider(providerName, i) {
-    I.see(providerName, { xpath: `(//c24-result-list-tariff-name)[${i}]` })
+    const nthOfXPath = (xpath, i) => { xpath: `(${xpath})[${i}]` }
+
+    if (isMobilePhone) {
+      I.waitForVisible('.tariff-name')
+      I.see(providerName, nthOfXPath('//*[contains(@class, "tariff-name")]', i))
+    } else if (isTablet) {
+      I.waitForVisible('//c24-result-list-item')
+      I.see(providerName, nthOfXPath('//c24-result-list-item', i))
+    } else {
+      I.waitForVisible('//c24-result-list-tariff-name')
+      I.see(providerName, nthOfXPath('//c24-result-list-tariff-name', i))
+    }
+  },
+
+  ISelectDatenvolumen(datenvolumen) {
+    if (isMobilePhone) {
+      I.click('ändern', '#EL_CTAAendern')
+      I.waitForVisible('#data_included')
+      I.selectOption('#data_included', datenvolumen)
+      I.click('übernehmen')
+    } else {
+      I.selectOption('#data_included', datenvolumen)
+    }
   },
 
   async IGrabBestPrice(amountInEuro) {
-    if (process.env.TEST_DEVICE === 'mobile') {
+    if (isMobilePhone) {
         const prices = await I.grabTextFrom('c24-result-list-item:nth-child(1) .price .value')
         const netPrice = toNumber(prices)[2]
         return netPrice

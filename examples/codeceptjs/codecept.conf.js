@@ -1,8 +1,15 @@
 const OutputDir = './__out'
 
+/**
+ * process.env.TEST_DEVICE can contain a chrome device
+ */
+const mobileEmulation = process.env.TEST_DEVICE !== undefined ? ({
+  "deviceName": process.env.TEST_DEVICE
+}) : undefined
+
 exports.config = {
     "output": OutputDir,
-    "helpers": {   
+    "helpers": {
       "WebDriverIO": {
         "url": "http://localhost",
         "host": process.env.SELENIUM_HOST || 'localhost',
@@ -15,10 +22,8 @@ exports.config = {
         "waitForTimeout": 10000,
         "desiredCapabilities": {
           "goog:chromeOptions": {
-            "args": [ "--disable-gpu", "--window-size=1200,1200" ],
-            "mobileEmulation": process.env.TEST_DEVICE ? ({
-              "deviceName": "iPhone 6 Plus"
-            }) : undefined
+            args: [ "--disable-gpu", "--window-size=1200,1200" ],
+            mobileEmulation
           }
         },
         "chrome": {
@@ -37,7 +42,7 @@ exports.config = {
         "chunks": 2,
         "browsers": ["chrome"]
       }
-    },  
+    },
     "include": {
       "I": "./custom-steps.js",
       "loginPage": "./pages/login.page.js",
