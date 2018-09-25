@@ -29,12 +29,13 @@ exports.config = {
             mobileEmulation
           }
         },
-        "chrome": {
-          "headless": false
+        chrome: {
+          headless: false
         }
       },
-      "BifrostHelper": {
-        "require": "bifrost-io/codeceptjs/dashboard_helper.js"
+      BifrostHelper: {
+        require: "bifrost-io/codeceptjs/dashboard_helper.js",
+        cutPrefix: "/features"
       },
       "CustomCommandsHelper": {
         "require": "./custom-commands.js"

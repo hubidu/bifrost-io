@@ -51,10 +51,12 @@
 - Test fullpage screenshots
 - Check: RUnning tests in mobile emulation mode
 - Dont add project name to prefix
+- Extract steps from test source and report
 
 # Doing
 
-- Extract steps from test source and report
+- Correct suite path
+- Find starting line number of test in test source file
 - Support for custom auto screenshot methods
 
 # Backlog V 2.1 Release

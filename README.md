@@ -76,7 +76,17 @@ E. g. you could
   - Categorize by feature category
   - Categorize by application/component and then by feature category
 
-The folder hierarchy will be used in test reports to group test runs nicely.
+The folder hierarchy can then be used in test reports to generate a table of contents for tests.
+
+Since you usually do not want to include the test base folder as a category, you can remove that
+by using the **cutPrefix** config parameter.
+
+```
+  BifrostHelper: {
+      require: "bifrost-io/codeceptjs/dashboard_helper.js",
+      cutPrefix: "/features"
+    },
+```
 
 ### Specify the environment when running tests
 

@@ -122,11 +122,22 @@ class BifrostIOHelper extends Helper {
    * Before/After Suite
    */
   _beforeSuite(suite) {
-    const makePrefix = suitePath => {
-      // TODO make the path configurable or get from codecept.conf
-      suitePath = suitePath && suitePath.replace(path.join(process.cwd(), 'features'), '')
+    const makePrefix = (suitePath, cutPrefix) => {
+      // const DefaultCutPrefixes = [`${path.sep}features`, `${path.sep}tests`]
+      const DefaultCutPrefixes = []
+      // Remove the current working directory from the suite path
+      suitePath = suitePath && suitePath.replace(process.cwd(), '')
       if (suitePath) {
+        // remove test base dir
+        DefaultCutPrefixes.forEach(cutPrefix => {
+          suitePath = suitePath.replace(cutPrefix, '')
+        })
+        if (cutPrefix) {
+          suitePath = suitePath.replace(cutPrefix.replace('/', path.sep), '')
+        }
+
         suitePath = path.dirname(suitePath)
+        // remove leading /
         if (suitePath[0] === path.sep) {
           suitePath = suitePath.slice(1)
         }
@@ -135,7 +146,7 @@ class BifrostIOHelper extends Helper {
     }
 
     const suitePath = suite.tests && suite.tests.length > 0 && suite.tests[0].file
-    const suitePrefix = makePrefix(suitePath)
+    const suitePrefix = makePrefix(suitePath, this.options.cutPrefix)
 
     if (suitePrefix) {
       suiteTitle = `${normalizePath(suitePrefix)} -- ${suite.title}`
