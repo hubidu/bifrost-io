@@ -55,7 +55,7 @@
 
 # Doing
 
-- Correct suite path
+- Format prefix correctly (no superfluous blanks)
 - Find starting line number of test in test source file
 - Support for custom auto screenshot methods
 
