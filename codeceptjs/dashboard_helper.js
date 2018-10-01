@@ -142,7 +142,7 @@ class BifrostIOHelper extends Helper {
           suitePath = suitePath.slice(1)
         }
       }
-      return suitePath
+      return suitePath.trim()
     }
 
     const suitePath = suite.tests && suite.tests.length > 0 && suite.tests[0].file
