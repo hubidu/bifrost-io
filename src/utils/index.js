@@ -8,6 +8,7 @@ const getDeviceSettingsFromUA = require('./get-device-settings-from-ua')
 const getDeviceSettingsFromSession = require('./get-device-settings-from-session')
 const normalizePath = require('./normalize-path')
 const extractStepOutline = require('./extract-step-outline')
+const findTestSourceInSource = require('./find-test-source-in-source')
 
 module.exports = {
     extractTags,
@@ -20,4 +21,5 @@ module.exports = {
     getDeviceSettingsFromSession,
     normalizePath,
     extractStepOutline,
+    findTestSourceInSource,
 }

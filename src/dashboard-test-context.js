@@ -13,6 +13,7 @@ const {
     makeUrlsAbsolute,
     gitLastCommit,
     extractStepOutline,
+    findTestSourceInSource,
 } = require('./utils')
 
 const onlyUnique = (value, index, self) => self.indexOf(value) === index
@@ -299,8 +300,12 @@ class DashboardTestContext {
         stringToFile(browserLogsFileName, stringify(logs, null, 2))
     }
 
-    extractAndAddStepOutlineFromSource(testSource) {
-      this.steps = extractStepOutline(testSource)
+    extractAndAddStepOutlineFromSource(completeSource, testSource) {
+      const startingLineInSource = findTestSourceInSource(completeSource, testSource)
+
+      this.steps = extractStepOutline(testSource).map(s => Object.assign(s, {
+        line: startingLineInSource + s.line
+      }))
     }
 
     /**

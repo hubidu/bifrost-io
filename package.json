@@ -1,6 +1,6 @@
 {
   "name": "bifrost-io",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "Client library for heimdall (an e2e dashboard server)",
   "main": "index.js",
   "scripts": {

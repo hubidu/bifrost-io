@@ -52,11 +52,11 @@
 - Check: RUnning tests in mobile emulation mode
 - Dont add project name to prefix
 - Extract steps from test source and report
+- Format prefix correctly (no unncecessary blanks)
 
 # Doing
 
-- Format prefix correctly (no superfluous blanks)
-- Find starting line number of test in test source file
+- Find and report starting line number of test in test source file
 - Support for custom auto screenshot methods
 
 # Backlog V 2.1 Release

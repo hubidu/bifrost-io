@@ -1,12 +1,13 @@
 const fs = require('fs')
 
 // Private utils
-const isStackframeOfTest = l => 
-  l.indexOf('Test.Scenario') > -1 || 
-  l.indexOf('Test.Data.Scenario') > -1 || 
-  l.indexOf('Test.<anonymous>') >= 0 || 
-  l.indexOf('Context.Before') >= 0 || 
-  l.indexOf('at within') >= 0 || 
+const isStackframeOfTest = l =>
+  l.indexOf('.only') > -1 ||
+  l.indexOf('Test.Scenario') > -1 ||
+  l.indexOf('Test.Data.Scenario') > -1 ||
+  l.indexOf('Test.<anonymous>') >= 0 ||
+  l.indexOf('Context.Before') >= 0 ||
+  l.indexOf('at within') >= 0 ||
   l.indexOf('at session') >= 0
 const matchSourceFileName = stackframe => stackframe.match(/\(([^)]*):[0-9]+:[0-9]+\)/)
 const filterStackframe = stackframe => stackframe.indexOf('node_modules') < 0
@@ -32,7 +33,7 @@ const getScreenshotFileName = (test, uniqueScreenshotNames, isError) => {
     };
 
     /**
-     * NOTE This logic is basically replicated from lib/helper/WebDriverIO 
+     * NOTE This logic is basically replicated from lib/helper/WebDriverIO
      */
 
     let fileName;
@@ -52,7 +53,7 @@ const getScreenshotFileName = (test, uniqueScreenshotNames, isError) => {
     if (test._retries < 1 || test._retries === test.retryNum) {
       fileName = `${fileName}${isError ? '.failed' : ''}.png`;
     }
-  
+
     return fileName
 }
 
@@ -65,7 +66,7 @@ const getTestFilePathFromStack = stack => {
     .splice(3)
     .filter(l => filterStackframe(l)) // Remove all stack frames pointing to a package dep
 
-  const indexOfTestStackLine = 
+  const indexOfTestStackLine =
     stackLines.findIndex(l => isStackframeOfTest(l))
 
   if (indexOfTestStackLine < 0) {
@@ -87,12 +88,12 @@ const mapStepToSource = step => {
     if (m1 && m2) {
       const sourceFileName = m1[1]
       const sourceLine = m2[1]
-    
+
       return {
         name: stepName,
         sourceFile: sourceFileName,
         sourceLine: Number(sourceLine)
-      }    
+      }
     }
     console.log(`ERROR Unable to extract source code snippet from stacktrace line ${stepLine} at ${stepName}`)
     return undefined
@@ -102,7 +103,7 @@ const mapStepToSource = step => {
     .splice(3)
     .filter(l => filterStackframe(l)) // Remove all stack frames pointing to a package dep
 
-  const indexOfTestStackLine = 
+  const indexOfTestStackLine =
     stackLines.findIndex(l => isStackframeOfTest(l))
   let stacklinesUpToTestFile = stackLines.slice(0, indexOfTestStackLine + 1)
 
@@ -123,7 +124,7 @@ const mapStepToSource = step => {
 /**
  * Stringify with circular refs
  */
-const stringify = (o) => { 
+const stringify = (o) => {
   // Note: cache should not be re-used by repeated calls to JSON.stringify.
   var cache = [];
   const res = JSON.stringify(o, function(key, value) {
@@ -152,7 +153,7 @@ const fileToStringSync = (path) => path ? fs.readFileSync(path, 'utf8') : undefi
 module.exports = {
     getScreenshotFileName,
     mapStepToSource,
-    getTestFilePathFromStack,    
+    getTestFilePathFromStack,
     stringify,
     writeStringToFileSync,
     fileToStringSync,

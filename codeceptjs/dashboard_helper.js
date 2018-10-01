@@ -336,16 +336,17 @@ class BifrostIOHelper extends Helper {
     testCtx.addDeviceSettings(deviceSettings)
 
     // Add source (make sure we have steps, TODO actually that should be always the case here)
+    let sourceCode
     if (test.steps.length > 0) {
       const testFilePath = getTestFilePathFromStack(test.steps[0].stack)
-      const sourceCode = fileToStringSync(testFilePath)
+      sourceCode = fileToStringSync(testFilePath)
       testCtx.addSource(sourceCode)
     }
 
     testCtx.addBrowserLogs(browserLogs)
     testCtx.addPerformanceLogs(testPerformanceLogs)
 
-    testCtx.extractAndAddStepOutlineFromSource(test.body)
+    testCtx.extractAndAddStepOutlineFromSource(sourceCode, test.body)
 
     testCtx.markSuccessful()
   }
@@ -435,11 +436,12 @@ class BifrostIOHelper extends Helper {
 
       // Add the source file (extracted from the step stack)
       let testFile = test.file
+      let sourceCode
       if (!testFile && test.steps && test.steps.length > 0) { // if no file prop extract from stack
         testFile = getTestFilePathFromStack(test.steps[0].stack)
       }
       if (testFile) {
-        const sourceCode = fileToStringSync(testFile)
+        sourceCode = fileToStringSync(testFile)
         testCtx.addSource(sourceCode)
       }
 
@@ -453,7 +455,7 @@ class BifrostIOHelper extends Helper {
       // Add html of page
       testCtx.addPageHtml(pageSource, extractBaseUrl(url))
 
-      testCtx.extractAndAddStepOutlineFromSource(test.body)
+      testCtx.extractAndAddStepOutlineFromSource(sourceCode, test.body)
 
       // Mark the test as failed
       testCtx.markFailed(toError(test.err))
