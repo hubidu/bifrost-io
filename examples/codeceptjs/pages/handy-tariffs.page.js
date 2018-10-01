@@ -66,7 +66,7 @@ module.exports = {
         const netPrice = toNumber(prices)[2]
         return netPrice
     } else {
-        const prices = await I.grabTextFrom('c24-result-list-tariff-name:nth-child(1) c24-tariff-price-average .value')
+        const prices = await I.grabTextFrom('c24-tariff-price-average:nth-child(1) .value')
         const netPrice = toNumber(prices)[0]
         return netPrice
     }
