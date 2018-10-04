@@ -301,9 +301,18 @@ class DashboardTestContext {
     }
 
     extractAndAddStepOutlineFromSource(completeSource, testSource) {
-      const startingLineInSource = findTestSourceInSource(completeSource, testSource)
+      const testSourceLines = testSource.split('\n')
+      const correctedTestSource = testSourceLines.slice(1, testSourceLines.length - 2).join('\n')
 
-      this.steps = extractStepOutline(testSource).map(s => Object.assign(s, {
+      const startingLineInSource = findTestSourceInSource(completeSource, correctedTestSource)
+
+      // console.log('starting', startingLineInSource)
+      // console.log('')
+      // console.log(completeSource)
+      // console.log('')
+      // console.log(correctedTestSource)
+
+      this.steps = extractStepOutline(correctedTestSource).map(s => Object.assign(s, {
         line: startingLineInSource + s.line
       }))
     }
