@@ -61,6 +61,8 @@
 
 # Backlog V 2.1 Release
 
+- BUG: Stacktraces extraction does not work in 
+  http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
 - BUG That should work:
 	WARNING Could not find test in stack [ '    at Object.navigateToLandingPage (/tests/src/page-objects/pages/landing.page.js:21:7)',
   17-Sep-2018 13:41:11	  '    at Test.Data.only.Scenario (/tests/src/tests/default-segment/landing-pages.test.js:15:17)' ]
