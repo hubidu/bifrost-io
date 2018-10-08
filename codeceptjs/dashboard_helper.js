@@ -313,42 +313,46 @@ class BifrostIOHelper extends Helper {
   }
 
   async _passed(test) {
-    if (!testCtx) {
-      return
+    try {
+      if (!testCtx) {
+        return
+      }
+
+      const helper = this._getHelper()
+
+      // Get various data from the browser
+      const [
+        userAgent,
+        viewportSize,
+        browserLogs,
+        session,
+      ] = await Promise.all([
+        helper.executeScript(getUserAgent),
+        helper.executeScript(getViewportSize),
+        helper.grabBrowserLogs(),
+        helper.grabSession()
+      ].map(ignoreError))
+
+      const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)
+      testCtx.addDeviceSettings(deviceSettings)
+
+      // Add source (make sure we have steps, TODO actually that should be always the case here)
+      let sourceCode
+      if (test.steps.length > 0) {
+        const testFilePath = getTestFilePathFromStack(test.steps[0].stack)
+        sourceCode = fileToStringSync(testFilePath)
+        testCtx.addSource(sourceCode)
+      }
+
+      testCtx.addBrowserLogs(browserLogs)
+      testCtx.addPerformanceLogs(testPerformanceLogs)
+
+      testCtx.extractAndAddStepOutlineFromSource(sourceCode, test.body)
+
+      testCtx.markSuccessful()
+    } catch (err) {
+      console.log('ERROR in _passed hook: ', err)
     }
-
-    const helper = this._getHelper()
-
-    // Get various data from the browser
-    const [
-      userAgent,
-      viewportSize,
-      browserLogs,
-      session,
-    ] = await Promise.all([
-      helper.executeScript(getUserAgent),
-      helper.executeScript(getViewportSize),
-      helper.grabBrowserLogs(),
-      helper.grabSession()
-    ].map(ignoreError))
-
-    const deviceSettings = session ? getDeviceSettingsFromSession(session) : getDeviceSettingsFromUA(userAgent, viewportSize)
-    testCtx.addDeviceSettings(deviceSettings)
-
-    // Add source (make sure we have steps, TODO actually that should be always the case here)
-    let sourceCode
-    if (test.steps.length > 0) {
-      const testFilePath = getTestFilePathFromStack(test.steps[0].stack)
-      sourceCode = fileToStringSync(testFilePath)
-      testCtx.addSource(sourceCode)
-    }
-
-    testCtx.addBrowserLogs(browserLogs)
-    testCtx.addPerformanceLogs(testPerformanceLogs)
-
-    testCtx.extractAndAddStepOutlineFromSource(sourceCode, test.body)
-
-    testCtx.markSuccessful()
   }
 
   async _failed(test) {

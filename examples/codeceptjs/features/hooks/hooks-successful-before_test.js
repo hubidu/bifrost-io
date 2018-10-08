@@ -9,7 +9,7 @@ Before((I) => {
     I.amOnPage('https://www.check24.de/versicherungscenter')
 })
 
-Scenario(`When there are hooks the report for the scenario should also include the hook steps`, 
-async (I) => {
-    I.amOnPage('https://www.check24.de/handytarife')
-})
+Scenario(`When there are hooks the report for the scenario should also include the hook steps`,
+  async (I) => {
+      I.amOnPage('https://www.check24.de/handytarife')
+  })

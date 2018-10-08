@@ -50,6 +50,7 @@ exports.config = {
     "include": {
       "I": "./custom-steps.js",
       "loginPage": "./pages/login.page.js",
+      "onHandyLandingPage": "./pages/handy-landing.page.js",
       "onHandyTariffsPage": "./pages/handy-tariffs.page.js",
     },
     mocha: {

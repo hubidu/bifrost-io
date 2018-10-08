@@ -217,7 +217,7 @@ class DashboardTestContext {
 
         this.tags = res1.tags.concat(res2.tags).filter(onlyUnique)
         this.runid = runid
-        this.result = undefined
+        this.result = 'error'
         this.reportFileName = REPORT_FILENAME // just the filename of the report data file
         this.reportDir = [this.OWNER_KEY, this.TEST_PROJECT, this.TEST_BASE, this.TEST_DIR].join('/')
         this.startedAt = Date.now()
@@ -291,26 +291,29 @@ class DashboardTestContext {
      * Add a file containing the browser logs
      */
     addBrowserLogs(logs = []) {
-        const browserLogsFileName = this.getBrowserLogsFileName()
-        stringToFile(browserLogsFileName, stringify(logs, null, 2))
+      debug('Adding browser logs')
+      const browserLogsFileName = this.getBrowserLogsFileName()
+      stringToFile(browserLogsFileName, stringify(logs, null, 2))
     }
 
     addPerformanceLogs(logs = []) {
-        const browserLogsFileName = path.join(this.outputPath, 'performance-logs.json')
-        stringToFile(browserLogsFileName, stringify(logs, null, 2))
+      debug('Adding performance logs')
+      const browserLogsFileName = path.join(this.outputPath, 'performance-logs.json')
+      stringToFile(browserLogsFileName, stringify(logs, null, 2))
     }
 
     extractAndAddStepOutlineFromSource(completeSource, testSource) {
+      if (!testSource) return // Can happen in certain scenarios (failures in before hook)
+      debug('Adding test source code')
+
       const testSourceLines = testSource.split('\n')
-      const correctedTestSource = testSourceLines.slice(1, testSourceLines.length - 2).join('\n')
+      const correctedTestSource = testSourceLines.slice(1, testSourceLines.length - 1).join('\n')
 
+      if (!correctedTestSource) {
+        console.log('WARNING Expected to get a corrected test source from ', testSource)
+        return
+      }
       const startingLineInSource = findTestSourceInSource(completeSource, correctedTestSource)
-
-      // console.log('starting', startingLineInSource)
-      // console.log('')
-      // console.log(completeSource)
-      // console.log('')
-      // console.log(correctedTestSource)
 
       this.steps = extractStepOutline(correctedTestSource).map(s => Object.assign(s, {
         line: startingLineInSource + s.line
