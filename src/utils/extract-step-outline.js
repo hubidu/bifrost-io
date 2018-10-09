@@ -1,13 +1,13 @@
 
-const unquote = str => str.replace(/^("|')/, '').replace(/("|')$/, '')
+const unquote = str => str.replace(/^("|'|`)/, '').replace(/("|'|`)$/, '')
 
-const extractStepOutline = source => {
+const extractStepOutline = (source, re = /I.say\s*\((.*)\)/) => {
   const lines = source.split('\n')
 
   return lines
       .map(l => l.trim())
       .map((l, i) => {
-        const match =  l.match(/I.say\s*\((.*)\)/)
+        const match =  l.match(re)
         if (match) {
           return {
             step: unquote(match[1].trim()),

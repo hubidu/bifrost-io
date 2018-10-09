@@ -53,14 +53,15 @@
 - Dont add project name to prefix
 - Extract steps from test source and report
 - Format prefix correctly (no unncecessary blanks)
+- Find and report starting line number of test in test source file
 
 # Doing
 
-- Find and report starting line number of test in test source file
 - Support for custom auto screenshot methods
 
 # Backlog V 2.1 Release
 
+- Autoscreenshots: I.see* : Would be better to take the screenshot AFTER the method call
 - BUG: Stacktraces extraction does not work in 
   http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
 - BUG That should work:
