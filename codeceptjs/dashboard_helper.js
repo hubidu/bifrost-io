@@ -123,24 +123,23 @@ class BifrostIOHelper extends Helper {
    */
   _beforeSuite(suite) {
     const makePrefix = (suitePath, cutPrefix) => {
-      // const DefaultCutPrefixes = [`${path.sep}features`, `${path.sep}tests`]
-      const DefaultCutPrefixes = []
+      const DefaultCutPrefixes = [`/features`, `/tests`, `/src/tests`]
+      if (cutPrefix) {
+        DefaultCutPrefixes.splice(0, 0, cutPrefix)
+      }
+
       // Remove the current working directory from the suite path
-      suitePath = suitePath && suitePath.replace(process.cwd(), '')
+      // and normalize the path using / as separator
+      suitePath = suitePath && suitePath.replace(process.cwd(), '').split(path.sep).join('/')
       if (suitePath) {
         // remove test base dir
         DefaultCutPrefixes.forEach(cutPrefix => {
           suitePath = suitePath.replace(cutPrefix, '')
         })
-        if (cutPrefix) {
-          suitePath = suitePath.replace(cutPrefix.replace('/', path.sep), '')
-        }
 
-        suitePath = path.dirname(suitePath)
-        // remove leading /
-        if (suitePath[0] === path.sep) {
-          suitePath = suitePath.slice(1)
-        }
+        const suitePathParts = suitePath.split('/')
+        // remove the test filename
+        suitePath = suitePathParts.slice(0, suitePathParts.length - 1).join('/')
       }
       return suitePath.trim()
     }
