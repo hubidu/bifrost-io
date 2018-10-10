@@ -1,6 +1,6 @@
 {
   "name": "bifrost-io",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Client library for heimdall (an e2e dashboard server)",
   "main": "index.js",
   "scripts": {
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "codeceptjs": "^1.4.2",
+    "codeceptjs": "^1.4.3",
     "conventional-changelog-cli": "^2.0.1",
     "cross-env": "^5.2.0",
     "release-it": "^7.4.8"

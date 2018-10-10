@@ -2,11 +2,6 @@ const assert = require('assert')
 
 const isAt = (haystack, needle, index) => {
   for (l of needle) {
-    // console.log('')
-    // console.log('needle line', l)
-    // console.log('haystack line', haystack[index])
-    // console.log('=', l == haystack[index])
-
     if (haystack[index++] !== l) return false
   }
   return true
