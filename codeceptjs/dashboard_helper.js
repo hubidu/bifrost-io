@@ -137,7 +137,7 @@ class BifrostIOHelper extends Helper {
           suitePath = suitePath.replace(cutPrefix, '')
         })
 
-        const suitePathParts = suitePath.split('/')
+        const suitePathParts = suitePath.split('/').filter(p => !!p)
         // remove the test filename
         suitePath = suitePathParts.slice(0, suitePathParts.length - 1).join('/')
       }
