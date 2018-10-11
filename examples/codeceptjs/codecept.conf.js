@@ -7,6 +7,13 @@ const mobileEmulation = process.env.TEST_DEVICE !== undefined ? ({
   "deviceName": process.env.TEST_DEVICE
 }) : undefined
 
+const loggingPrefs = process.env.PERF_LOGGING !== undefined ? ({browser: 'ALL', performance: 'INFO'}) : ({browser: 'ALL'})
+const perfLoggingPrefs =  process.env.PERF_LOGGING !== undefined ? {
+  // traceCategories: 'browser,devtools.timeline,devtools',
+  enableNetwork: true,
+  // enablePage: true
+} : undefined
+
 exports.config = {
     "name": "codeceptjs",
     "tests": "./features/**/*_test.js",
@@ -24,9 +31,11 @@ exports.config = {
         "smartWait": 2000,
         "waitForTimeout": 10000,
         "desiredCapabilities": {
+          loggingPrefs,
           "goog:chromeOptions": {
             args: [ "--disable-gpu", "--window-size=1200,1200" ],
-            mobileEmulation
+            mobileEmulation,
+            perfLoggingPrefs
           }
         },
         chrome: {

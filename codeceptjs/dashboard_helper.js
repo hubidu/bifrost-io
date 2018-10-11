@@ -9,7 +9,7 @@ const {
   getViewportSize,
   getUserAgent,
   dehighlightElement,
-  getPerformance,
+  // getPerformance,
   highlightElement} = require('../src/scripts')
 // TODO Refactor Move all this to utils
 const {
@@ -97,6 +97,14 @@ class BifrostIOHelper extends Helper {
     if (webdriverHelper) {
       return Object.assign(webdriverHelper, {
         grabSession: async () => undefined,
+        grabPerformanceLogs: async () => {
+          try {
+            const logs = await webdriverHelper.browser.log('performance')
+            return logs.value.map(l => JSON.parse(l.message))
+            } catch (err) {
+              console.log('WARNING', err)
+          }
+        }
       })
     }
 
@@ -104,6 +112,7 @@ class BifrostIOHelper extends Helper {
     if (puppeteerHelper) {
       return Object.assign(puppeteerHelper, {
         grabSession: async () => undefined,
+        grabPerformanceLogs: async () => Promise.resolve([]),
       })
     }
 
@@ -113,6 +122,7 @@ class BifrostIOHelper extends Helper {
       grabTitle: async () => '-',
       grabCurrentUrl: async () => appiumHelper.grabCurrentActivity(),
       executeScript: async () => Promise.resolve(),
+      grabPerformanceLogs: async () => Promise.resolve([])
     })
   }
 
@@ -249,11 +259,11 @@ class BifrostIOHelper extends Helper {
         // Add to current test performance logs
         // TODO Move that to test context
         if (url !== currentUrl) {
-          debug(`${step.name} ${step.humanizeArgs()}: Getting performance logs ${currentUrl} -> ${url}`)
-          const performanceLogs = await helper.executeScript(getPerformance)
-          if (performanceLogs) {
-            testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
-          }
+          // debug(`${step.name} ${step.humanizeArgs()}: Getting performance logs ${currentUrl} -> ${url}`)
+          // const performanceLogs = await helper.executeScript(getPerformance)
+          // if (performanceLogs) {
+          //   testPerformanceLogs = testPerformanceLogs.concat(JSON.parse(performanceLogs))
+          // }
           // console.log(step.name, currentUrl, url, testPerformanceLogs.length)
           currentUrl = url
         }
@@ -324,11 +334,13 @@ class BifrostIOHelper extends Helper {
         userAgent,
         viewportSize,
         browserLogs,
+        performanceLogs,
         session,
       ] = await Promise.all([
         helper.executeScript(getUserAgent),
         helper.executeScript(getViewportSize),
         helper.grabBrowserLogs(),
+        helper.grabPerformanceLogs(),
         helper.grabSession()
       ].map(ignoreError))
 
@@ -344,7 +356,7 @@ class BifrostIOHelper extends Helper {
       }
 
       testCtx.addBrowserLogs(browserLogs)
-      testCtx.addPerformanceLogs(testPerformanceLogs)
+      testCtx.addPerformanceLogs(performanceLogs)
 
       testCtx.extractAndAddStepOutlineFromSource(sourceCode, test.body)
 
@@ -413,7 +425,8 @@ class BifrostIOHelper extends Helper {
         helper.executeScript(getUserAgent),
         helper.executeScript(getViewportSize),
         helper.grabBrowserLogs(),
-        helper.executeScript(getPerformance),
+        helper.grabPerformanceLogs(),
+        // helper.executeScript(getPerformance),
         helper.grabSession()
       ].map(ignoreError))
 
@@ -450,10 +463,7 @@ class BifrostIOHelper extends Helper {
 
       // Add the browserlogs
       testCtx.addBrowserLogs(browserLogs)
-
-      if (performanceLogs) {
-        testCtx.addPerformanceLogs(JSON.parse(performanceLogs))
-      }
+      testCtx.addPerformanceLogs(performanceLogs)
 
       // Add html of page
       testCtx.addPageHtml(pageSource, extractBaseUrl(url))
