@@ -102,7 +102,8 @@ class BifrostIOHelper extends Helper {
             const logs = await webdriverHelper.browser.log('performance')
             return logs.value.map(l => JSON.parse(l.message))
             } catch (err) {
-              console.log('WARNING', err)
+              // console.log('WARNING', err)
+              debug('INFO No performance logs found')
           }
         }
       })
