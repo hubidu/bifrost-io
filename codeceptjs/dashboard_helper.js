@@ -19,10 +19,10 @@ const {
   getScreenshotFileName,
   mapStepToSource} = require('./utils')
 const {
+  extractTags,
   extractBaseUrl,
   getDeviceSettingsFromSession,
-  getDeviceSettingsFromUA,
-  normalizePath
+  getDeviceSettingsFromUA
 } = require('../src/utils')
 
 // TODO Should support unique screenshot filenames
@@ -82,8 +82,6 @@ const getSuiteTitle = (suite, options) => {
       // filter empty parts (equivalent to remove leading /)
       const suitePathParts = suitePath.split('/').filter(p => !!p)
 
-      console.log(suitePathParts)
-
       // remove the test filename (last path item)
       suitePath = suitePathParts.slice(0, suitePathParts.length - 1).join(PrefixSep)
     }
@@ -94,7 +92,10 @@ const getSuiteTitle = (suite, options) => {
   const suitePrefix = makePrefix(suitePath, options.cutPrefix)
 
   if (suitePrefix) {
-    suiteTitle = [suitePrefix, suite.title].map(part => part.trim()).join(PrefixSep)
+    // extract tags from suite.title
+    const {str: suiteTitleWithoutTags} = extractTags(suite.title)
+    // create the suite path
+    suiteTitle = [suitePrefix, suiteTitleWithoutTags].map(part => part.trim()).join(PrefixSep)
   } else {
     suiteTitle = suite.title
   }
