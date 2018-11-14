@@ -11,11 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bifrost-io": "^0.6.3",
-    "codeceptjs": "^1.4.3",
+    "bifrost-io": "^0.6.7",
+    "codeceptjs": "^1.4.5",
     "mocha-junit-reporter": "^1.18.0",
     "mocha-multi": "^1.0.1",
-    "puppeteer": "^1.9.0",
-    "webdriverio": "^4.13.2"
+    "puppeteer": "^1.10.0",
+    "webdriverio": "^4.14.0"
   }
 }

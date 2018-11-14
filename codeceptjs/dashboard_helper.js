@@ -82,6 +82,8 @@ const getSuiteTitle = (suite, options) => {
       // filter empty parts (equivalent to remove leading /)
       const suitePathParts = suitePath.split('/').filter(p => !!p)
 
+      console.log(suitePathParts)
+
       // remove the test filename (last path item)
       suitePath = suitePathParts.slice(0, suitePathParts.length - 1).join(PrefixSep)
     }
@@ -92,7 +94,7 @@ const getSuiteTitle = (suite, options) => {
   const suitePrefix = makePrefix(suitePath, options.cutPrefix)
 
   if (suitePrefix) {
-    suiteTitle = [suitePrefix, suite.title].join(PrefixSep)
+    suiteTitle = [suitePrefix, suite.title].map(part => part.trim()).join(PrefixSep)
   } else {
     suiteTitle = suite.title
   }
