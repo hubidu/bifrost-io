@@ -55,10 +55,50 @@ const ignoreError = promise =>  promise.catch(e => undefined)
 let Helper = codecept_helper;
 
 let suiteTitle, testCtx, commandCtx, currentUrl
-let testPerformanceLogs = []
+// let testPerformanceLogs = []
 
 const dashboardClient = new DashboardClient()
 
+const getSuiteTitle = (suite, options) => {
+  const PrefixSep = ' -- '
+
+  const makePrefix = (suitePath, cutPrefix) => {
+    const DefaultCutPrefixes = [`/features`, `/tests`, `/src/tests`]
+    if (cutPrefix) {
+      DefaultCutPrefixes.splice(0, 0, cutPrefix)
+    }
+
+    // Remove the current working directory from the suite path
+    // and normalize the path using / as separator
+    suitePath = suitePath && suitePath.replace(process.cwd(), '').split(path.sep).join('/')
+    if (suitePath) {
+      // remove test base dir
+      DefaultCutPrefixes.forEach(cutPrefix => {
+        if (suitePath.indexOf(cutPrefix) === 0) {
+          suitePath = suitePath.replace(cutPrefix, '')
+        }
+      })
+
+      // filter empty parts (equivalent to remove leading /)
+      const suitePathParts = suitePath.split('/').filter(p => !!p)
+
+      // remove the test filename (last path item)
+      suitePath = suitePathParts.slice(0, suitePathParts.length - 1).join(PrefixSep)
+    }
+    return suitePath.trim()
+  }
+
+  const suitePath = suite.tests && suite.tests.length > 0 && suite.tests[0].file
+  const suitePrefix = makePrefix(suitePath, options.cutPrefix)
+
+  if (suitePrefix) {
+    suiteTitle = [suitePrefix, suite.title].join(PrefixSep)
+  } else {
+    suiteTitle = suite.title
+  }
+
+  return suiteTitle
+}
 
 class BifrostIOHelper extends Helper {
   constructor(config) {
@@ -133,36 +173,7 @@ class BifrostIOHelper extends Helper {
    * Before/After Suite
    */
   _beforeSuite(suite) {
-    const makePrefix = (suitePath, cutPrefix) => {
-      const DefaultCutPrefixes = [`/features`, `/tests`, `/src/tests`]
-      if (cutPrefix) {
-        DefaultCutPrefixes.splice(0, 0, cutPrefix)
-      }
-
-      // Remove the current working directory from the suite path
-      // and normalize the path using / as separator
-      suitePath = suitePath && suitePath.replace(process.cwd(), '').split(path.sep).join('/')
-      if (suitePath) {
-        // remove test base dir
-        DefaultCutPrefixes.forEach(cutPrefix => {
-          suitePath = suitePath.replace(cutPrefix, '')
-        })
-
-        const suitePathParts = suitePath.split('/').filter(p => !!p)
-        // remove the test filename
-        suitePath = suitePathParts.slice(0, suitePathParts.length - 1).join('/')
-      }
-      return suitePath.trim()
-    }
-
-    const suitePath = suite.tests && suite.tests.length > 0 && suite.tests[0].file
-    const suitePrefix = makePrefix(suitePath, this.options.cutPrefix)
-
-    if (suitePrefix) {
-      suiteTitle = `${normalizePath(suitePrefix)} -- ${suite.title}`
-    } else {
-      suiteTitle = suite.title
-    }
+    suiteTitle = getSuiteTitle(suite, this.options)
   }
 
   _afterSuite(suite) {
@@ -175,7 +186,7 @@ class BifrostIOHelper extends Helper {
   async _before() {
     try {
       testCtx = dashboardClient.createTestContext(suiteTitle, 'before', true)
-      testPerformanceLogs = []
+      // testPerformanceLogs = []
       currentUrl = undefined
     } catch (err) {
       console.log('ERROR in _before hook', err)
