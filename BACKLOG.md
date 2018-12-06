@@ -57,10 +57,14 @@
 
 # Doing
 
-- Support for custom auto screenshot methods
 
 # Backlog V 2.1 Release
 
+- If error message is an object then stringify it
+- Bug: Selector highlighting (see github)
+- seeNumberOf.../seeElement has selector as first parameter
+- grabTextFrom is not highlighting selector
+- Support for custom auto screenshot methods
 - Autoscreenshots: I.see* : Would be better to take the screenshot AFTER the method call
 - BUG: Stacktraces extraction does not work in 
   http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
