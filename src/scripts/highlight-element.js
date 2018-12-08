@@ -13,7 +13,7 @@ module.exports = function (sel, isError, txt) {
         const isCss = (str) => [
             '.', '#', '[', 'body', 'table', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'input', 'button', 'a ', 'a[',
             'tr', 'tr:', 'tr[',
-            'td', 'td:', 'td[',
+            'td', 'td:', 'td[', 'label',
         ].some(el => str.indexOf(el) === 0)
         function isXPath(str) {
             return str.indexOf('//') === 0 || str.indexOf('text()') >= 0 || str.indexOf('(//') >= 0 || str.indexOf('.//') >= 0
@@ -56,15 +56,15 @@ module.exports = function (sel, isError, txt) {
         newOutline.style['pointer-events'] = 'none'; // be able to click through this element
         newOutline.style.opacity = 0.2;
         newOutline.style['background-color'] = highlightColor
-    
+
         newOutline.style.width = rect.width + 'px'
         newOutline.style.height = rect.height + 'px'
         newOutline.style.top = rect.top + window.scrollY + 'px'
         newOutline.style.left = rect.left + window.scrollX + 'px'
-        
+
         if (txt) {
             var txtContainer = document.createElement('div')
-            var textContent = document.createTextNode(txt); 
+            var textContent = document.createTextNode(txt);
             txtContainer.className = 'wdio-outline'
             txtContainer.style.position = 'absolute'
             txtContainer.style['padding'] = '3px';
@@ -81,8 +81,8 @@ module.exports = function (sel, isError, txt) {
             txtContainer.style.height = '40px'
             txtContainer.style.top = (rect.top + window.scrollY - 50) + 'px'
             txtContainer.style.left = (rect.left + window.scrollX) + 'px'
-                        
-            txtContainer.appendChild(textContent);      
+
+            txtContainer.appendChild(textContent);
             document.querySelector('body').appendChild(txtContainer)
         }
 

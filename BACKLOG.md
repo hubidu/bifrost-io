@@ -58,6 +58,7 @@
 
 # Doing
 
+- seeNumberOf.../seeElement has selector as first parameter
 
 
 # Backlog V 2.1 Release
@@ -66,7 +67,6 @@
     at module.exports (/home/stefan/Projects/bifrost-io/examples/codeceptjs/node_modules/bifrost-io/src/utils/find-test-source-in-source.js:20:3)
 - If error message is an object then stringify it
 - Bug: Selector highlighting (see github)
-- seeNumberOf.../seeElement has selector as first parameter
 - Support for custom auto screenshot methods
 - Autoscreenshots: I.see* : Would be better to take the screenshot AFTER the method call
 - BUG: Stacktraces extraction does not work in 
