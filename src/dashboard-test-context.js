@@ -125,8 +125,9 @@ class DashboardCommandContext {
      * Decide on which commands to do element highlighting on the web page
      */
     shouldHighlight() {
-        return this.name.indexOf('click') >= 0 ||
-            this.name.indexOf('see') >= 0
+      return ['click', 'see', 'grab'].some(prefix => this.name.indexOf(prefix) >= 0)
+        // return this.name.indexOf('click') >= 0 ||
+        //     this.name.indexOf('see') >= 0
     }
 
     /**

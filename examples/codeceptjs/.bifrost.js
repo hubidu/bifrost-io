@@ -1,6 +1,6 @@
 module.exports = {
     ownerkey: 'BGHB0nuKmW',
-    dashboardHost: 'heimdall.io',
+    dashboardHost: 'localhost',
     project: 'codeceptjs-demo'
     // autoscreenshotMethodPrefixes: ['shouldSee']
 }

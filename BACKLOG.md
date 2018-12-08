@@ -54,16 +54,19 @@
 - Extract steps from test source and report
 - Format prefix correctly (no unncecessary blanks)
 - Find and report starting line number of test in test source file
+- grabTextFrom is not highlighting selector
 
 # Doing
 
 
+
 # Backlog V 2.1 Release
 
+- Bug "When the test fails in a before() hook": No test source => _failed(test) hook:  { AssertionError [ERR_ASSERTION]: Expected the complete source
+    at module.exports (/home/stefan/Projects/bifrost-io/examples/codeceptjs/node_modules/bifrost-io/src/utils/find-test-source-in-source.js:20:3)
 - If error message is an object then stringify it
 - Bug: Selector highlighting (see github)
 - seeNumberOf.../seeElement has selector as first parameter
-- grabTextFrom is not highlighting selector
 - Support for custom auto screenshot methods
 - Autoscreenshots: I.see* : Would be better to take the screenshot AFTER the method call
 - BUG: Stacktraces extraction does not work in 

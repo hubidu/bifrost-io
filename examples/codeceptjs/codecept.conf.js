@@ -15,8 +15,8 @@ const perfLoggingPrefs =  process.env.PERF_LOGGING !== undefined ? {
 } : undefined
 
 exports.config = {
-    "name": "codeceptjs",
-    "tests": "./features/**/*_test.js",
+    "name": "bifrost-demo",
+    "tests": "./bifrost-demo/**/*_test.js",
     "timeout": 10000,
     "output": OutputDir,
     "helpers": {
@@ -48,6 +48,11 @@ exports.config = {
       },
       "CustomCommandsHelper": {
         "require": "./custom-commands.js"
+      }
+    },
+    "plugins": {
+      "allure": {
+        targetDir: './allure'
       }
     },
     "multiple": {
