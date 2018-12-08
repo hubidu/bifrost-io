@@ -31,14 +31,20 @@ const getCodeceptjsScreenshotPath = (test, useUniqueScreenshotNames, isError = t
   const errorScreenshot = getScreenshotFileName(test, useUniqueScreenshotNames, isError)
   return path.join(global.output_dir, errorScreenshot)
 }
+const toString = sth => {
+  if (typeof sth === 'string') return sth
+  if (typeof sth === 'object') return JSON.stringify(sth)
+  return '' + sth
+}
 const toError = err => {
   let message = err.message;
   if (err.inspect) { // AssertionFailedError
     message = err.message = err.inspect();
   }
+
   return {
     name: err.name,
-    message,
+    message: toString(message),
     stack: err.stack,
     actual: err.actual,
     expected: err.expected,
