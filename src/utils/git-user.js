@@ -6,8 +6,11 @@ module.exports = function(options) {
     const gc = gitconfig(Object.assign({type: 'global'}, options && options.gitconfig));
     options = Object.assign({cwd: '/', path: gc}, options);
     const config = parse.sync(options) || {};
-    return config.user ? config.user : null;  
+    return config.user ? config.user : null;
   } catch (err) {
+    // Dont log on CI/CD
+    if (!process.env.NODE_ENV) {
       console.log('WARNING Could not determine git user info', err)
+    }
   }
 };

@@ -56,19 +56,20 @@
 - Find and report starting line number of test in test source file
 - grabTextFrom is not highlighting selector
 - Already implemented: seeNumberOf.../seeElement has selector as first parameter
+- Cannot do: Autoscreenshots: I.see* : Would be better to take the screenshot AFTER the method call
+- Cannot reproduce: Bug "When the test fails in a before() hook": No test source => _failed(test) hook:  { AssertionError [ERR_ASSERTION]: Expected the complete source
+    at module.exports (/home/stefan/Projects/bifrost-io/examples/codeceptjs/node_modules/bifrost-io/src/utils/find-test-source-in-source.js:20:3)
+- Fix git log spam
 
 # Doing
 
-- If error message is an object then stringify it
+- If error message is an object then stringify it. Check also screenshot error
 
 
 # Backlog V 2.1 Release
 
-- Bug "When the test fails in a before() hook": No test source => _failed(test) hook:  { AssertionError [ERR_ASSERTION]: Expected the complete source
-    at module.exports (/home/stefan/Projects/bifrost-io/examples/codeceptjs/node_modules/bifrost-io/src/utils/find-test-source-in-source.js:20:3)
 - Bug: Selector highlighting (see github)
 - Support for custom auto screenshot methods
-- Autoscreenshots: I.see* : Would be better to take the screenshot AFTER the method call
 - BUG: Stacktraces extraction does not work in 
   http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
 - BUG That should work:

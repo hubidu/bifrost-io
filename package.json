@@ -14,24 +14,24 @@
   },
   "license": "ISC",
   "dependencies": {
-    "archiver": "^2.1.1",
+    "archiver": "^3.0.0",
     "chalk": "^2.4.1",
     "code-excerpt": "^2.1.1",
-    "debug": "^3.1.0",
-    "git-config-path": "^1.0.1",
+    "debug": "^4.1.0",
+    "git-config-path": "^2.0.0",
     "git-last-commit": "^0.3.0",
     "mkdirp": "^0.5.1",
-    "parse-git-config": "^2.0.2",
-    "request": "^2.87.0",
+    "parse-git-config": "^3.0.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "shortid": "^2.2.12",
-    "ua-parser-js": "^0.7.18"
+    "shortid": "^2.2.14",
+    "ua-parser-js": "^0.7.19"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
-    "codeceptjs": "^1.4.3",
-    "conventional-changelog-cli": "^2.0.1",
+    "ava": "^1.0.1",
+    "codeceptjs": "^1.4.6",
+    "conventional-changelog-cli": "^2.0.11",
     "cross-env": "^5.2.0",
-    "release-it": "^7.4.8"
+    "release-it": "^9.2.0"
   }
 }

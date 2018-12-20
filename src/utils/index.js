@@ -9,8 +9,10 @@ const getDeviceSettingsFromSession = require('./get-device-settings-from-session
 const normalizePath = require('./normalize-path')
 const extractStepOutline = require('./extract-step-outline')
 const findTestSourceInSource = require('./find-test-source-in-source')
+const getSuiteTitle = require('./get-suite-title')
 
 module.exports = {
+    getSuiteTitle,
     extractTags,
     zipDirectory,
     extractBaseUrl,

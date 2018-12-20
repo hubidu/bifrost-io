@@ -17,8 +17,8 @@ const trimLine = l => l.trim().replace(/;$/, '')
  * @param {*} testSource
  */
 module.exports = (completeSource, testSource) => {
-  assert(completeSource, 'Expected the complete source')
-  assert(testSource, 'Expected the test source')
+  assert(completeSource, 'The complete test file source code is required')
+  assert(testSource, 'The test source code is required')
 
   const completeSourceLinesTrimmed =
     completeSource

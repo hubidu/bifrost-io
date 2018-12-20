@@ -2,7 +2,7 @@ const assert = require('assert')
 
 Feature('Failing test scenarios');
 
-Scenario('The test will fail and should still get a report When I throw an assertion @failing', async (I) => {
+Scenario('The test will fail and should still get a report When I throw an assertion @failing @assert', async (I) => {
     I.amOnPage('http://www.check24.de')
     assert(false, 'Throw an assertion')
 })
@@ -19,11 +19,11 @@ Scenario('The test will fail When checking for a non-existing element within a c
     })
 })
 
-Scenario('When the error message is a js object a report should still be generated @failing', async (I) => {
+Scenario('When the error message is a js object a report should still be generated @failing @with-object', async (I) => {
   I.amOnPage('http://www.check24.de')
   const errorAsObject = {
     message: 'Some error message',
     foo: 'bar'
   }
-  assert(false, errorAsObject)
+  I.assertThat(false, errorAsObject)
 })
