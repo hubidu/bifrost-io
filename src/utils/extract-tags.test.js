@@ -14,13 +14,13 @@ test('@foo @bar Some description', t => {
     t.is(str, 'Some description')
 });
 
-test('@foo @bar Some description', t => {
+test('@foo Some @bar description', t => {
     const {tags, str} = extractTags('@foo Some @bar description')
     t.is(2, tags.length)
     t.is(str, 'Some  description')
 });
 
-test('@foo @bar Some description', t => {
+test('@foo Some description @bar @baz', t => {
     const {tags, str} = extractTags('@foo Some description @bar @baz')
     t.is(3, tags.length)
     t.is(str, 'Some description')

@@ -25,6 +25,9 @@ const {
   getDeviceSettingsFromUA
 } = require('../src/utils')
 
+// In codeceptjs 2 the name of the webdriver helper changed
+const WebDriverHelperName = 'WebDriver'
+
 // TODO Should support unique screenshot filenames
 const getScreenshotPath = filename => path.join(global.output_dir, filename);
 const getCodeceptjsScreenshotPath = (test, useUniqueScreenshotNames, isError = true) => {
@@ -84,10 +87,12 @@ class BifrostIOHelper extends Helper {
   }
 
   _getSaveScreenshot() {
-    let helper = this.helpers['WebDriverIO']
-    if (helper) return Object.assign({}, {
-      saveScreenshot: helper.browser.saveScreenshot
-    })
+    let helper = this.helpers[WebDriverHelperName]
+    if (helper) {
+      return Object.assign({}, {
+        saveScreenshot: async filePath => await helper.browser.saveScreenshot(filePath)
+      })
+    }
 
     helper = this.helpers['Puppeteer']
     if (helper) {
@@ -99,13 +104,13 @@ class BifrostIOHelper extends Helper {
     helper = this.helpers['Appium']
     if (helper) {
       return Object.assign({}, {
-        saveScreenshot: helper.browser.saveScreenshot
+        saveScreenshot: async filePath => await helper.browser.saveScreenshot(filePath)
       })
     }
   }
 
   _getHelper() {
-    const webdriverHelper = this.helpers['WebDriverIO']
+    const webdriverHelper = this.helpers[WebDriverHelperName]
     if (webdriverHelper) {
       return Object.assign(webdriverHelper, {
         grabSession: async () => undefined,
@@ -130,13 +135,15 @@ class BifrostIOHelper extends Helper {
     }
 
     const appiumHelper = this.helpers['Appium']
-    return Object.assign(appiumHelper, {
-      grabSession: async () => (await appiumHelper.browser.session()).value,
-      grabTitle: async () => '-',
-      grabCurrentUrl: async () => appiumHelper.grabCurrentActivity(),
-      executeScript: async () => Promise.resolve(),
-      grabPerformanceLogs: async () => Promise.resolve([])
-    })
+    if (appiumHelper) {
+      return Object.assign(appiumHelper, {
+        grabSession: async () => (await appiumHelper.browser.session()).value,
+        grabTitle: async () => '-',
+        grabCurrentUrl: async () => appiumHelper.grabCurrentActivity(),
+        executeScript: async () => Promise.resolve(),
+        grabPerformanceLogs: async () => Promise.resolve([])
+      })
+    }
   }
 
   _init() {}
