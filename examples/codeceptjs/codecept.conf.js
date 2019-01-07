@@ -42,10 +42,10 @@ exports.config = {
           headless: false
         }
       },
-      // BifrostHelper: {
-      //   require: "bifrost-io/codeceptjs/dashboard_helper.js",
-      //   cutPrefix: "/features"
-      // },
+      BifrostHelper: {
+        require: "bifrost-io/codeceptjs/dashboard_helper.js",
+        cutPrefix: "/features"
+      },
       "CustomCommandsHelper": {
         "require": "./custom-commands.js"
       }
