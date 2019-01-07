@@ -15,9 +15,9 @@
   "license": "ISC",
   "dependencies": {
     "archiver": "^3.0.0",
-    "chalk": "^2.4.1",
+    "chalk": "^2.4.2",
     "code-excerpt": "^2.1.1",
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "git-config-path": "^2.0.0",
     "git-last-commit": "^0.3.0",
     "mkdirp": "^0.5.1",
@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "ava": "^1.0.1",
-    "codeceptjs": "^1.4.6",
+    "codeceptjs": "^2.0.2",
     "conventional-changelog-cli": "^2.0.11",
     "cross-env": "^5.2.0",
-    "release-it": "^9.2.0"
+    "release-it": "^9.6.2"
   }
 }

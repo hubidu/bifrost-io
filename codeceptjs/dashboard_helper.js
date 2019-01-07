@@ -94,6 +94,13 @@ class BifrostIOHelper extends Helper {
       })
     }
 
+    helper = this.helpers['WebDriverIO']
+    if (helper) {
+      return Object.assign({}, {
+        saveScreenshot: async filePath => await helper.browser.saveScreenshot(filePath)
+      })
+    }
+
     helper = this.helpers['Puppeteer']
     if (helper) {
       return {
