@@ -64,11 +64,11 @@
 # Doing
 
 - If error message is an object then stringify it. Check also screenshot error
-
+- Bug: Selector highlighting (see github)
+ 
 
 # Backlog V 2.1 Release
 
-- Bug: Selector highlighting (see github)
 - Support for custom auto screenshot methods
 - BUG: Stacktraces extraction does not work in 
   http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
