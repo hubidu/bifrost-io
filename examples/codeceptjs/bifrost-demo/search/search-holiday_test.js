@@ -17,11 +17,11 @@ async (I, current) => {
     I.fillField('body #c24-travel-destination-element', current.destination)
 
     I.say('I enter origin')
-    I.pressKey('Enter')
+    // I.pressKey('Enter')
     I.wait(1)
     I.pressKey('Tab')
     I.fillField('body #c24-travel-airport-element', current.airport)
-    I.pressKey('Enter')
+    // I.pressKey('Enter')
     I.wait(1)
 
     I.saveScreenshot('after-destination-airport.png')
