@@ -7,7 +7,7 @@ async (I) => {
 
   I.say('I search for react jobs')
   I.fillField('body #search', 'react docker')
-  I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
+  I.click('.btn.btn-m.primary.block') // Depending on the screen size there may be two such elements
 
   I.say('I see 4 vacancies')
   I.waitInUrl('/search')
@@ -22,10 +22,10 @@ async (I) => {
 
   I.say('I search for C# jobs')
   I.fillField('body #search', 'c#')
-  I.clickVisible('Job finden') // Depending on the screen size there may be two such elements
+  I.click('.btn.btn-m.primary.block')
 
   I.say('I see 6 vacancies')
   I.waitInUrl('/search')
   I.seeElementInDOM('.filter--section')
-  I.seeNumberOfVisibleElements('.vacancy--boxitem', 6)
+  I.seeNumberOfVisibleElements('.vacancy--boxitem', 4)
 })

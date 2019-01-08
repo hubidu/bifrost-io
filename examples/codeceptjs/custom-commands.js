@@ -12,7 +12,7 @@ function assertElementExists(res, locator, prefix, suffix) {
         throw new ElementNotFound(locator, prefix, suffix);
     }
 }
-  
+
 async function clickVisibleWDIO(wdio, locator, context) {
     assert(wdio, 'clickVisible() requires WebDriverIO')
     let browser = wdio.browser;
@@ -21,7 +21,7 @@ async function clickVisibleWDIO(wdio, locator, context) {
     const elemIsDisplayed = await Promise.all(res.map(elem => browser.elementIdDisplayed(elem.ELEMENT)))
 
     let visibleClickableElement
-    res.forEach((elem, i) => elemIsDisplayed[i].value === true ? visibleClickableElement = elem : false) 
+    res.forEach((elem, i) => elemIsDisplayed[i].value === true ? visibleClickableElement = elem : false)
 
     if (context) {
         assertElementExists(visibleClickableElement, locator, 'Clickable element', `was not found inside element ${new Locator(context).toString()}`);
@@ -40,7 +40,7 @@ class CustomHelper extends Helper {
    * Click the first visible element matching the locator and context
    */
   async clickVisible(locator, context = undefined) {
-    const wdio = this.helpers['WebDriverIO']
+    const wdio = this.helpers['WebDriver'] || this.helpers['WebDriverIO']
     const pp = this.helpers['Puppeteer']
 
     if (wdio) return clickVisibleWDIO(wdio, locator, context)

@@ -84,9 +84,9 @@ class BifrostIOHelper extends Helper {
   }
 
   _getSaveScreenshot() {
-    let helper = this.helpers['WebDriverIO']
+    let helper = this.helpers['WebDriver'] || this.helpers['WebDriverIO']
     if (helper) return Object.assign({}, {
-      saveScreenshot: helper.browser.saveScreenshot
+      saveScreenshot: filePath => helper.browser.saveScreenshot(filePath)
     })
 
     helper = this.helpers['Puppeteer']
@@ -105,7 +105,7 @@ class BifrostIOHelper extends Helper {
   }
 
   _getHelper() {
-    const webdriverHelper = this.helpers['WebDriverIO']
+    let webdriverHelper = this.helpers['WebDriver'] || this.helpers['WebDriverIO']
     if (webdriverHelper) {
       return Object.assign(webdriverHelper, {
         grabSession: async () => undefined,

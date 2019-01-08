@@ -20,7 +20,7 @@ exports.config = {
     "timeout": 10000,
     "output": OutputDir,
     "helpers": {
-      "WebDriverIO": {
+      "WebDriver": {
         "url": "http://localhost",
         "host": process.env.SELENIUM_HOST || 'localhost',
         "port": process.env.SELENIUM_PORT || 4444,
@@ -31,11 +31,11 @@ exports.config = {
         "smartWait": 2000,
         "waitForTimeout": 10000,
         "desiredCapabilities": {
-          loggingPrefs,
+          // loggingPrefs,
           "goog:chromeOptions": {
             args: [ "--disable-gpu", "--window-size=1200,1200" ],
-            mobileEmulation,
-            perfLoggingPrefs
+            // mobileEmulation,
+            // perfLoggingPrefs
           }
         },
         chrome: {
