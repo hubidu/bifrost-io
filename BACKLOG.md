@@ -63,6 +63,7 @@
 
 # Doing
 
+- BUG Tag extraction also detects email address in data driven test as tag
 - If error message is an object then stringify it. Check also screenshot error
 - Bug: Selector highlighting (see github)
  
