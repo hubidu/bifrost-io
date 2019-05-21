@@ -1,4 +1,69 @@
+# Backlog
+
+- IDEA Just rerun failed tests (get from heimdall backend)
+- IDEA When an error occurs extract more detailed context info from the page
+- Always take fullscreen screenshots
+- Take html snapshots on first run or first run after failed
+- FIX report git changes for test file (not whole repo)
+- BUG codeceptjs: Converts { xpath: '' } selector into a string (in step args) -> file a bug
+- Make highlighting for xpath selectors work
+- PRB When a test throws an assertion, the error does not have a stack property (which would be nice to mark the actual source location of the failure)
+- IDEA Link to stories in test titles using tags: Provide issue tracker url and tag regex template
+- IDEA Improve errors (try to find out what exactly went wrong): 
+    * Does not make sense to trigger a retry if an assertion failed (like wrong text in input field) while it does make sense if an element could not be found
+- Performance logs: Must take performance logs for each new page
+- Performance: Try out setting performance markers
+- BUG Highlighting xpath expressions with puppeteer does not work
+- XPATH Should also detect .// as xpath (imporove css/xpath detection)
+- Make this codeceptjs error nicer:
+    'expected element .ResultTariffListItem-tariffName to include "B1"'
+
+    Expected  'B1'
+    Found  '120
+    ___(next element)___
+    SecurAL BV 10 AU
+    ___(next element)___
+    S-M.A.R.T
+    ___(next element)___
+    Getsurance Job mit Option Psyche
+    ___(next element)___
+    XL
+    ___(next element)___
+    --( 69 lines more )---'
+- Add a proper cahngelog for the project
+- Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
+- Use regexes for proper css detection
+- HOw can I add the result of a rest api call?
+- Better parser for codeceptjs assertion errors
+- HIde sensitive data in test source, steps and step.args
+- BETTER DO IN REPORT Add more error details (actual/expected)
+- BETTER DO IN REPORT Improve error messages
+- Enable logging json or markdown to provide additional information (e. g. links to items)
+- Autowait for elements
+
+# Backlog V 2.1 Release
+
+- Support for custom auto screenshot methods
+- BUG: Stacktraces extraction does not work in 
+  http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
+- BUG That should work:
+	WARNING Could not find test in stack [ '    at Object.navigateToLandingPage (/tests/src/page-objects/pages/landing.page.js:21:7)',
+  17-Sep-2018 13:41:11	  '    at Test.Data.only.Scenario (/tests/src/tests/default-segment/landing-pages.test.js:15:17)' ]
+- Android: Extract more info for deviceSettings from native and webview sessions
+- seeInField: should highlight field (even when command failed)
+- Highlight element by text (e. g. in I.click('button text'))
+- Better error message: I.click(text, context): Should show me clickable elements with similar text
+- Try: run parallel with puppeteer
+- Should not generate multiple runids when running in parallel
+
+
+# Doing
+
+- BUG Data Driven Tests: Tag extraction also detects email address in data driven test as tag
+- Bug: xpaths selectors are not highlighted
+ 
 ## Done
+- DONE saveScreenshot should copy the screenshot not move
 - DONE Reverse screenshot order (actually report app should order by time)
 - DONE report-app: Filter by token and project
 - DONE Add project id
@@ -61,69 +126,6 @@
     at module.exports (/home/stefan/Projects/bifrost-io/examples/codeceptjs/node_modules/bifrost-io/src/utils/find-test-source-in-source.js:20:3)
 - Fix git log spam
 
-# Doing
 
-- BUG Tag extraction also detects email address in data driven test as tag
-- If error message is an object then stringify it. Check also screenshot error
-- Bug: Selector highlighting (see github)
- 
-
-# Backlog V 2.1 Release
-
-- Support for custom auto screenshot methods
-- BUG: Stacktraces extraction does not work in 
-  http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
-- BUG That should work:
-	WARNING Could not find test in stack [ '    at Object.navigateToLandingPage (/tests/src/page-objects/pages/landing.page.js:21:7)',
-  17-Sep-2018 13:41:11	  '    at Test.Data.only.Scenario (/tests/src/tests/default-segment/landing-pages.test.js:15:17)' ]
-- Android: Extract more info for deviceSettings from native and webview sessions
-- seeInField: should highlight field (even when command failed)
-- Highlight element by text (e. g. in I.click('button text'))
-- Better error message: I.click(text, context): Should show me clickable elements with similar text
-- Try: run parallel with puppeteer
-- Should not generate multiple runids when running in parallel
-
-# Backlog
-
-- IDEA Just rerun failed tests (get from heimdall backend)
-- IDEA When an error occurs extract more detailed context info from the page
-- Always take fullscreen screenshots
-- Take html snapshots on first run or first run after failed
-- FIX report git changes for test file (not whole repo)
-- BUG codeceptjs: Converts { xpath: '' } selector into a string (in step args) -> file a bug
-- Make highlighting for xpath selectors work
-- PRB When a test throws an assertion, the error does not have a stack property (which would be nice to mark the actual source location of the failure)
-- IDEA Link to stories in test titles using tags: Provide issue tracker url and tag regex template
-- IDEA Improve errors (try to find out what exactly went wrong): 
-    * Does not make sense to trigger a retry if an assertion failed (like wrong text in input field) while it does make sense if an element could not be found
-- Performance logs: Must take performance logs for each new page
-- Performance: Try out setting performance markers
-- BUG Highlighting xpath expressions with puppeteer does not work
-- XPATH Should also detect .// as xpath (imporove css/xpath detection)
-- Make this codeceptjs error nicer:
-    'expected element .ResultTariffListItem-tariffName to include "B1"'
-
-    Expected  'B1'
-    Found  '120
-    ___(next element)___
-    SecurAL BV 10 AU
-    ___(next element)___
-    S-M.A.R.T
-    ___(next element)___
-    Getsurance Job mit Option Psyche
-    ___(next element)___
-    XL
-    ___(next element)___
-    --( 69 lines more )---'
-- Add a proper cahngelog for the project
-- Unfortunately say will not be reported as a step: Add say to autoscreenshot methods
-- Use regexes for proper css detection
-- HOw can I add the result of a rest api call?
-- Better parser for codeceptjs assertion errors
-- HIde sensitive data in test source, steps and step.args
-- BETTER DO IN REPORT Add more error details (actual/expected)
-- BETTER DO IN REPORT Improve error messages
-- Enable logging json or markdown to provide additional information (e. g. links to items)
-- Autowait for elements
 
 

@@ -150,7 +150,7 @@ class DashboardCommandContext {
 
     addExistingScreenshot(screenshotPath, err = undefined) {
         const targetFileName = this.getFileName()
-        fs.renameSync(screenshotPath, path.join(this.testContext.outputPath, targetFileName))
+        fs.copyFileSync(screenshotPath, path.join(this.testContext.outputPath, targetFileName))
 
         this._createScreenshot(targetFileName, err)
 
