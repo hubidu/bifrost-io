@@ -374,7 +374,9 @@ class DashboardTestContext {
         try {
             this.lastSourceCommit = await gitLastCommit()
         } catch (err) {
+          if (process.env.DEBUG) {
             console.log('WARNING Failed to get last git commit', err)
+          }
         }
 
         writeReport(this);

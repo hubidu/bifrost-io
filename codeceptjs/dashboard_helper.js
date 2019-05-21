@@ -217,7 +217,9 @@ class BifrostIOHelper extends Helper {
             await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)
           }
         } catch (err) {
-          console.log(`WARNING Failed to highlight element ${sel}`, err)
+          if (process.env.DEBUG) {
+            console.log(`WARNING Failed to highlight element ${sel}`, err)
+          }
         }
       }
 
