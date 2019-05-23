@@ -60,9 +60,9 @@
 # Doing
 
 - BUG Data Driven Tests: Tag extraction also detects email address in data driven test as tag
-- Bug: xpaths selectors are not highlighted
  
 ## Done
+- DONE Bug: xpaths selectors are not highlighted
 - DONE saveScreenshot should copy the screenshot not move
 - DONE Reverse screenshot order (actually report app should order by time)
 - DONE report-app: Filter by token and project

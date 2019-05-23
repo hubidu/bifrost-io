@@ -207,10 +207,12 @@ class BifrostIOHelper extends Helper {
       */
       commandCtx = testCtx.createCommandContext(step.name, step.args)
 
-      let sel = commandCtx.getSelector()
-      sel = typeof sel === 'object' ? sel.css || sel.xpath : sel // HACKY
-      // console.log('SELECTOR', typeof sel, sel)
       if (commandCtx.shouldHighlight()) {
+        let sel = commandCtx.getSelector()
+        console.log('SELECTOR', typeof(sel), sel)
+
+        sel = sel.match(/css\:/) ? JSON.parse(sel) : sel
+        sel = sel.match(/xpath\:/) ? JSON.parse(sel) : sel
         try {
           debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
           if (sel) {
@@ -218,7 +220,7 @@ class BifrostIOHelper extends Helper {
           }
         } catch (err) {
           if (process.env.DEBUG) {
-            console.log(`WARNING Failed to highlight element ${sel}`, err)
+            console.log(`WARNING Failed to highlight I ${step.name} ${step.args}`, typeof(sel))
           }
         }
       }
@@ -236,7 +238,7 @@ class BifrostIOHelper extends Helper {
 
         // Add url and title
         debug(`${step.name}: Getting page url and title after step`)
-        const [url, title, _] = await Promise.all([ helper.grabCurrentUrl(), helper.grabTitle(), helper.executeScript(dehighlightElement)])
+        const [url, title, _] = await Promise.all([helper.grabCurrentUrl(), helper.grabTitle(), helper.executeScript(dehighlightElement)])
         commandCtx.addPageInfo({
           url,
           title

@@ -11,17 +11,15 @@ module.exports = function (sel, isError, txt) {
     function querySel(cssOrXPath) {
         // TODO Refactor this
         const isCss = (str) => [
-            '.', '#', '[', 'body', 'table', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'div', 'input', 'button', 'a ', 'a[',
-            'tr', 'tr:', 'tr[',
-            'td', 'td:', 'td[', 'label',
+            '.', '#', '[', 'body', 'table', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'span', 'div', 'input', 'button', 'a ', 'a[',
+            'tbody', 'tr', 'tr:', 'tr[', 'td', 'td:', 'td[', 'label',
         ].some(el => str.indexOf(el) === 0)
-        function isXPath(str) {
-            return str.indexOf('//') === 0 || str.indexOf('text()') >= 0 || str.indexOf('(//') >= 0 || str.indexOf('.//') >= 0
-        }
+        const isXPath = (str) => ['.//', '//*', '//'].some(el => str.indexOf(el) === 0) || str.indexOf('text()') >= 0 || str.indexOf('(//') >= 0 || str.indexOf('.//') >= 0
 
         if (typeof cssOrXPath !== 'string') return
 
-        if(isCss(cssOrXPath)) {
+        if(isCss(cssOrXPath) && !isXPath(cssOrXPath)) {
             return document.querySelectorAll(sel)
         } else if (isXPath(cssOrXPath)) {
             // TODO Implement this
