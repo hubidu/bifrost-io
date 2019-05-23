@@ -40,9 +40,6 @@
 - BETTER DO IN REPORT Improve error messages
 - Enable logging json or markdown to provide additional information (e. g. links to items)
 - Autowait for elements
-
-# Backlog V 2.1 Release
-
 - Support for custom auto screenshot methods
 - BUG: Stacktraces extraction does not work in 
   http://localhost:4000/details?ownerkey=WubaDm0VZj&project=%23All& hashcategory=1722448850
@@ -53,13 +50,12 @@
 - seeInField: should highlight field (even when command failed)
 - Highlight element by text (e. g. in I.click('button text'))
 - Better error message: I.click(text, context): Should show me clickable elements with similar text
-- Try: run parallel with puppeteer
-- Should not generate multiple runids when running in parallel
-
 
 # Doing
 
-- BUG Data Driven Tests: Tag extraction also detects email address in data driven test as tag
+- DONE Should not generate multiple runids when running in parallel
+- DONE BUG Data Driven Tests: Tag extraction also detects email address in data driven test as tag
+    -> Cut out data driven part first, then extract tags
  
 ## Done
 - DONE Bug: xpaths selectors are not highlighted
