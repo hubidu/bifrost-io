@@ -12,7 +12,8 @@ class DashboardClient {
         this.TEST_PROJECT = config.project
         assert(this.TEST_PROJECT, 'Expected a project name/identifier for this e2e project (process.env.TEST_PROJECT)')
 
-        this.runid = shortid.generate()
+        // Enable runid via env variable for parallel execution
+        this.runid = process.env.RUNID || shortid.generate()
         this.ctx = undefined
     }
 
