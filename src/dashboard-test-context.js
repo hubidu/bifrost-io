@@ -60,6 +60,7 @@ const writeReport = (testContext) => fs.writeFileSync(testContext.getReportFileN
 const rmFileSync = filename => fs.unlinkSync(filename)
 const cleanTitle = str => str.replace(/\r?\n|\r/, ' ').replace(/\s+/g,' ').trim()
 const getErrorMessage = err => err.inspect ? err.inspect() : err.message;
+const argToString = arg => arg.value ? arg.value : arg.toString()
 
 /**
  * Collect data for a single test command
@@ -91,27 +92,43 @@ class DashboardCommandContext {
      * Retrieve the selector from command arguments
      */
     getSelector() {
-        if (this.name.indexOf('click') === 0) {
-            if (this.args.length === 1) {
-                return this.args[0]
-            } else if (this.args.length === 2) {
-                return this.args[1]
-            }
-        } else if (this.name.indexOf('fillField') === 0) {
-            return this.args[0]
-        } else if (this.name === 'seeNumberOfVisibleElements' || this.name === 'seeElementInDOM' || this.name === 'seeInField') {
-            return this.args[0]
-        } else if (this.name.indexOf('see') === 0) {
-            if (this.args.length === 1) {
-                return this.args[0]
-            } else if (this.args.length === 2) {
-                return this.args[1]
-            }
-        } else {
-            // TODO Should be configurable with autoscreenshotPrefixes (see shouldTakeScreenshot)
-            // TODO Implement a better selector detection
-            return undefined
+      let selector
+
+      if (this.name.indexOf('click') === 0) {
+          if (this.args.length === 1) {
+              selector = this.args[0]
+          } else if (this.args.length === 2) {
+              selector = this.args[1]
+          }
+      } else if (this.name.indexOf('fillField') === 0) {
+          selector = this.args[0]
+      } else if (this.name === 'seeNumberOfVisibleElements' || this.name === 'seeElementInDOM' || this.name === 'seeInField') {
+          selector = this.args[0]
+      } else if (this.name.indexOf('see') === 0) {
+          if (this.args.length === 1) {
+              selector = this.args[0]
+          } else if (this.args.length === 2) {
+              selector = this.args[1]
+          }
+      } else {
+          // TODO Should be configurable with autoscreenshotPrefixes (see shouldTakeScreenshot)
+          // TODO Implement a better selector detection
+          selector = undefined
+      }
+
+      if (typeof(selector) === 'object') {
+        if (selector.value) {
+          selector = selector.value
         }
+        if (selector.css) {
+          selector = selector.css
+        }
+        if (selector.xpath) {
+          selector = selector.xpath
+        }
+      }
+
+      return selector
     }
 
     /**
@@ -192,7 +209,7 @@ class DashboardCommandContext {
      * Create a filename (e. g. to save a screenshot) for the current step
      */
     getFileName(ext = '.png') {
-        const stepName = `${this.name}(${this.args.join(',')})`.slice(0, 20) // limit to max chars
+        const stepName = `${this.name}(${this.args.map(argToString).join(',')})`.slice(0, 20) // limit to max chars
         return makeFileName(`${this.stepNo} - I.${stepName}.png`)
     }
 
@@ -250,7 +267,8 @@ class DashboardTestContext {
     }
 
     createCommandContext(stepName, stepArgs) {
-        const cmd = new DashboardCommandContext(this, stepName, stepArgs.map(arg => arg && arg.toString()))
+        // const cmd = new DashboardCommandContext(this, stepName, stepArgs.map(arg => arg && arg.toString()))
+        const cmd = new DashboardCommandContext(this, stepName, stepArgs)
         this.commands.push(cmd)
         return cmd
     }

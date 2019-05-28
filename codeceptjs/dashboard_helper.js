@@ -209,14 +209,13 @@ class BifrostIOHelper extends Helper {
 
       if (commandCtx.shouldHighlight()) {
         let sel = commandCtx.getSelector()
-        console.log('SELECTOR', typeof(sel), sel)
 
-        sel = sel.match(/css\:/) ? JSON.parse(sel) : sel
-        sel = sel.match(/xpath\:/) ? JSON.parse(sel) : sel
         try {
           debug(`${step.name} ${step.humanizeArgs()}: Highlighting element ${sel}`)
           if (sel) {
             await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)
+          } else {
+            console.log(`ERROR Selector is undefined for ${step.name} ${step.args}`)
           }
         } catch (err) {
           if (process.env.DEBUG) {
