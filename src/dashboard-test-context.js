@@ -110,6 +110,8 @@ class DashboardCommandContext {
           } else if (this.args.length === 2) {
               selector = this.args[1]
           }
+      } else if (this.name.indexOf('grabAttribute') === 0 || this.name.indexOf('grabHTML') === 0 || this.name.indexOf('grabValue') === 0) {
+        selector = this.args[0]
       } else {
           // TODO Should be configurable with autoscreenshotPrefixes (see shouldTakeScreenshot)
           // TODO Implement a better selector detection
