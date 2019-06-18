@@ -215,7 +215,9 @@ class BifrostIOHelper extends Helper {
           if (sel) {
             await helper.executeScript(highlightElement, sel, false, `I ${step.name} ${step.humanizeArgs()}`)
           } else {
-            console.log(`ERROR Selector is undefined for ${step.name} ${step.args}`)
+            if (process.env.DEBUG) {
+              console.log(`WARNING Selector ${sel} is falsy for ${step.name} ${step.args}`)
+            }
           }
         } catch (err) {
           if (process.env.DEBUG) {
