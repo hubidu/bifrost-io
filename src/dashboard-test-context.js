@@ -182,12 +182,19 @@ class DashboardCommandContext {
      */
     addSourceSnippets(sourceSnippets) {
         this.codeStack = sourceSnippets.map(({sourceLine, sourceFile}) => {
+            let source
+            try {
+              source = codeExcerpt(fileToString(sourceFile), sourceLine)
+            } catch (err) {
+              debug('WARNING Failed to do code excerpt for ', sourceFile)
+            }
+
             return {
                 location: {
                     line: sourceLine,
                     file: sourceFile
                 },
-                source: codeExcerpt(fileToString(sourceFile), sourceLine),
+                source
             }
         }).reverse() // code snippet of the command should be first in list
     }
