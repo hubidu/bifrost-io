@@ -3,6 +3,7 @@ const debug = require('debug')('bifrost-io:codeceptjs-helper')
 const path = require('path')
 const chalk = require('chalk')
 const info = chalk.bold.green.underline
+const { event } = codeceptjs;
 
 const DashboardClient = require('../index')
 const {
@@ -10,14 +11,14 @@ const {
   getUserAgent,
   dehighlightElement,
   // getPerformance,
-  highlightElement} = require('../src/scripts')
+  highlightElement } = require('../src/scripts')
 // TODO Refactor Move all this to utils
 const {
   stringify,
   fileToStringSync,
   getTestFilePathFromStack,
   getScreenshotFileName,
-  mapStepToSource} = require('./utils')
+  mapStepToSource } = require('./utils')
 const {
   getSuiteTitle,
   extractBaseUrl,
@@ -53,7 +54,7 @@ const toError = err => {
 }
 const printToConsole = msg => console.log(info(msg))
 const isScreenshotStep = step => step.name === 'saveScreenshot'
-const ignoreError = promise =>  promise.catch(e => undefined)
+const ignoreError = promise => promise.catch(e => undefined)
 
 /**
  * Some global variables
@@ -68,12 +69,15 @@ const dashboardClient = new DashboardClient()
 class BifrostIOHelper extends Helper {
   constructor(config) {
     super(config)
+
     // set defaults
     this.options = {
       uniqueScreenshotNames: false,
       disableScreenshots: false,
     }
     Object.assign(this.options, config);
+
+    event.dispatcher.on(event.test.failed, (test, err) => this.onFailed({ ...test, err }));
   }
 
   assertThat(expr, msg) {
@@ -92,7 +96,7 @@ class BifrostIOHelper extends Helper {
     helper = this.helpers['Puppeteer']
     if (helper) {
       return {
-        saveScreenshot: async (path) =>  this.helpers['Puppeteer'].page.screenshot({ path })
+        saveScreenshot: async (path) => this.helpers['Puppeteer'].page.screenshot({ path })
       }
     }
 
@@ -113,9 +117,9 @@ class BifrostIOHelper extends Helper {
           try {
             const logs = await webdriverHelper.browser.log('performance')
             return logs.value.map(l => JSON.parse(l.message))
-            } catch (err) {
-              // console.log('WARNING', err)
-              debug('INFO No performance logs found')
+          } catch (err) {
+            // console.log('WARNING', err)
+            debug('INFO No performance logs found')
           }
         }
       })
@@ -139,7 +143,7 @@ class BifrostIOHelper extends Helper {
     })
   }
 
-  _init() {}
+  _init() { }
 
   /**
    * Before/After Suite
@@ -189,7 +193,7 @@ class BifrostIOHelper extends Helper {
 
     testCtx.commit()
     testCtx = undefined
-}
+  }
 
   async _beforeStep(step) {
     if (!testCtx) {
@@ -221,7 +225,7 @@ class BifrostIOHelper extends Helper {
           }
         } catch (err) {
           if (process.env.DEBUG) {
-            console.log(`WARNING Failed to highlight I ${step.name} ${step.args}`, typeof(sel))
+            console.log(`WARNING Failed to highlight I ${step.name} ${step.args}`, typeof (sel))
           }
         }
       }
@@ -355,7 +359,11 @@ class BifrostIOHelper extends Helper {
     }
   }
 
-  async _failed(test) {
+  /**
+   * 
+   * @param {Mocha.Test} test  with injected err property
+   */
+  async onFailed(test) {
     const isBeforeHook = t => t.ctx && t.ctx._runnable && t.ctx._runnable.title.indexOf('before') >= 0
 
     try {
